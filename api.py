@@ -2,8 +2,14 @@ import endpoints
 import codecs
 from protorpc import remote, messages
 
-from models import FoodItem, StringMessage
+from models import (FoodItem,
+                    StringMessage,
+                    User,
+                    FoodProportion,
+                    FoodItemForm)
 
+FOODITEM_REQUEST = endpoints.ResourceContainer(
+    food_item_nr = messages.IntegerField(1),)
 
 
 @endpoints.api(name='matarvefur', version='v1')
@@ -11,8 +17,7 @@ class MatarvefurApi(remote.Service):
     @endpoints.method(response_message=StringMessage,
         path='upload_database',
         name='upload_database',
-        http_method='GET')
-    
+        http_method='PUT')   
     def upload_database(self, request):
         f = codecs.open('isgem2.csv', encoding='ISO-8859-1')
     
@@ -83,12 +88,25 @@ class MatarvefurApi(remote.Service):
                                 fluor = columns[46],
                                 cis_fjolomettadar_fitusyrur_n_6 = columns[47],
                                 cis_fjolomettadar_fitusyrur_n_3 = columns[48])
+                fooditem.put()
             except ValueError:
                 raise endpoints.BadRequestException("Error inserting to a database")
             
         f.close()
         return StringMessage(message="Finished resetting the database.")
+    
+    @endpoints.method(request_message= FOODITEM_REQUEST,
+            response_message=FoodItemForm,
+            path='get_food_item',
+            name='get_food_item',
+            http_method='GET')   
+    def get_food_item(self, request):
+        fooditem = FoodItem.query(FoodItem.nr == request.food_item_nr).get()
+        if not fooditem:
+            raise endpoints.NotFoundException(
+                    'A food item not found')
 
+        return fooditem.to_form()
         
 api = endpoints.api_server([MatarvefurApi])
 

@@ -4,13 +4,22 @@ from datetime import date, datetime
 from protorpc import messages
 from google.appengine.ext import ndb
 
+class User(ndb.Model):
+    name = ndb.StringProperty(required=True)
+    email = ndb.StringProperty(required=True)
+    
+class FoodProportion(ndb.Model):
+    size = ndb.FloatProperty(required=True)
+    user = ndb.KeyProperty(required=True,kind='User')
+    fooditem = ndb.KeyProperty(required=True,kind='FoodItem')
+
 class FoodItem(ndb.Model):
     nr = ndb.IntegerProperty(required=True)
     heiti = ndb.StringProperty(required=True)
     name = ndb.StringProperty(required=True)
-    ediblePortion = ndb.IntegerProperty(required=True)
-    foodGroup1 = ndb.IntegerProperty(required=True)
-    foodGroup2 = ndb.IntegerProperty(required=True)
+    ediblePortion = ndb.IntegerProperty(required=False)
+    foodGroup1 = ndb.IntegerProperty(required=False)
+    foodGroup2 = ndb.IntegerProperty(required=False)
     protein = ndb.FloatProperty(required=False)
     fita = ndb.FloatProperty(required=False)
     mettadar_fitusyrur = ndb.FloatProperty(required=False)
@@ -54,9 +63,23 @@ class FoodItem(ndb.Model):
     fluor = ndb.FloatProperty(required=False)
     cis_fjolomettadar_fitusyrur_n_6 = ndb.FloatProperty(required=False)
     cis_fjolomettadar_fitusyrur_n_3 = ndb.FloatProperty(required=False)
-    
+    def to_form(self):
+        form = FoodItemForm()
+        form.heiti = self.heiti
+        form.name = self.name
+        form.ediblePortion = self.ediblePortion
+        form.foodGroup1 = self.foodGroup1
+        form.foodGroup2 = self.foodGroup2
+        return form
     
 class StringMessage(messages.Message):
     """StringMessage-- outbound (single) string message"""
     message = messages.StringField(1, required=True)
 
+class FoodItemForm(messages.Message):
+    heiti = messages.StringField(1,required=True)
+    name = messages.StringField(2,required=True)
+    ediblePortion = messages.IntegerField(3,required=False)
+    foodGroup1 = messages.IntegerField(4,required=False)
+    foodGroup2 = messages.IntegerField(5,required=False)
+    

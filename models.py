@@ -63,6 +63,7 @@ class FoodItem(ndb.Model):
     fluor = ndb.FloatProperty(required=False)
     cis_fjolomettadar_fitusyrur_n_6 = ndb.FloatProperty(required=False)
     cis_fjolomettadar_fitusyrur_n_3 = ndb.FloatProperty(required=False)
+    leitarstrengur = ndb.StringProperty(required=False)
     def to_form(self):
         form = FoodItemForm()
         form.heiti = self.heiti
@@ -70,6 +71,49 @@ class FoodItem(ndb.Model):
         form.ediblePortion = self.ediblePortion
         form.foodGroup1 = self.foodGroup1
         form.foodGroup2 = self.foodGroup2
+        form.protein = self.protein
+        form.fita = self.fita
+        form.mettadar_fitusyrur = self.mettadar_fitusyrur 
+        form.cis_einomettadar_fitusyrur = self.cis_einomettadar_fitusyrur
+        form.cis_fjolomettadar_fitusyrur = self.cis_fjolomettadar_fitusyrur
+        form.cis_fjolomettadar_fitu_n_3_langar = self.cis_fjolomettadar_fitu_n_3_langar
+        form.trans_fitusyrur = self.trans_fitusyrur
+        form.kolestrol = self.kolestrol
+        form.kolvetni_alls = self.kolvetni_alls
+        form.sykrur = self.sykrur
+        form.vidbaettur_sykur = self.vidbaettur_sykur
+        form.trefjaefni = self.trefjaefni
+        form.alkohol = self.alkohol
+        form.steinefni_alls = self.steinefni_alls
+        form.vatn = self.vatn
+        form.a_vitamin_rj = self.a_vitamin_rj
+        form.retinol = self.retinol
+        form.beta_karotin = self.beta_karotin
+        form.d_vitamin = self.d_vitamin
+        form.e_vitamin_alfa_tj = self.e_vitamin_alfa_tj
+        form.alfa_tokoferol = self.alfa_tokoferol
+        form.b1_vitamin = self.b1_vitamin 
+        form.b2_vitamin = self.b2_vitamin
+        form.niasin_jafngildi = self.niasin_jafngildi
+        form.niasin = self.niasin
+        form.b6_vitamin = self.b6_vitamin
+        form.folat_alls = self.folat_alls
+        form.b_12_vitamin = self.b_12_vitamin
+        form.c_vitamin = self.c_vitamin
+        form.kalk = self.kalk
+        form.fosfor = self.fosfor
+        form.magnesium = self.magnesium
+        form.natrium = self.natrium
+        form.kalium = self.kalium
+        form.jarn = self.jarn
+        form.sink = self.sink
+        form.kopar = self.kopar
+        form.jod = self.jod
+        form.mangan = self.mangan
+        form.selen = self.selen
+        form.fluor = self.fluor
+        form.cis_fjolomettadar_fitusyrur_n_6 = self.cis_fjolomettadar_fitusyrur_n_6
+        form.cis_fjolomettadar_fitusyrur_n_3 = self.cis_fjolomettadar_fitusyrur_n_3 
         return form
     
 class StringMessage(messages.Message):
@@ -82,4 +126,49 @@ class FoodItemForm(messages.Message):
     ediblePortion = messages.IntegerField(3,required=False)
     foodGroup1 = messages.IntegerField(4,required=False)
     foodGroup2 = messages.IntegerField(5,required=False)
-    
+    protein = messages.FloatField(6,required=False)
+    fita = messages.FloatField(7,required=False)
+    mettadar_fitusyrur = messages.FloatField(8,required=False)
+    cis_einomettadar_fitusyrur = messages.FloatField(9,required=False)
+    cis_fjolomettadar_fitusyrur = messages.FloatField(10,required=False)
+    cis_fjolomettadar_fitu_n_3_langar = messages.FloatField(11,required=False)
+    trans_fitusyrur = messages.FloatField(12,required=False)
+    kolestrol = messages.FloatField(13,required=False)
+    kolvetni_alls = messages.FloatField(14,required=False)
+    sykrur = messages.FloatField(15,required=False)
+    vidbaettur_sykur = messages.FloatField(16,required=False)
+    trefjaefni = messages.FloatField(17,required=False)
+    alkohol = messages.FloatField(18,required=False)
+    steinefni_alls = messages.FloatField(19,required=False)
+    vatn = messages.FloatField(20,required=False)
+    a_vitamin_rj = messages.FloatField(21,required=False)
+    retinol = messages.FloatField(22,required=False)
+    beta_karotin = messages.FloatField(23,required=False)
+    d_vitamin = messages.FloatField(24,required=False)
+    e_vitamin_alfa_tj = messages.FloatField(25,required=False)
+    alfa_tokoferol = messages.FloatField(26,required=False)
+    b1_vitamin = messages.FloatField(27,required=False)
+    b2_vitamin = messages.FloatField(28,required=False)
+    niasin_jafngildi = messages.FloatField(29,required=False)
+    niasin = messages.FloatField(30,required=False)
+    b6_vitamin = messages.FloatField(31,required=False)
+    folat_alls = messages.FloatField(32,required=False)
+    b_12_vitamin = messages.FloatField(33,required=False)
+    c_vitamin = messages.FloatField(34,required=False)
+    kalk = messages.FloatField(35,required=False)
+    fosfor = messages.FloatField(36,required=False)
+    magnesium = messages.FloatField(37,required=False)
+    natrium = messages.FloatField(38,required=False)
+    kalium = messages.FloatField(39,required=False)
+    jarn = messages.FloatField(40,required=False)
+    sink = messages.FloatField(41,required=False)
+    kopar = messages.FloatField(42,required=False)
+    jod = messages.FloatField(43,required=False)
+    mangan = messages.FloatField(44,required=False)
+    selen = messages.FloatField(45,required=False)
+    fluor = messages.FloatField(46,required=False)
+    cis_fjolomettadar_fitusyrur_n_6 = messages.FloatField(47,required=False)
+    cis_fjolomettadar_fitusyrur_n_3 = messages.FloatField(48,required=False)
+
+class FoodItemForms(messages.Message):
+    items = messages.MessageField(FoodItemForm,1,repeated=True)

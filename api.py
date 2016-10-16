@@ -6,11 +6,14 @@ from models import (FoodItem,
                     StringMessage,
                     User,
                     FoodProportion,
-                    FoodItemForm)
+                    FoodItemForm,
+                    FoodItemForms)
 
 FOODITEM_REQUEST = endpoints.ResourceContainer(
     food_item_nr = messages.IntegerField(1),)
 
+SEARCH_REQUEST = endpoints.ResourceContainer(
+    query_string = messages.StringField(1),)
 
 @endpoints.api(name='matarvefur', version='v1')
 class MatarvefurApi(remote.Service):
@@ -37,6 +40,7 @@ class MatarvefurApi(remote.Service):
                         columns.append(float(items[i].replace(u',',u'.')))
                     else:
                         columns.append(None)
+            columns.append(items[1].split(',')[0])
             
             try:
                 fooditem = FoodItem(nr = columns[0],
@@ -87,7 +91,8 @@ class MatarvefurApi(remote.Service):
                                 selen = columns[45],
                                 fluor = columns[46],
                                 cis_fjolomettadar_fitusyrur_n_6 = columns[47],
-                                cis_fjolomettadar_fitusyrur_n_3 = columns[48])
+                                cis_fjolomettadar_fitusyrur_n_3 = columns[48],
+                                leitarstrengur = columns[49])
                 fooditem.put()
             except ValueError:
                 raise endpoints.BadRequestException("Error inserting to a database")
@@ -104,9 +109,22 @@ class MatarvefurApi(remote.Service):
         fooditem = FoodItem.query(FoodItem.nr == request.food_item_nr).get()
         if not fooditem:
             raise endpoints.NotFoundException(
-                    'A food item not found')
+                    'No food item found.')
 
         return fooditem.to_form()
+    
+    @endpoints.method(request_message= SEARCH_REQUEST,
+            response_message=FoodItemForms,
+            path='search_food_item',
+            name='search_food_item',
+            http_method='GET')   
+    def search_food_item(self, request):
+        fooditems = FoodItem.query(FoodItem.leitarstrengur == request.query_string.upper())
+        if not fooditems:
+            raise endpoints.NotFoundException(
+                    'No food item found.')
+
+        return FoodItemForms(items=[fooditem.to_form() for fooditem in fooditems])
         
 api = endpoints.api_server([MatarvefurApi])
 

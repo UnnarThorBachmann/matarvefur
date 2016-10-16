@@ -16,10 +16,11 @@ class FoodItem(ndb.Model):
     mettadar_fitusyrur = ndb.FloatProperty(required=False)
     cis_einomettadar_fitusyrur = ndb.FloatProperty(required=False)
     cis_fjolomettadar_fitusyrur = ndb.FloatProperty(required=False)
+    cis_fjolomettadar_fitu_n_3_langar = ndb.FloatProperty(required=False)
     trans_fitusyrur = ndb.FloatProperty(required=False)
     kolestrol = ndb.FloatProperty(required=False)
     kolvetni_alls = ndb.FloatProperty(required=False)
-    sykur = ndb.FloatProperty(required=False)
+    sykrur = ndb.FloatProperty(required=False)
     vidbaettur_sykur = ndb.FloatProperty(required=False)
     trefjaefni = ndb.FloatProperty(required=False)
     alkohol = ndb.FloatProperty(required=False)
@@ -55,5 +56,7 @@ class FoodItem(ndb.Model):
     cis_fjolomettadar_fitusyrur_n_3 = ndb.FloatProperty(required=False)
     
     
-    
+class StringMessage(messages.Message):
+    """StringMessage-- outbound (single) string message"""
+    message = messages.StringField(1, required=True)
 

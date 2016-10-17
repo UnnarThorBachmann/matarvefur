@@ -172,3 +172,8 @@ class FoodItemForm(messages.Message):
 
 class FoodItemForms(messages.Message):
     items = messages.MessageField(FoodItemForm,1,repeated=True)
+    
+class CategoryForm(messages.Message):
+    category = messages.StringField(1,required=False)
+    subcategory = messages.StringField(2,required=False)
+    items = messages.StringField(3,repeated=True)

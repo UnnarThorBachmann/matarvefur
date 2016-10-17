@@ -7,11 +7,12 @@ from google.appengine.ext import ndb
 class User(ndb.Model):
     name = ndb.StringProperty(required=True)
     email = ndb.StringProperty(required=True)
+    def to_form(self):
+        form = userForm()
+        form.user = self.user
+        form.email = self.email
+        return form
     
-class FoodProportion(ndb.Model):
-    size = ndb.FloatProperty(required=True)
-    user = ndb.KeyProperty(required=True,kind='User')
-    fooditem = ndb.KeyProperty(required=True,kind='FoodItem')
 
 class FoodItem(ndb.Model):
     nr = ndb.IntegerProperty(required=True)
@@ -115,6 +116,20 @@ class FoodItem(ndb.Model):
         form.cis_fjolomettadar_fitusyrur_n_6 = self.cis_fjolomettadar_fitusyrur_n_6
         form.cis_fjolomettadar_fitusyrur_n_3 = self.cis_fjolomettadar_fitusyrur_n_3 
         return form
+
+class Food(ndb.Model):
+    size = ndb.FloatProperty(required=True)
+    user = ndb.KeyProperty(required=True,kind='User')
+    fooditem = ndb.StructuredProperty(FoodItem,required=True)
+    dagsetning = ndb.DateProperty(required=True,auto_now = True)
+    def to_form(self):
+        form = FoodForm()
+        form.user = self.user.name
+        form.size = self.size
+        form.fooditem = self.fooditem.to_form()
+        form.dagsetning = self.dagsetning.toString()
+        return form
+        
     
 class StringMessage(messages.Message):
     """StringMessage-- outbound (single) string message"""
@@ -172,8 +187,18 @@ class FoodItemForm(messages.Message):
 
 class FoodItemForms(messages.Message):
     items = messages.MessageField(FoodItemForm,1,repeated=True)
-    
+
+class FoodForm(messages.Message):
+     user = messages.StringField(1,required = True)
+     size = messages.FloatField(2,required=True)
+     fooditem = messages.MessageField(FoodItemForm,3,required = True)
+     dagsetning = messages.StringField(4,required=True)
+     
 class CategoryForm(messages.Message):
-    category = messages.StringField(1,required=False)
+    category = messages.StringField(1,required=True)
     subcategory = messages.StringField(2,required=False)
     items = messages.StringField(3,repeated=True)
+
+class UserForm(messages.Message):
+    name = messages.StringField(1,required=True)
+    email = messages.StringField(2,required=True)

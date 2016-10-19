@@ -2,6 +2,7 @@
 
 import endpoints
 import codecs
+from datetime import date
 from protorpc import remote, messages
 from flokkar import c,sc
 from models import (FoodItem,
@@ -10,6 +11,7 @@ from models import (FoodItem,
                     UserForm,
                     Food,
                     FoodForm,
+                    FoodForms,
                     FoodItemForm,
                     FoodItemForms,
                     CategoryForm)
@@ -27,7 +29,12 @@ SEARCH_CATEGORY = endpoints.ResourceContainer(
 CREATE_USER_REQUEST = endpoints.ResourceContainer(
     user_name = messages.StringField(1,required=True),
     email = messages.StringField(2,required=True))
-
+FOOD_REQUEST = endpoints.ResourceContainer(
+    size = messages.FloatField(1,required=True),
+    user_name = messages.StringField(2,required=True),
+    fooditem_nr = messages.IntegerField(3,required=True))
+CONSUMPTION_REQUEST = endpoints.ResourceContainer(
+    user_name = messages.StringField(1,required=True))
 @endpoints.api(name='matarvefur', version='v1')
 class MatarvefurApi(remote.Service):
     @endpoints.method(response_message=StringMessage,
@@ -181,7 +188,35 @@ class MatarvefurApi(remote.Service):
         user.put()
         return UserForm(name = user.name,
                         email = user.email)
-	
+    @endpoints.method(request_message= FOOD_REQUEST,
+            response_message=FoodForm,
+            path='food',
+            name='register_food',
+            http_method='PUT')   
+    def register_food(self, request):
+        user = User.query(User.name == request.user_name).get()
+        if not user:
+            raise endpoints.NotFoundException(
+                'User does not exist.')
+
+        fooditem = FoodItem.query(FoodItem.nr == request.fooditem_nr).get()
+        if not fooditem:
+            raise endpoints.NotFoundException(
+                'Food item not found.')
+        
+        food = Food(size = request.size,
+                    user = user.key,
+                    fooditem_nr = request.fooditem_nr)
+        food.put()
+        
+        return FoodForm(size = request.size,
+                        fooditem = fooditem.to_form(),
+                        user = user.name,
+                        dagsetning = str(food.dagsetning))
+        
+    
+
+                        
 api = endpoints.api_server([MatarvefurApi])
 
 

@@ -120,16 +120,9 @@ class FoodItem(ndb.Model):
 class Food(ndb.Model):
     size = ndb.FloatProperty(required=True)
     user = ndb.KeyProperty(required=True,kind='User')
-    fooditem = ndb.StructuredProperty(FoodItem,required=True)
+    fooditem_nr = ndb.IntegerProperty(required=True)
     dagsetning = ndb.DateProperty(required=True,auto_now = True)
-    def to_form(self):
-        form = FoodForm()
-        form.user = self.user.name
-        form.size = self.size
-        form.fooditem = self.fooditem.to_form()
-        form.dagsetning = self.dagsetning.toString()
-        return form
-        
+    
     
 class StringMessage(messages.Message):
     """StringMessage-- outbound (single) string message"""
@@ -194,6 +187,9 @@ class FoodForm(messages.Message):
      fooditem = messages.MessageField(FoodItemForm,3,required = True)
      dagsetning = messages.StringField(4,required=True)
      
+class FoodForms(messages.Message):
+    items = messages.MessageField(FoodForm,1,repeated=True)
+    
 class CategoryForm(messages.Message):
     category = messages.StringField(1,required=True)
     subcategory = messages.StringField(2,required=False)

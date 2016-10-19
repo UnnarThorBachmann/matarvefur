@@ -184,7 +184,7 @@ class FoodItemForms(messages.Message):
 class FoodForm(messages.Message):
      user = messages.StringField(1,required = True)
      size = messages.FloatField(2,required=True)
-     fooditem = messages.MessageField(FoodItemForm,3,required = True)
+     fooditemForm = messages.MessageField(FoodItemForm,3,required = True)
      dagsetning = messages.StringField(4,required=True)
      
 class FoodForms(messages.Message):

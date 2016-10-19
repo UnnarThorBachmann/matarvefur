@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 #!/usr/bin/env python
 #
 # Copyright 2007 Google Inc.
@@ -18,7 +20,7 @@ import webapp2
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+        self.response.write('Velkomin á matarvefinn.')
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)

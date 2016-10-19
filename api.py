@@ -34,7 +34,10 @@ FOOD_REQUEST = endpoints.ResourceContainer(
     user_name = messages.StringField(2,required=True),
     fooditem_nr = messages.IntegerField(3,required=True))
 CONSUMPTION_REQUEST = endpoints.ResourceContainer(
-    user_name = messages.StringField(1,required=True))
+    user_name = messages.StringField(1,required=True),
+    year = messages.IntegerField(2,required=True),
+    day = messages.IntegerField(3,required=True),
+    month = messages.IntegerField(4,required=True))
 @endpoints.api(name='matarvefur', version='v1')
 class MatarvefurApi(remote.Service):
     @endpoints.method(response_message=StringMessage,
@@ -210,10 +213,35 @@ class MatarvefurApi(remote.Service):
         food.put()
         
         return FoodForm(size = request.size,
-                        fooditem = fooditem.to_form(),
+                        fooditemForm = fooditem.to_form(),
                         user = user.name,
                         dagsetning = str(food.dagsetning))
+    @endpoints.method(request_message= CONSUMPTION_REQUEST,
+                      response_message=FoodForms,
+                      path='consumption',
+                      name='consumed_items',
+                      http_method='GET')   
+    def consumed_items(self, request):
+        user = User.query(User.name == request.user_name).get()
+        if not user:
+            raise endpoints.NotFoundException(
+                'User does not exist.')
+
+        dagsetning_leit = date(request.year,request.month,request.day)
+        consumption = Food.query(Food.user == user.key,Food.dagsetning == dagsetning_leit).fetch()
         
+        foodForms = []
+        for item in consumption:
+            print item.fooditem_nr
+            fooditem = FoodItem.query(FoodItem.nr == item.fooditem_nr).get()
+            foodForms.append(FoodForm(user = user.name,
+                                      size = item.size,
+                                      fooditemForm = fooditem.to_form(),
+                                      dagsetning = str(item.dagsetning)))
+        
+        
+        
+        return FoodForms(items = foodForms)
     
 
                         

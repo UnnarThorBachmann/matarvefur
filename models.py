@@ -4,20 +4,11 @@ from datetime import date, datetime
 from protorpc import messages
 from google.appengine.ext import ndb
 
-class User(ndb.Model):
-    name = ndb.StringProperty(required=True)
-    email = ndb.StringProperty(required=True)
-    def to_form(self):
-        form = userForm()
-        form.user = self.user
-        form.email = self.email
-        return form
-    
 
 class FoodItem(ndb.Model):
-    nr = ndb.IntegerProperty(required=True)
+    nr = ndb.IntegerProperty(required=False)
     heiti = ndb.StringProperty(required=True)
-    name = ndb.StringProperty(required=True)
+    name = ndb.StringProperty(required=False)
     ediblePortion = ndb.IntegerProperty(required=False)
     foodGroup1 = ndb.IntegerProperty(required=False)
     foodGroup2 = ndb.IntegerProperty(required=False)
@@ -64,7 +55,6 @@ class FoodItem(ndb.Model):
     fluor = ndb.FloatProperty(required=False)
     cis_fjolomettadar_fitusyrur_n_6 = ndb.FloatProperty(required=False)
     cis_fjolomettadar_fitusyrur_n_3 = ndb.FloatProperty(required=False)
-    leitarstrengur = ndb.StringProperty(required=False)
     def to_form(self):
         form = FoodItemForm()
         form.heiti = self.heiti
@@ -117,10 +107,31 @@ class FoodItem(ndb.Model):
         form.cis_fjolomettadar_fitusyrur_n_3 = self.cis_fjolomettadar_fitusyrur_n_3 
         return form
 
+class User(ndb.Model):
+    name = ndb.StringProperty(required=True)
+    email = ndb.StringProperty(required=True)
+    fooditems = ndb.StructuredProperty(FoodItem, repeated=True)
+    def to_form(self):
+        form = userForm()
+        form.user = self.user
+        form.email = self.email
+        return form
+    
+    def put_item(self,fooditem):
+        self.fooditems.append(fooditem)
+        
+    def get_item(self,heiti):
+        for item in self.fooditems:
+            if item.heiti == heiti:
+                return item
+        return None
+        
+
+
 class Food(ndb.Model):
-    size = ndb.FloatProperty(required=True)
     user = ndb.KeyProperty(required=True,kind='User')
-    fooditem_nr = ndb.IntegerProperty(required=True)
+    size = ndb.FloatProperty(required=True)
+    foodItem = ndb.KeyProperty(required=True,kind='FoodItem')
     dagsetning = ndb.DateProperty(required=True,auto_now = True)
     
     
@@ -130,7 +141,7 @@ class StringMessage(messages.Message):
 
 class FoodItemForm(messages.Message):
     heiti = messages.StringField(1,required=True)
-    name = messages.StringField(2,required=True)
+    name = messages.StringField(2,required=False)
     ediblePortion = messages.IntegerField(3,required=False)
     foodGroup1 = messages.IntegerField(4,required=False)
     foodGroup2 = messages.IntegerField(5,required=False)

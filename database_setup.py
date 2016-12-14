@@ -17,5 +17,4 @@ for line in f:
             else:
                 columns.append(None)
 
-    print len(columns)
 f.close()

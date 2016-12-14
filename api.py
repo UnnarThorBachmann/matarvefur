@@ -18,7 +18,8 @@ from models import (FoodItem,
                     FoodItemForm,
                     FoodItemForms,
                     CategoryForm)
-
+USER_REQUEST = endpoints.ResourceContainer(
+    user_email = messages.StringField(1,required=True))
 	
 FOOD_ITEM_REQUEST = endpoints.ResourceContainer(
     user_email = messages.StringField(1,required=False),
@@ -233,7 +234,18 @@ class MatarvefurApi(remote.Service):
                     'No food item found.')
 
         return fooditem.to_form()
-    
+    @endpoints.method(request_message= USER_REQUEST,
+            response_message=FoodItemForms,
+            path='get_user_food_items',
+            name='get_user_food_items',
+            http_method='GET')   
+    def get_user_food_items(self, request):
+        user = User.query(User.email== request.user_email).get()
+        if not user:
+            raise endpoints.NotFoundException(
+                    'No user found.')
+        
+        return  FoodItemForms(items = [item.to_form() for item in user.fooditems])
     @endpoints.method(request_message= FOOD_ITEM_REGISTER,
             response_message=FoodItemForm,
             path='put_food_item',
@@ -242,11 +254,11 @@ class MatarvefurApi(remote.Service):
     def put_food_item(self, request):
         user = User.query(User.email== request.user_email).get()
         if not user:
-            raise endpoints.NotFoundException(
+            raise endpoints.ForbiddenException(
                 'User does not exist.')
         
         if user.get_item(request.heiti) is not None:
-            raise endpoints.NotFoundException(
+            raise endpoints.ForbiddenException(
                 'Item does exist.')
         fooditem = FoodItem.query(FoodItem.heiti == request.heiti).get()
         

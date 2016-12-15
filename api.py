@@ -17,7 +17,10 @@ from models import (FoodItem,
                     FoodForms,
                     FoodItemForm,
                     FoodItemForms,
-                    CategoryForm)
+                    CategoryForm,
+                    Statistics,
+                    StatisticsForm,
+                    StatisticsForms)
 USER_REQUEST = endpoints.ResourceContainer(
     user_email = messages.StringField(1,required=True))
 	
@@ -437,6 +440,7 @@ class MatarvefurApi(remote.Service):
                         user = user.name,
                         dagsetning = str(food.dagsetning),
                         mal = FoodForm.Mal(food.mal))
+    
     @endpoints.method(request_message= CONSUMPTION_REQUEST,
                       response_message=FoodForms,
                       path='get_food',
@@ -463,6 +467,59 @@ class MatarvefurApi(remote.Service):
         
     
         return FoodForms(items = foodForms)
+
+    @endpoints.method(request_message= CONSUMPTION_REQUEST,
+                      response_message=StatisticsForms,
+                      path='statistics',
+                      name='statistics',
+                      http_method='GET')   
+    def statistics(self, request):
+        user = User.query(User.email == request.user_email).get()
+        if not user:
+            raise endpoints.NotFoundException(
+                'User does not exist.')
+
+        dagsetning_leit2 = date(request.year2,request.month2,request.day2)
+        dagsetning_leit1 = date(request.year1,request.month1,request.day1)
+
+        consumption = Food.query(Food.user == user.key,Food.dagsetning <= dagsetning_leit2,Food.dagsetning >= dagsetning_leit1).fetch()
+        fita = 0
+        kolvetni = 0
+        protein = 0
+        days_dict =  {} 
+        
+        for food in consumption:
+            fooditem = food.foodItem.get()
+
+            if not days_dict.has_key(str(food.dagsetning)):
+               days_dict[str(food.dagsetning)] = {'protein': 0,'fita': 0, 'kolvetni': 0, 'orka':0}
+               
+            if hasattr(fooditem,'fita'):
+                days_dict[str(food.dagsetning)]['fita'] += fooditem.fita
+            if hasattr(fooditem,'kolvetni_alls'):
+                days_dict[str(food.dagsetning)]['kolvetni'] += fooditem.kolvetni_alls
+            if hasattr(fooditem,'protein'):
+                days_dict[str(food.dagsetning)]['protein'] += fooditem.protein
+
+        
+        for day in days_dict.keys():
+            days_dict[day]['orka'] = 37*days_dict[day]['fita'] + 17*days_dict[day]['protein'] + 17*days_dict[day]['kolvetni']
+
+
+        consumpt_days = []
+        for day in days_dict.keys():     
+            stat = Statistics(user = user.name,
+                              fita = days_dict[day]['fita'],
+                              kolvetni = days_dict[day]['kolvetni'],
+                              protein = days_dict[day]['protein'],
+                              orka = days_dict[day]['orka'],
+                              protein_orku_hlutfall = float(17)*days_dict[day]['protein']/days_dict[day]['orka'],
+                              kolvetni_orku_hlutfall = float(17)*days_dict[day]['kolvetni']/days_dict[day]['orka'],
+                              fita_orku_hlutfall = float(37)*days_dict[day]['fita']/days_dict[day]['orka'],
+                              dagsetning = day)
+            consumpt_days.append(stat)
+        return StatisticsForms(items = [item.to_form() for item in consumpt_days])
+        
     @endpoints.method(request_message= DELETE_REQUEST,
                       response_message=StringMessage,
                       path='delete_food',

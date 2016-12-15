@@ -134,7 +134,30 @@ class Food(ndb.Model):
     foodItem = ndb.KeyProperty(required=True,kind='FoodItem')
     dagsetning = ndb.DateProperty(required=True,auto_now = True)
     mal = ndb.StringProperty(required=True)
+
+class Statistics(ndb.Model):
+    user = ndb.StringProperty(required=True)
+    fita = ndb.FloatProperty(required=True)
+    kolvetni = ndb.FloatProperty(required=True)
+    protein = ndb.FloatProperty(required=True)
+    orka = ndb.FloatProperty(required=True)
+    protein_orku_hlutfall = ndb.FloatProperty(required=True)
+    kolvetni_orku_hlutfall = ndb.FloatProperty(required=True)
+    fita_orku_hlutfall = ndb.FloatProperty(required=True)
+    dagsetning = ndb.StringProperty(required=True)
+    def to_form(self):
+        form = StatisticsForm()
+        form.user = self.user
+        form.fita = self.fita
+        form.kolvetni = self.kolvetni
+        form.protein = self.protein
+        form.orka = self.orka
+        form.protein_orku_hlutfall = self.protein_orku_hlutfall
+        form.kolvetni_orku_hlutfall = self.kolvetni_orku_hlutfall
+        form.fita_orku_hlutfall = self.fita_orku_hlutfall
+        form.dagsetning = self.dagsetning
     
+        return form
     
 class StringMessage(messages.Message):
     """StringMessage-- outbound (single) string message"""
@@ -210,9 +233,23 @@ class FoodForm(messages.Message):
     mal = messages.EnumField('Mal',5,required=True,default="Morgunnmatur")
      
 
-    
 class FoodForms(messages.Message):
     items = messages.MessageField(FoodForm,1,repeated=True)
+
+
+class StatisticsForm(messages.Message):
+    user = messages.StringField(1,required = True)
+    fita = messages.FloatField(2,required = True)
+    kolvetni = messages.FloatField(3,required = True)
+    protein = messages.FloatField(4, required = True)
+    orka = messages.FloatField(5,required = True)
+    protein_orku_hlutfall = messages.FloatField(6,required=True)
+    kolvetni_orku_hlutfall = messages.FloatField(7,required=True)
+    fita_orku_hlutfall = messages.FloatField(8,required=True)
+    dagsetning = messages.StringField(9,required=True)
+
+class StatisticsForms(messages.Message):
+    items = messages.MessageField(StatisticsForm,1,repeated=True)
     
 class CategoryForm(messages.Message):
     category = messages.StringField(1,required=True)

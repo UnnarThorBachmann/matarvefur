@@ -241,7 +241,7 @@ class MatarvefurApi(remote.Service):
 
         return fooditem.to_form()
     @endpoints.method(request_message= FOOD_ITEM_DELETE_REQUEST,
-            response_message=FoodItemForm,
+            response_message=StringMessage,
             path='delete_user_food_item',
             name='delete_user_food_item',
             http_method='GET')   
@@ -263,7 +263,7 @@ class MatarvefurApi(remote.Service):
             raise endpoints.NotFoundException(
                     'Food item not found.')
 
-        return fooditem.to_form()
+        return StringMessage(message='One item deleted')
     @endpoints.method(request_message= USER_REQUEST,
             response_message=FoodItemForms,
             path='get_user_food_items',
@@ -448,6 +448,32 @@ class MatarvefurApi(remote.Service):
         
         
         return FoodForms(items = foodForms)
+    @endpoints.method(request_message= CONSUMPTION_REQUEST,
+                      response_message=StringMessage,
+                      path='delete_food',
+                      name='delete_food',
+                      http_method='GET')   
+    def delete_food(self, request):
+        user = User.query(User.email == request.user_email).get()
+        if not user:
+            raise endpoints.NotFoundException(
+                'User does not exist.')
+
+        dagsetning_leit2 = date(request.year2,request.month2,request.day2)
+        dagsetning_leit1 = date(request.year1,request.month1,request.day1)
+
+        consumption = Food.query(Food.user == user.key,Food.dagsetning <= dagsetning_leit2,Food.dagsetning >= dagsetning_leit1).fetch()
+        
+        foodForms = []
+        n = 0
+        for item in consumption:
+            item.key.delete()
+            n += 1
+        
+        
+        
+        
+        return StringMessage(message= str(n) + ' items deleted.')
                         
 api = endpoints.api_server([MatarvefurApi])
 

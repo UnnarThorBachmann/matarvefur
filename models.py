@@ -133,7 +133,7 @@ class Food(ndb.Model):
     size = ndb.FloatProperty(required=True)
     foodItem = ndb.KeyProperty(required=True,kind='FoodItem')
     dagsetning = ndb.DateProperty(required=True,auto_now = True)
-    mal = ndb.StringProperty(required=False)
+    mal = ndb.StringProperty(required=True)
     
     
 class StringMessage(messages.Message):

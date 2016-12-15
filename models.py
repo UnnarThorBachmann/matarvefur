@@ -133,6 +133,7 @@ class Food(ndb.Model):
     size = ndb.FloatProperty(required=True)
     foodItem = ndb.KeyProperty(required=True,kind='FoodItem')
     dagsetning = ndb.DateProperty(required=True,auto_now = True)
+    mal = ndb.StringProperty(required=False)
     
     
 class StringMessage(messages.Message):
@@ -193,11 +194,23 @@ class FoodItemForms(messages.Message):
     items = messages.MessageField(FoodItemForm,1,repeated=True)
 
 class FoodForm(messages.Message):
-     user = messages.StringField(1,required = True)
-     size = messages.FloatField(2,required=True)
-     fooditemForm = messages.MessageField(FoodItemForm,3,required = True)
-     dagsetning = messages.StringField(4,required=True)
+    class Mal(messages.Enum):
+        Morgunnmatur = 1
+        Morgunnsnarl = 2
+        Hadegismatur = 3
+        Middegissnarl = 4
+        Kvoldmatur = 5
+        Kvoldsnarl = 6
+        
+
+    user = messages.StringField(1,required = True)
+    size = messages.FloatField(2,required=True)
+    fooditemForm = messages.MessageField(FoodItemForm,3,required = True)
+    dagsetning = messages.StringField(4,required=True)
+    mal = messages.EnumField('Mal',5,required=True,default="Morgunnmatur")
      
+
+    
 class FoodForms(messages.Message):
     items = messages.MessageField(FoodForm,1,repeated=True)
     

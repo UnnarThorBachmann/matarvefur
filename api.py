@@ -42,7 +42,8 @@ CREATE_USER_REQUEST = endpoints.ResourceContainer(
 FOOD_REQUEST = endpoints.ResourceContainer(
     size = messages.FloatField(1,required=True),
     user_email = messages.StringField(2,required=True),
-    food_item_heiti = messages.StringField(3,required=True))
+    food_item_heiti = messages.StringField(3,required=True),
+    mal = messages.StringField(4,required=False))
 CONSUMPTION_REQUEST = endpoints.ResourceContainer(
     user_email = messages.StringField(1,required=True),
     year2 = messages.IntegerField(2,required=True),
@@ -415,13 +416,15 @@ class MatarvefurApi(remote.Service):
         
         food = Food(size = request.size,
                     user = user.key,
-                    foodItem = fooditem.key)
+                    foodItem = fooditem.key,
+                    mal = request.mal)
         food.put()
         
         return FoodForm(size = request.size,
                         fooditemForm = fooditem.to_form(),
                         user = user.name,
-                        dagsetning = str(food.dagsetning))
+                        dagsetning = str(food.dagsetning),
+                        mal = FoodForm.Mal(food.mal))
     @endpoints.method(request_message= CONSUMPTION_REQUEST,
                       response_message=FoodForms,
                       path='get_food',
@@ -443,10 +446,10 @@ class MatarvefurApi(remote.Service):
             foodForms.append(FoodForm(user = user.name,
                                       size = item.size,
                                       fooditemForm = item.foodItem.get().to_form(),
-                                      dagsetning = str(item.dagsetning)))
+                                      dagsetning = str(item.dagsetning),
+                                      mal=FoodForm.Mal(item.mal)))
         
-        
-        
+    
         return FoodForms(items = foodForms)
     @endpoints.method(request_message= CONSUMPTION_REQUEST,
                       response_message=StringMessage,

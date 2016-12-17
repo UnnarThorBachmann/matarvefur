@@ -131,8 +131,9 @@ class User(ndb.Model):
 class Food(ndb.Model):
     user = ndb.KeyProperty(required=True,kind='User')
     size = ndb.FloatProperty(required=True)
-    foodItem = ndb.KeyProperty(required=True,kind='FoodItem')
-    dagsetning = ndb.DateProperty(required=True,auto_now = True)
+    foodItem = ndb.KeyProperty(required=False,kind='FoodItem')
+    foodItemName = ndb.StringProperty(required=False)
+    dagsetning = ndb.DateProperty(required=True)
     mal = ndb.StringProperty(required=True)
 
 class Statistics(ndb.Model):
@@ -215,6 +216,8 @@ class FoodItemForm(messages.Message):
 
 class FoodItemForms(messages.Message):
     items = messages.MessageField(FoodItemForm,1,repeated=True)
+    category = messages.StringField(2,required=False)
+    subcategory = messages.StringField(3,required=False)
 
 class FoodForm(messages.Message):
     class Mal(messages.Enum):

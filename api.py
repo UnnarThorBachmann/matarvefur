@@ -3,7 +3,7 @@
 import endpoints
 import codecs
 import math
-from datetime import date
+from datetime import date,datetime
 from protorpc import remote, messages
 from flokkar import c,sc
 from google.appengine.ext import ndb
@@ -36,9 +36,11 @@ SEARCH_REQUEST = endpoints.ResourceContainer(
     query_string = messages.StringField(2,required=True))
 
 
-SEARCH_CATEGORY = endpoints.ResourceContainer(
-    category = messages.IntegerField(1,required=True),
-    subcategory = messages.IntegerField(2,required=False))
+SEARCH_FOOD_ITEMS = endpoints.ResourceContainer(
+    user_email = messages.StringField(1,required=False),
+    category = messages.IntegerField(2,required=False),
+    subcategory = messages.IntegerField(3,required=False))
+
 CREATE_USER_REQUEST = endpoints.ResourceContainer(
     user_name = messages.StringField(1,required=True),
     user_email = messages.StringField(2,required=True))
@@ -46,24 +48,21 @@ FOOD_REQUEST = endpoints.ResourceContainer(
     size = messages.FloatField(1,required=True),
     user_email = messages.StringField(2,required=True),
     food_item_heiti = messages.StringField(3,required=True),
-    mal = messages.StringField(4,required=True))
+    mal = messages.StringField(4,required=True),
+    dags = messages.StringField(5,required=False))
+    
 CONSUMPTION_REQUEST = endpoints.ResourceContainer(
     user_email = messages.StringField(1,required=True),
-    year2 = messages.IntegerField(2,required=True),
-    day2 = messages.IntegerField(3,required=True),
-    month2 = messages.IntegerField(4,required=True),
-    year1 = messages.IntegerField(5,required=True),
-    day1 = messages.IntegerField(6,required=True),
-    month1 = messages.IntegerField(7,required=True))
+    dags2 = messages.StringField(2,required=True),
+    dags1 = messages.StringField(3,required=True))
+    
 
 DELETE_REQUEST = endpoints.ResourceContainer(
     user_email = messages.StringField(1,required=True),
-    year = messages.IntegerField(2,required=True),
-    day = messages.IntegerField(3,required=True),
-    month = messages.IntegerField(4,required=True),
-    food_item_heiti = messages.StringField(5,required=True),
-    size = messages.IntegerField(6,required=True),
-    mal = messages.StringField(7,required=True))
+    food_item_heiti = messages.StringField(2,required=True),
+    size = messages.IntegerField(3,required=True),
+    mal = messages.StringField(4,required=True),
+    dags = messages.StringField(5,required=True))
 
     
     
@@ -121,6 +120,14 @@ FOOD_ITEM_REGISTER = endpoints.ResourceContainer(
 
 @endpoints.api(name='matarvefur', version='v1')
 class MatarvefurApi(remote.Service):
+    def dags_str_datetime(self,dags):
+        if dags:
+            a = dags.split('-')
+            dagsetning = datetime(int(a[0]),int(a[1]),int(a[2]))
+        else:
+            dagsetning = datetime.now()
+        return dagsetning
+    """
     @endpoints.method(request_message= CREATE_USER_REQUEST,
             response_message=UserForm,
             path='create_user',
@@ -138,6 +145,7 @@ class MatarvefurApi(remote.Service):
         user.put()
         return UserForm(name = user.name,
                         email = user.email)
+    
     @endpoints.method(response_message=StringMessage,
         path='delete_database',
         name='delete_database',
@@ -235,33 +243,42 @@ class MatarvefurApi(remote.Service):
         f.close()
         return StringMessage(message="Finished resetting the database with "+ str(n) + " items.")
     # Food item functions.
+    """
+
     @endpoints.method(request_message= FOOD_ITEM_REQUEST,
             response_message=FoodItemForm,
-            path='get_food_item',
-            name='get_food_item',
+            path='food_item_get',
+            name='food_item_get',
             http_method='GET')   
-    def get_food_item(self, request):
-        user = User.query(User.email== request.user_email).get()
-        if not user:
-            fooditem = fooditem = FoodItem.query(FoodItem.heiti == request.food_item_heiti).get()
-        else:
-            for item in user.fooditems:
-                if item.heiti == request.food_item_heiti:
-                    fooditem = item
-                    break
+    def food_item_get(self, request):
+        if request.user_email:
+            user = User.query(User.email == request.user_email).get()
+            if not user:
+                raise endpoints.NotFoundException(
+                    'User not found.')
+            else:
+                for item in user.fooditems:
+                    if item.heiti == request.food_item_heiti:
+                        return item.to_form()
+                raise endpoints.NotFoundException(
+                    'Item not found.')
+        else:                    
             fooditem = fooditem = FoodItem.query(FoodItem.heiti == request.food_item_heiti).get()
         
-        if not fooditem:
-            raise endpoints.NotFoundException(
+            if not fooditem:
+                raise endpoints.NotFoundException(
                     'No food item found.')
 
-        return fooditem.to_form()
+            return fooditem.to_form()
+
+    
+    
     @endpoints.method(request_message= FOOD_ITEM_DELETE_REQUEST,
             response_message=StringMessage,
-            path='delete_user_food_item',
-            name='delete_user_food_item',
+            path='food_item_delete',
+            name='food_item_delete',
             http_method='GET')   
-    def delete_user_food_item(self, request):
+    def food_item_delete(self, request):
         user = User.query(User.email== request.user_email).get()
         if not user:
             raise endpoints.NotFoundException(
@@ -280,36 +297,81 @@ class MatarvefurApi(remote.Service):
                     'Food item not found.')
 
         return StringMessage(message='One item deleted')
-    @endpoints.method(request_message= USER_REQUEST,
+    @endpoints.method(request_message= SEARCH_FOOD_ITEMS,
             response_message=FoodItemForms,
-            path='get_user_food_items',
-            name='get_user_food_items',
+            path='food_items_get',
+            name='food_items_get',
             http_method='GET')   
-    def get_user_food_items(self, request):
-        user = User.query(User.email== request.user_email).get()
-        if not user:
-            raise endpoints.NotFoundException(
-                    'No user found.')
+    def food_items_get(self, request):
+        if request.user_email:
+            user = User.query(User.email== request.user_email).get()
+            if not user:
+                raise endpoints.NotFoundException('No user found.')
+            return  FoodItemForms(items = [item.to_form() for item in user.fooditems],category=None, subcategory=None)
+        elif request.category:
+            fooditems = FoodItem.query(FoodItem.foodGroup1 == request.category)
+            if request.subcategory:
+                fooditems = fooditems.filter(FoodItem.foodGroup2 == request.subcategory)
+            if not fooditems:
+                raise endpoints.NotFoundException(
+                    'No food items found.')
         
-        return  FoodItemForms(items = [item.to_form() for item in user.fooditems])
+        
+            if c.has_key(request.category) and sc.has_key((request.category,request.subcategory)):
+                cat = (c[request.category],sc[(request.category,request.subcategory)])
+        
+            elif c.has_key(request.category):
+                cat = (c[request.category],None)
+            else:
+                cat = (None,None)
+         
+            return FoodItemForms(items=[fooditem.to_form() for fooditem in fooditems],
+                                 category = cat[0],
+                                subcategory = cat[1])
+    
+        else:
+            return FoodItemForms(items =[],category=None,subcategory=None)
+            
+    """
+    fooditems = FoodItem.query(FoodItem.foodGroup1 == request.category)
+        if request.subcategory:
+            fooditems = fooditems.filter(FoodItem.foodGroup2 == request.subcategory)
+        if not fooditems:
+            raise endpoints.NotFoundException(
+                    'No food items found.')
+        
+        
+        if c.has_key(request.category) and sc.has_key((request.category,request.subcategory)):
+            cat = (c[request.category],sc[(request.category,request.subcategory)])
+        
+        elif c.has_key(request.category):
+            cat = (c[request.category],None)
+        else:
+            cat = (None,None)
+         
+        return CategoryForm(category = cat[0],
+                            subcategory = cat[1],
+                            items=[fooditem.heiti for fooditem in fooditems])
+    """
+    
     
     @endpoints.method(request_message= FOOD_ITEM_REGISTER,
             response_message=FoodItemForm,
-            path='put_food_item',
-            name='put_food_item',
-            http_method='POST')   
-    def put_food_item(self, request):
+            path='food_item_put',
+            name='food_item_put',
+            http_method='PUT')   
+    def food_item_put(self, request):
         user = User.query(User.email== request.user_email).get()
         if not user:
             raise endpoints.ForbiddenException(
                 'User does not exist.')
         
-        if user.get_item(request.heiti) is not None:
+        if user.get_item(request.heiti):
             raise endpoints.ForbiddenException(
                 'Item does exist.')
         fooditem = FoodItem.query(FoodItem.heiti == request.heiti).get()
         
-        if fooditem is not None:
+        if fooditem:
             raise endpoints.NotFoundException(
                 'Item does exist.')
         
@@ -367,30 +429,13 @@ class MatarvefurApi(remote.Service):
 
         return fooditem.to_form()
 
-    @endpoints.method(request_message= FOOD_ITEM_REGISTER,
-            response_message=FoodItemForm,
-            path='put_food_item',
-            name='put_food_item',
-            http_method='POST')   
-    def put_food_item(self, request):
-        user = User.query(User.email== request.user_email).get()
-        if not user:
-            raise endpoints.ForbiddenException(
-                'User does not exist.')
-        
-        if user.get_item(request.heiti) is not None:
-            raise endpoints.ForbiddenException(
-                'Item does exist.')
-        fooditem = FoodItem.query(FoodItem.heiti == request.heiti).get()
-        
-        if fooditem is not None:
-            raise endpoints.NotFoundException(
-                'Item does exist.')
+    """
     @endpoints.method(request_message= SEARCH_CATEGORY,
             response_message=CategoryForm,
             path='search_category',
             name='search_category',
-            http_method='GET')   
+            http_method='GET')
+    
     def search_category(self, request):
         fooditems = FoodItem.query(FoodItem.foodGroup1 == request.category)
         if request.subcategory:
@@ -413,6 +458,7 @@ class MatarvefurApi(remote.Service):
                             items=[fooditem.heiti for fooditem in fooditems])
     
     # Food functions.
+    
     @endpoints.method(request_message= FOOD_REQUEST,
             response_message=FoodForm,
             path='put_food',
@@ -429,10 +475,13 @@ class MatarvefurApi(remote.Service):
             raise endpoints.NotFoundException(
                 'Food item not found.')
         
+        dagsetning = self.dags_str_datetime(request.dags)
+            
         food = Food(size = request.size,
                     user = user.key,
                     foodItem = fooditem.key,
-                    mal = request.mal)
+                    mal = request.mal,
+                    dagsetning = dagsetning)
         food.put()
         
         return FoodForm(size = request.size,
@@ -440,7 +489,7 @@ class MatarvefurApi(remote.Service):
                         user = user.name,
                         dagsetning = str(food.dagsetning),
                         mal = FoodForm.Mal(food.mal))
-    
+   
     @endpoints.method(request_message= CONSUMPTION_REQUEST,
                       response_message=FoodForms,
                       path='get_food',
@@ -452,8 +501,8 @@ class MatarvefurApi(remote.Service):
             raise endpoints.NotFoundException(
                 'User does not exist.')
 
-        dagsetning_leit2 = date(request.year2,request.month2,request.day2)
-        dagsetning_leit1 = date(request.year1,request.month1,request.day1)
+        dagsetning_leit2 = self.dags_str_datetime(request.dags2)
+        dagsetning_leit1 = self.dags_str_datetime(request.dags1)
 
         consumption = Food.query(Food.user == user.key,Food.dagsetning <= dagsetning_leit2,Food.dagsetning >= dagsetning_leit1).fetch()
         
@@ -467,7 +516,7 @@ class MatarvefurApi(remote.Service):
         
     
         return FoodForms(items = foodForms)
-
+    
     @endpoints.method(request_message= CONSUMPTION_REQUEST,
                       response_message=StatisticsForms,
                       path='statistics',
@@ -479,8 +528,8 @@ class MatarvefurApi(remote.Service):
             raise endpoints.NotFoundException(
                 'User does not exist.')
 
-        dagsetning_leit2 = date(request.year2,request.month2,request.day2)
-        dagsetning_leit1 = date(request.year1,request.month1,request.day1)
+        dagsetning_leit2 = self.dags_str_datetime(request.dags2)
+        dagsetning_leit1 = self.dags_str_datetime(request.dags1)
 
         consumption = Food.query(Food.user == user.key,Food.dagsetning <= dagsetning_leit2,Food.dagsetning >= dagsetning_leit1).fetch()
         fita = 0
@@ -519,7 +568,7 @@ class MatarvefurApi(remote.Service):
                               dagsetning = day)
             consumpt_days.append(stat)
         return StatisticsForms(items = [item.to_form() for item in consumpt_days])
-        
+    
     @endpoints.method(request_message= DELETE_REQUEST,
                       response_message=StringMessage,
                       path='delete_food',
@@ -531,11 +580,12 @@ class MatarvefurApi(remote.Service):
             raise endpoints.NotFoundException(
                 'User does not exist.')
 
-        dagsetning_leit = date(request.year,request.month,request.day)
         size = request.size
+        dagsetning = self.dags_str_datetime(request.dags)
+
         fooditem = FoodItem.query(FoodItem.heiti == request.food_item_heiti).get()
         food_to_delete = Food.query(Food.user == user.key,
-                                    Food.dagsetning == dagsetning_leit,
+                                    Food.dagsetning == dagsetning,
                                     Food.foodItem == fooditem.key,
                                     Food.mal==request.mal).get()
         
@@ -546,23 +596,8 @@ class MatarvefurApi(remote.Service):
             food_to_delete.key.delete()
             return StringMessage(message='Food deleted.')
         
+    """
     
-    @endpoints.method(request_message= USER_REQUEST,
-                      response_message=StringMessage,
-                      path='delete_last_food',
-                      name='delete_last_food',
-                      http_method='PUT')   
-    def delete_last_food(self, request):
-        user = User.query(User.email == request.user_email).get()
-        if not user:
-            raise endpoints.NotFoundException(
-                'User does not exist.')
-
-
-        last = Food.query().order(-Food.dagsetning).get()
-        last.key.delete()
-        
-        return StringMessage(message='Last item deleted.')
                         
 api = endpoints.api_server([MatarvefurApi])
 

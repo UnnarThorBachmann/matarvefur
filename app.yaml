@@ -11,9 +11,15 @@ handlers:
 
 - url: /_ah/spi/.*
   script: api.api
+
+- url: /bootstrap
+  static_dir: static/bootstrap
+
+- url: /
+  static_files: templates/index.html
+  upload: templates/index\.html
+  secure: always
   
-- url: .*
-  script: main.app
 
 libraries:
 - name: webapp2

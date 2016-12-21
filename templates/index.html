@@ -11,6 +11,9 @@
 .row {
    margin: 1%;
 }
+ul {
+   width: 70%;
+}
 </style>
 <body>
     <div class="container">
@@ -1294,22 +1297,25 @@
         </form>
         <div class="row">
           <div class="btn-group" role="group">
-          <button type="button" class="btn btn-default">Skoða</button>
+          <button type="button" class="btn btn-default" id="skoda">Skoða</button>
         </div>
+        </div>
+        <div class="row" id="food_item">
         </div>
       </div>  
     </div>
-<script>
+    <script src="/js/foll.js"></script>
+
+    <script>
         /**
          * Initializes the Google API JavaScript client. Bootstrap the angular module after loading the Google libraries
          * so that Google JavaScript library ready in the angular modules.
          */
         function init() {
-            gapi.client.load('matarvefur', 'v1', null, '//' + window.location.host + '/_ah/api');
             //gapi.client.load('oauth2', 'v2', function () {
             //    angular.bootstrap(document, ['conferenceApp']);
             //});
-            console.log('prump');
+            google.appengine.matarapp.init('//' + window.location.host + '/_ah/api');
         };
     </script>
     <script src="//apis.google.com/js/client:plusone.js?onload=init"></script>

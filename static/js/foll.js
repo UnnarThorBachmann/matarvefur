@@ -11,13 +11,13 @@ google.appengine.matarapp.enableButton = function() {
 	var valtakki = document.getElementById("skoda");
 	valtakki.addEventListener('click', function(e) {
 		var matur = document.getElementById("matarlistiInput");
-		console.log(matur);
 		gapi.client.matarvefur.food_item_get({'food_item_heiti': matur.value}).execute(function(resp) {
 			var node = document.getElementById("food_item");
 			while (node.firstChild) {
     			node.removeChild(node.firstChild);
 			}
 			if (!resp.code) {
+				console.log(resp);
 				var food_item_div = document.getElementById("food_item");
 				var naering_listi = document.createElement('ul');
 				naering_listi.setAttribute('class','list-group');

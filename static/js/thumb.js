@@ -1,4 +1,4 @@
-var naertafla= '<div class="thumbnail"><div class="caption"><h4><strong><%=heiti%></strong>\
+var naertafla= '<div class="thumbnail <%=hidden%>"><div class="caption"><h4><span class="badge"><%=nr%>/<%=n%></span>&nbsp;<strong><%=heiti%></strong>\
 </h4><h5>Næringargildi í 100 g:</h5>\
 <table class="table-responsive">\
 <tr>\
@@ -9,7 +9,7 @@ var naertafla= '<div class="thumbnail"><div class="caption"><h4><strong><%=heiti
 <tr>\
 <td>Hitaeiningar: <%=hitaeiningar%> kJ</td>\
 <td></td>\
-<td>A-vítamín: <%=a_vitamin_rj%> míkró grömm</td>\
+<td>A-vítamín: <%=a_vitamin_rj%> &mu;g</td>\
 </tr>\
 <tr>\
 <td>Protein: <%=protein%> g</td>\
@@ -22,7 +22,7 @@ var naertafla= '<div class="thumbnail"><div class="caption"><h4><strong><%=heiti
 <td>Kalk: <%=kalk%> mg</td>\
 </tr>\
 <tr>\
-<td>Kólesteról: <%=kolesterol%> mg</td>\
+<td>Fita: <%=fita%> g</td>\
 <td></td>\
 <td>Járn: <%=jarn%> mg</td>\
 </tr>\

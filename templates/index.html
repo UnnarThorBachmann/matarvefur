@@ -17,7 +17,11 @@ ul {
 }
 .flokkar {
     width: 100%;
-    font-size: 12px;
+    font-size: 20px;
+}
+.flokkar2 {
+    width: 100%;
+    font-size: 20px;
 }
 .databasebtn {
     font-size: 14px;
@@ -25,7 +29,13 @@ ul {
 .dropdown-menu > li > a {
     white-space: normal;
 }
+.hidden {
+    display: none;
+}
 table {
+    width: 100%;
+}
+ul.pager {
     width: 100%;
 }
 </style>
@@ -34,10 +44,8 @@ table {
         <div class="row" > 
             <div class="col-md-6 menu" >
             <form>
-                <div class="input-group" id="fsd">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-primary databasebtn" id="skoda">Fletta í gagnagrunni</button>
-                    </span>
+                <div class="form-group form-group-lg" id="fsd">
+                    
                     <input class="form-control" list="matarlisti" id="matarlistiInput">
                     <datalist  id="matarlisti">
                         <option value="AB - MJÓLK"> </option>
@@ -1305,8 +1313,12 @@ table {
                         <option value="ÞYNGINGARDRYKKUR, Mass-Tech, þynntur m vatni"> </option>
                         <option value="ÞÖRUNGAMJÖL"> </option>
                     </datalist>
+                    <span class="input-group-btn input-group-lg">
+                        <button type="button" class="btn btn-primary flokkar2" id="skoda">Fletta í gagnagrunni</button>
+                    </span>
                 </div>
             </form>
+            <a class="btn btn-primary flokkar2" id="up"><span class="glyphicon glyphicon-menu-up"></span></a>
             <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl1" aria-expanded="false" aria-controls="fl1">
                 1. Mjólk, mjólkurvörur
             </a>
@@ -1320,7 +1332,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl2" aria-expanded="false" aria-controls="fl2">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl2" aria-expanded="false" aria-controls="fl2">
                 2. Ostar
             </a>
             <div class="collapse" id="fl2">
@@ -1331,7 +1343,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl3" aria-expanded="false" aria-controls="fl3">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl3" aria-expanded="false" aria-controls="fl3">
                 3. Ís
             </a>
             <div class="collapse" id="fl3">
@@ -1343,7 +1355,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl4" aria-expanded="false" aria-controls="fl4">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl4" aria-expanded="false" aria-controls="fl4">
                 4. Kornmatur, brauð og kökur
             </a>
             <div class="collapse" id="fl4">
@@ -1359,7 +1371,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl5" aria-expanded="false" aria-controls="fl5">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl5" aria-expanded="false" aria-controls="fl5">
                 5. Grænmeti og kartöflur
             </a>
             <div class="collapse" id="fl5">
@@ -1377,7 +1389,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl6" aria-expanded="false" aria-controls="fl6">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl6" aria-expanded="false" aria-controls="fl6">
                 6. Ávextir, ber, hnetur og fræ
             </a>
             <div class="collapse" id="fl6">
@@ -1393,7 +1405,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl7" aria-expanded="false" aria-controls="fl7">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl7" aria-expanded="false" aria-controls="fl7">
                 7. Kjöt og kjötvörur. Fuglakjöt
             </a>
             <div class="collapse" id="fl7">
@@ -1413,7 +1425,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl8" aria-expanded="false" aria-controls="fl8">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl8" aria-expanded="false" aria-controls="fl8">
                 8. Fiskur, fiskafurðir og skeldýr
             </a>
             <div class="collapse" id="fl8">
@@ -1428,7 +1440,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl9" aria-expanded="false" aria-controls="fl9">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl9" aria-expanded="false" aria-controls="fl9">
                 9. Egg og eggjavörur
             </a>
             <div class="collapse" id="fl9">
@@ -1440,7 +1452,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl10" aria-expanded="false" aria-controls="fl10">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl10" aria-expanded="false" aria-controls="fl10">
                 10. Feitmeti: smjör, smjörlíki, olíur o.fl
             </a>
             <div class="collapse" id="fl10">
@@ -1456,7 +1468,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl11" aria-expanded="false" aria-controls="fl11">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl11" aria-expanded="false" aria-controls="fl11">
                 11. Sykur, hunang og sælgæti
             </a>
             <div class="collapse" id="fl11">
@@ -1468,7 +1480,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl12" aria-expanded="false" aria-controls="fl12">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl12" aria-expanded="false" aria-controls="fl12">
                 12. Drykkir, nema mjólkurdrykkir
             </a>
             <div class="collapse" id="fl12">
@@ -1486,7 +1498,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl13" aria-expanded="false" aria-controls="fl13">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl13" aria-expanded="false" aria-controls="fl13">
                 13. Matarsalt, edik, ger, krydd og kraftur
             </a>
             <div class="collapse" id="fl13">
@@ -1498,7 +1510,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl14" aria-expanded="false" aria-controls="fl14">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl14" aria-expanded="false" aria-controls="fl14">
                 14. Snakk: poppkorn, flögur o.fl.
             </a>
             <div class="collapse" id="fl14">
@@ -1510,7 +1522,7 @@ table {
 
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl15" aria-expanded="false" aria-controls="fl15">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl15" aria-expanded="false" aria-controls="fl15">
                 15. Sósur, súpur og áleggssalöt
             </a>
             <div class="collapse" id="fl15">
@@ -1522,7 +1534,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl16" aria-expanded="false" aria-controls="fl16">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl16" aria-expanded="false" aria-controls="fl16">
                 16. Tilbúnir réttir
             </a>
             <div class="collapse" id="fl16">
@@ -1538,7 +1550,7 @@ table {
                     </ol>
                 </div>
             </div>
-            <a class="btn btn-primary flokkar" role="button" data-toggle="collapse" href="#fl17" aria-expanded="false" aria-controls="fl17">
+            <a class="btn btn-primary flokkar hidden" role="button" data-toggle="collapse" href="#fl17" aria-expanded="false" aria-controls="fl17">
                 17. Fæðubótarefni, næringardrykkir, sérfæði
             </a>
             <div class="collapse" id="fl17">
@@ -1550,6 +1562,8 @@ table {
                     </ol>
                 </div>
             </div>
+            <a class="btn btn-primary flokkar2" id="down"><span class="glyphicon glyphicon-menu-down"></span></a>
+
             </div>
             <div class="col-md-6" id="results">
             </div>     

@@ -1,9 +1,11 @@
+'use strict';
+
 var kommufall = function(t) {
   if (typeof t == "undefined") {
-   return '<óskilgreint>';
+   return 'null';
  }
  else if (isNaN(t)){
- 	return '<óskilgreint>';
+ 	return 'null';
  }
  else {
     return (t.toString()).replace('.',',');
@@ -29,6 +31,9 @@ google.appengine.matarapp.enableButton = function() {
 			if (!resp.code) {
 				var template = _.template(naertafla);
     			document.getElementById("results").innerHTML = template({
+    				    nr: 1,
+    				    n: 1,
+    				    hidden: '',
               			heiti: resp['heiti'],
               			hitaeiningar: kommufall((37*resp['fita'] + 17*resp['protein'] + 17*resp['kolvetni_alls']).toFixed(0)),
               			fita: kommufall(resp['fita']),
@@ -76,8 +81,18 @@ google.appengine.matarapp.enableAnchors = function() {
 					var ret = "";
 					for (var i=0; i < resp.items.length; i++) {
 						var item = resp.items[i];
+						var hidmidi;
+						if (i==0) {
+						 hidmidi = '';
+						}
+						else {
+							hidmidi='hidden';
+						}
 						var template = _.template(naertafla);
     					ret += template({
+    					nr: i+1,
+    					n: resp.items.length,
+    					hidden: hidmidi,
               			heiti: item['heiti'],
               			hitaeiningar: kommufall((37*item['fita'] + 17*item['protein'] + 17*item['kolvetni_alls']).toFixed(0)),
               			fita: kommufall(item['fita']),
@@ -90,7 +105,44 @@ google.appengine.matarapp.enableAnchors = function() {
               			jarn: kommufall(item['jarn'])
     					}); 
 					}
+					ret += '<nav aria-label="takkabord"><ul class="pager"><li class="previous"><a href="#" id="prev"><span aria-hidden="true">&larr;</span>Aftur</a></li><li class="next"><a href="#" id="next">Fram<span aria-hidden="true">&rarr;</span></a></li></ul></nav>';
 					document.getElementById("results").innerHTML = ret;	
+				    var thumbs = document.getElementsByClassName('thumbnail');
+
+					var aftur = document.getElementById('prev');
+					aftur.addEventListener('click', function(e) {
+				    	var j;
+				    	for (var i=0; i < thumbs.length; i++) {
+				    		if (!thumbs[i].classList.contains('hidden')) {
+				    			j = i
+				    			break;
+				    		}
+				    	}
+				    	thumbs[j].classList.add('hidden');
+				    	j = j-1
+				    	if (j < 0) {
+				    		j = thumbs.length-1;
+				    	}
+
+				    	thumbs[j].classList.remove('hidden');
+				    });
+
+				    var fram = document.getElementById('next');
+				    fram.addEventListener('click', function(e) {
+				    	var j;
+				    	for (var i=0; i < thumbs.length; i++) {
+				    		if (!thumbs[i].classList.contains('hidden')) {
+				    			j = i
+				    			break;
+				    		}
+				    	}
+				    	thumbs[j].classList.add('hidden');
+				    	j = (j+1) % thumbs.length;
+				    	thumbs[j].classList.remove('hidden');
+				    });
+
+					console.log(thumbs.length);
+					console.log(aftur);
 				}
 				else {
 					var res = document.getElementById("results");
@@ -106,33 +158,55 @@ google.appengine.matarapp.enableAnchors = function() {
 			};
 		}(item));
 	}
-	/*
-	valtakki.addEventListener('click', function(e) {
-		var matur = document.getElementById("matarlistiInput");
-		gapi.client.matarvefur.food_item_get({'food_item_heiti': matur.value}).execute(function(resp) {
-			var node = document.getElementById("results");
-			while (node.firstChild) {
-    			node.removeChild(node.firstChild);
-			}
-			if (!resp.code) {
-				
-    		 
-				
-			}
-			else {
-				
-			}
-		});
-	});*/
 };
 
+google.appengine.matarapp.enableAnchors2 = function() {
+	var flokkar = document.getElementsByClassName('flokkar');
+	var uptakki = document.getElementById('up');
+	uptakki.addEventListener('click', function(e){
+		$('.collapse').collapse('hide');
 
+		var j;
+		for (var i = 0; i < flokkar.length; i++) {
+			if(!flokkar[i].classList.contains('hidden')) {
+				j = i;
+			}
+		}
+
+		flokkar[j].classList.add('hidden');
+
+		j = (j+1) % flokkar.length;
+		flokkar[j].classList.remove('hidden');
+	});
+	var downtakki = document.getElementById('down');
+	downtakki.addEventListener('click', function(e){
+		$('.collapse').collapse('hide');
+
+
+		var j;
+		for (var i = 0; i < flokkar.length; i++) {
+			if(!flokkar[i].classList.contains('hidden')) {
+				j = i;
+			}
+		}
+		flokkar[j].classList.add('hidden');
+
+		j -= 1;
+		if (j < 0) {
+			j = flokkar.length-1;
+		}
+		flokkar[j].classList.remove('hidden');
+	});
+
+
+};
 google.appengine.matarapp.init = function(apiRoot) {
 	var apisToLoad;
 	var callback = function() {
 		if (--apisToLoad == 0) {
 			google.appengine.matarapp.enableButton();
 			google.appengine.matarapp.enableAnchors();
+			google.appengine.matarapp.enableAnchors2();
 		}
 	};
 	apisToLoad = 1;

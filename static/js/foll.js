@@ -17,7 +17,6 @@ google.appengine.matarapp = google.appengine.matarapp || {};
 
 google.appengine.matarapp.hello = google.appengine.matarapp.hello || {};
 
-
 google.appengine.matarapp.enableButton = function() {
 	var valtakki = document.getElementById("skoda");
 	valtakki.addEventListener('click', function(e) {
@@ -41,30 +40,7 @@ google.appengine.matarapp.enableButton = function() {
               			kalk: kommufall(resp['kalk']),
               			jarn: kommufall(resp['jarn'])
     			}); 
-				/*
-				var food_item_div = document.getElementById("food_item");
-				var naering_listi = document.createElement('ul');
-				naering_listi.setAttribute('class','list-group');
-				var naering_item = document.createElement('li');
-				naering_item.setAttribute('class','list-group-item');
-				naering_item.innerHTML ='<b>'+ resp.heiti+'</b>';
-				naering_listi.append(naering_item);
-				food_item_div.append(naering_listi);
-				for (var property in resp) {
-					if (!isNaN(resp[property])) {
-					var naering_listi = document.createElement('ul');
-					naering_listi.setAttribute('class','list-group');
-					var naering_item = document.createElement('li');
-					naering_item.setAttribute('class','list-group-item');
-					naering_item.innerHTML = property;
-					var span = document.createElement('span');
-					span.setAttribute('class','badge');
-					span.innerHTML = ((resp[property]).toString()).replace('.',',');
-					naering_item.append(span);
-					naering_listi.append(naering_item);
-					food_item_div.append(naering_listi);
-					}
-				}*/
+				
 			}
 			else {
 				var res = document.getElementById("results");
@@ -80,11 +56,83 @@ google.appengine.matarapp.enableButton = function() {
 	});
 };
 
+google.appengine.matarapp.enableAnchors = function() {
+	var akkerin = document.getElementsByClassName("category");
+	for (var i = 0; i < akkerin.length; i++) {
+		var item = akkerin[i];
+		item.addEventListener('click',function(item){
+			return function() {
+				var str_arr = item.id.split("-");
+				var category = parseInt(str_arr[0]);
+				var subcategory = parseInt(str_arr[1]);
+
+				gapi.client.matarvefur.food_items_get({'category': category,
+														'subcategory': subcategory}).execute(function(resp) {
+				var node = document.getElementById("results");
+				while (node.firstChild) {
+    				node.removeChild(node.firstChild);
+				}
+				if (!resp.code) {
+					var ret = "";
+					for (var i=0; i < resp.items.length; i++) {
+						var item = resp.items[i];
+						var template = _.template(naertafla);
+    					ret += template({
+              			heiti: item['heiti'],
+              			hitaeiningar: kommufall((37*item['fita'] + 17*item['protein'] + 17*item['kolvetni_alls']).toFixed(0)),
+              			fita: kommufall(item['fita']),
+              			protein: kommufall(item['protein']),
+              			kolesterol: kommufall(item['kolestrol']),
+              			kolvetni: kommufall(item['kolvetni_alls']),
+              			a_vitamin_rj: kommufall(item['a_vitamin_rj']),
+              			c_vitamin: kommufall(item['c_vitamin']),
+              			kalk: kommufall(item['kalk']),
+              			jarn: kommufall(item['jarn'])
+    					}); 
+					}
+					document.getElementById("results").innerHTML = ret;	
+				}
+				else {
+					var res = document.getElementById("results");
+					var div_thumb = document.createElement('div');
+					div_thumb.setAttribute('class','thumbnail');
+					var div = document.createElement('div');
+					div.setAttribute('class','caption');
+					div.innerHTML='<h4><strong>Fannst ekki</strong></h4>';
+					div_thumb.append(div);
+					res.append(div_thumb);
+				}
+				});
+			};
+		}(item));
+	}
+	/*
+	valtakki.addEventListener('click', function(e) {
+		var matur = document.getElementById("matarlistiInput");
+		gapi.client.matarvefur.food_item_get({'food_item_heiti': matur.value}).execute(function(resp) {
+			var node = document.getElementById("results");
+			while (node.firstChild) {
+    			node.removeChild(node.firstChild);
+			}
+			if (!resp.code) {
+				
+    		 
+				
+			}
+			else {
+				
+			}
+		});
+	});*/
+};
+
+
 google.appengine.matarapp.init = function(apiRoot) {
 	var apisToLoad;
 	var callback = function() {
 		if (--apisToLoad == 0) {
 			google.appengine.matarapp.enableButton();
+			google.appengine.matarapp.enableAnchors();
 		}
 	};
 	apisToLoad = 1;

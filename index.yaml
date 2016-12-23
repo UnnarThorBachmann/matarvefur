@@ -14,3 +14,9 @@ indexes:
   properties:
   - name: user
   - name: dagsetning
+
+- kind: FoodItem
+  properties:
+  - name: foodGroup1
+  - name: foodGroup2
+  - name: heiti

@@ -310,7 +310,7 @@ class MatarvefurApi(remote.Service):
                 raise endpoints.NotFoundException('No user found.')
             return  FoodItemForms(items = [item.to_form() for item in user.fooditems],category=None, subcategory=None)
         elif request.category:
-            fooditems = FoodItem.query(FoodItem.foodGroup1 == request.category)
+            fooditems = FoodItem.query(FoodItem.foodGroup1 == request.category).order(FoodItem.heiti)
             if request.subcategory:
                 fooditems = fooditems.filter(FoodItem.foodGroup2 == request.subcategory)
             if not fooditems:

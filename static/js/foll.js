@@ -141,8 +141,6 @@ google.appengine.matarapp.enableAnchors = function() {
 				    	thumbs[j].classList.remove('hidden');
 				    });
 
-					console.log(thumbs.length);
-					console.log(aftur);
 				}
 				else {
 					var res = document.getElementById("results");

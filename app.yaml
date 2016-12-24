@@ -15,6 +15,9 @@ handlers:
 - url: /js
   static_dir: static/js
 
+- url: /img
+  static_dir: static/img
+
 - url: /fonts
   static_dir: static/fonts
 
@@ -26,6 +29,10 @@ handlers:
   upload: templates/index\.html
   secure: always
   
+- url: /(20\d\d-(01|02|03|04|05|06|07|08|09|1|2|3|4|5|6|7|8|9|10|11|12)?-((0|1|2)?\d|30|31))$
+  static_files: templates/skra.html
+  upload: templates/skra\.html
+  secure: always
 
 libraries:
 - name: webapp2

@@ -11,6 +11,28 @@ var kommufall = function(t) {
     return (t.toString()).replace('.',',');
  }
 };
+
+var manudir = {'1': 'Janúar', 
+			   '2': 'Febrúar',
+			   '3': 'Mars',
+			   '4': 'Apríl',
+			   '5': 'Maí',
+			   '6': 'Júní',
+			   '7': 'Júlí',
+			   '8': 'Ágúst',
+			   '9': 'September',
+			   '10': 'Okctóber',
+			   '11': 'Nóvember',
+			   '12': 'Desember',
+			   '01': 'Janúar', 
+			   '02': 'Febrúar',
+			   '03': 'Mars',
+			   '04': 'Apríl',
+			   '05': 'Maí',
+			   '06': 'Júní',
+			   '07': 'Júlí',
+			   '08': 'Ágúst',
+			   '09': 'September'};
 var google = google || {};
 
 google.appengine = google.appengine || {};
@@ -77,7 +99,7 @@ google.appengine.matarapp.enableAnchors = function() {
 				while (node.firstChild) {
     				node.removeChild(node.firstChild);
 				}
-				if (!resp.code) {
+				if (!resp.code && (typeof resp.items != 'undefined')) {
 					var ret = "";
 					for (var i=0; i < resp.items.length; i++) {
 						var item = resp.items[i];
@@ -105,7 +127,7 @@ google.appengine.matarapp.enableAnchors = function() {
               			jarn: kommufall(item['jarn'])
     					}); 
 					}
-					ret += '<nav aria-label="takkabord"><ul class="pager"><li class="previous"><a href="#" id="prev"><span aria-hidden="true">&larr;</span>Aftur</a></li><li class="next"><a href="#" id="next">Fram<span aria-hidden="true">&rarr;</span></a></li></ul></nav>';
+					ret += '<nav aria-label="takkabord"><ul class="pager"><li class="previous"><a href="#" id="prev"><span class="glyphicon glyphicon-triangle-left"></span></a></li><li class="next"><a href="#" id="next"><span class="glyphicon glyphicon-triangle-right"></span></a></li></ul></nav>';
 					document.getElementById("results").innerHTML = ret;	
 				    var thumbs = document.getElementsByClassName('thumbnail');
 
@@ -198,10 +220,27 @@ google.appengine.matarapp.enableAnchors2 = function() {
 
 
 };
+
+google.appengine.matarapp.setHeader = function() {
+  var href_str = window.location.href.toString();
+  var directories = href_str.split('/');
+  var dags = directories[directories.length-1];
+  var ymd = dags.split('-');
+  if (ymd.length == 3) {
+  	var dagur = ymd[2];
+  	var manudur = ymd[1];
+  	var ar = ymd[0];
+  	if (dagur[0]=='0') {
+  		dagur = dagur[1];
+  	}
+  	document.getElementById('dags').innerHTML = dagur + '. '+ manudir[manudur] + ' ' + ar;
+  }
+};
 google.appengine.matarapp.init = function(apiRoot) {
 	var apisToLoad;
 	var callback = function() {
 		if (--apisToLoad == 0) {
+			google.appengine.matarapp.setHeader();
 			google.appengine.matarapp.enableButton();
 			google.appengine.matarapp.enableAnchors();
 			google.appengine.matarapp.enableAnchors2();

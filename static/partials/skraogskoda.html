@@ -1,0 +1,33 @@
+<div class="row main" ng-controller="SkraOgSkodaCtrl" ng-init="init()">
+    <div class="col-md-12">
+      <nav>
+        <ul class="pager leftText">
+          <li><h3 class="monthHeader">{{manudur.heiti}} <small>({{manudur.ar}})</small></h3></li>
+          <li><a ng-click="changeMonth('-')">Síðasti</a></li>
+          <li><a ng-click="changeMonth('+')">Næsti</a></li>
+        </ul>
+      </nav>
+      <div class="month" ng-repeat="vika in manudur.vikur">
+        <div class="week"  ng-style="{'margin-left': vika.left,'margin-right': vika.right}">
+          <div class="day thumbnail" ng-repeat="dagur in vika.vd" >
+            <div class="dayDiv" ng-style="{'border-color': red}">
+            <span class="badge">{{dagur.manadardagur}}</span>
+            </div>
+            <div class="spaceDiv">
+            </div>
+            <div class="eventsDiv">
+              <div class="eventDiv">
+                <a href="#/neysla/skra:{{dagur.datestring}}"><span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="bottom" title="Skrá"></span></a>
+              </div>
+              <div class="eventDiv">
+                <a><span class="glyphicon glyphicon-zoom-in" data-toggle="tooltip" data-placement="bottom" title="Skoða dag"></span></a>
+              </div>
+            </div>
+          </div>
+        </div><!-- end of week -->
+      </div>
+      
+    </div>
+</div>
+
+ 

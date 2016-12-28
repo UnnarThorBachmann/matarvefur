@@ -11,7 +11,7 @@ for line in f:
 
 heitin = sorted(heitin)
 for heiti in heitin:
-    f2.write(('<option value="%s"> </option>\n' % heiti).encode('utf-8'))
+    f2.write(('"%s",\n' % heiti).encode('utf-8'))
 
 f2.close()
 f.close()

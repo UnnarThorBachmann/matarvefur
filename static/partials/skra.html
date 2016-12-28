@@ -1,0 +1,73 @@
+<div class="row main" ng-controller="SkraCtrl"> 
+	<div class="col-md-6 menu" >
+		<h4>Skrásetningardagur {{dagsetning}}</h4>
+        <form>
+            <div class="form-group form-group-lg" id="fsd"> 
+                <input class="form-control" list="matarlisti" id="matarlistiInput">
+                    <datalist  id="matarlisti">
+                    	<option ng-repeat="item in matartegundir">{{item}}</option>
+                    </datalist>
+                    <span class="input-group-btn input-group-lg">
+                        <button type="button" class="btn btn-success flokkar2" id="skoda" href="#/neysla/skra:{{datestring}}" ng-click="finnaMat()">Fletta í gagnagrunni</button>
+                    </span>
+                </div>
+       	</form>
+        <a class="btn btn-success flokkar2" id="up" ng-click="fletta('+')"><span class="glyphicon glyphicon-menu-up" ></span></a>
+        <div ng-repeat="(nr,matarflokkur) in matarflokkar" ng-class="{hidden:!isVisible(nr)}">
+        	<a class="btn btn-success flokkar" role="button" data-toggle="collapse" href="" aria-expanded="false" aria-controls="fl{{nr+1}}" ng-click="collapse(nr+1)">
+                {{matarflokkur.heiti}}
+        	</a>
+        	<div class="collapse" id="fl{{nr+1}}">
+            <div class="well">
+                <ol class="list-group">
+                    <li class="list-group-item" ng-repeat="(nr2,undirheiti) in matarflokkur.undirflokkar"><a class="category" href="#/neysla/skra:{{datestring}}" id="{{nr+1}}-{{nr2+1}}" ng-click="finnaFlokka(nr+1,nr2+1)">{{undirheiti}}</a></li>
+                </ol>
+            </div>
+        	</div>
+        </div>
+        <a class="btn btn-success flokkar2" id="down"><span class="glyphicon glyphicon-menu-down" ng-click="fletta('-')"></span></a>
+    </div>
+    <div class="col-md-6" id="results">
+    	<div class="thumbnail" ng-repeat="(k,item) in searchedItems" ng-class="{hidden:!isVisibleSearched(k)}">
+    		<div class="caption">
+    			<h4><span class="badge">{{k+1}}/{{searchedItems.length}}</span>&nbsp;<strong>{{item.heiti}}</strong>
+				</h4>
+				<h5>Næringargildi í 100 g:</h5>
+				<table class="table-responsive">
+					<tr>
+						<th>Orka</th>
+						<th></th>
+						<th>vítamín og steinefni</th>
+					</tr>
+					<tr>
+						<td>Hitaeiningar: {{(37*item.fita + 17*item.protein + 17*item.kolvetni_alls).toFixed(0)}} kJ
+						</td>
+						<td></td>
+						<td>A-vítamín: {{item.a_vitamin_rj}} &mu;g</td>
+					</tr>
+					<tr>
+						<td>Protein: {{item.protein}} g</td>
+						<td></td>
+						<td>C-vítamín: {{item.c_vitamin}} mg</td>
+					</tr>
+					<tr>
+						<td>Kolvetni: {{item.kolvetni}} g</td>
+						<td></td>
+						<td>Kalk: {{item.kalk}} mg</td>
+					</tr>
+					<tr>
+						<td>Fita: {{item.fita}} g</td>
+						<td></td>
+						<td>Járn: {{item.jarn}} mg</td>
+					</tr>
+				</table>
+				<button type="button" class="btn btn-primary databasebtn" id="skoda">Nánar</button>
+    	</div>
+    </div>
+    <nav>
+        <ul class="pager" ng-class="{hidden: searchedItems.length <= 1}">
+          <li><a ng-click="flettaSearched('-')"><span class="glyphicon glyphicon-triangle-left"></span></a></li>
+          <li><a ng-click="flettaSearched('+')"><span class="glyphicon glyphicon-triangle-right"></span></a></li>
+        </ul>
+      </nav>     
+ </div>

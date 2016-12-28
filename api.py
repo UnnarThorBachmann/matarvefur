@@ -8,6 +8,10 @@ from protorpc import remote, messages
 from flokkar import c,sc
 from google.appengine.ext import ndb
 
+
+WEB_CLIENT_ID = '2696834811-72f8727n8t7iipvlfv8d1u1kemfjl588.apps.googleusercontent.com'
+ANDROID_AUDIENCE = WEB_CLIENT_ID
+
 from models import (FoodItem,
                     StringMessage,
                     User,
@@ -118,7 +122,10 @@ FOOD_ITEM_REGISTER = endpoints.ResourceContainer(
     cis_fjolomettadar_fitusyrur_n_6 = messages.FloatField(48,required=False),
     cis_fjolomettadar_fitusyrur_n_3 = messages.FloatField(49,required=False))
 
-@endpoints.api(name='matarvefur', version='v1')
+@endpoints.api(name='matarvefur',
+               version='v1',
+               allowed_client_ids=[WEB_CLIENT_ID],
+               audiences=[ANDROID_AUDIENCE])
 class MatarvefurApi(remote.Service):
     def dags_str_datetime(self,dags):
         if dags:
@@ -127,24 +134,30 @@ class MatarvefurApi(remote.Service):
         else:
             dagsetning = datetime.now()
         return dagsetning
-    """
+    
     @endpoints.method(request_message= CREATE_USER_REQUEST,
             response_message=UserForm,
-            path='create_user',
-            name='create_user',
+            path='/welcome',
+            name='create_user_if_not_exists',
             http_method='PUT')   
-    def create_user(self, request):
-        if User.query(User.name == request.user_name).get():
-            raise endpoints.ConflictException(
-                'User already exists!')
+    def create_user_if_not_exists(self, request):
+        curr_user = endpoints.get_current_user()
+        if curr_user is None:
+            raise endpoints.UnauthorizedException('Invalid token.')
         
-        if User.query(User.email == request.user_email).get():
-            raise endpoints.ConflictException(
-                'User already exists!')
-        user = User(name=request.user_name,email=request.user_email)
-        user.put()
-        return UserForm(name = user.name,
-                        email = user.email)
+        if curr_user.email() != request.user_email:
+           raise endpoints.UnauthorizedException('Forbidden!')
+
+        user = User.query(User.email == request.user_email).get()
+        if user and user.email == curr_user.email():
+            return UserForm(name = user.name,email = user.email)
+
+        else:
+           user = User(name=request.user_name,email=request.user_email)
+           user.put()
+           return UserForm(name = user.name,email = user.email)
+    
+    
     """
     @endpoints.method(response_message=StringMessage,
         path='delete_database',
@@ -244,7 +257,7 @@ class MatarvefurApi(remote.Service):
         f.close()
         return StringMessage(message="Finished resetting the database with "+ str(n) + " items.")
     # Food item functions.
-    
+    """
 
     @endpoints.method(request_message= FOOD_ITEM_REQUEST,
             response_message=FoodItemForm,

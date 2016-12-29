@@ -3,22 +3,11 @@
 
 var matarapp = matarapp || {};
 
-matarapp.controllers = angular.module('conferenceControllers', ['ui.bootstrap']);
+matarapp.controllers = angular.module('matarappControllers', ['ui.bootstrap']);
 
-
-matarapp.controllers.controller('MyProfileCtrl',
-    function ($scope, $log, oauth2Provider) {
-   
-});
-
-/**
- * @name SkraCtrl
- *
- * @description
- * A controller which controls the diary view.
- */
 matarapp.controllers.controller('SkraOgSkodaCtrl',
     function ($scope, $log, oauth2Provider) {
+
         $scope.days = [];
 
         $scope.months_number_dict = {0: 31, 1: 28, 2: 31, 3: 30, 4: 31, 5: 30, 6: 31, 7: 31, 8: 30, 9: 31, 10: 31, 11: 31};
@@ -140,7 +129,7 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope, $log, oauth2P
  
 });
 matarapp.controllers.controller('SkraCtrl',
-    function ($scope, $log, $routeParams,oauth2Provider) {
+    function ($scope,$timeout, $routeParams,oauth2Provider) {
     var dags = $routeParams.dags;
     dags = dags.slice(1,dags.length);
     $scope.datestring = dags;
@@ -1604,6 +1593,7 @@ matarapp.controllers.controller('SkraCtrl',
         }
     ];
     $scope.searchedItems =[];
+    $scope.fellt = false;
     $scope.flokkahlekkir = document.getElementsByClassName('flokkar');
     $scope.collapse = function (nr) {
         $('#fl'+ nr.toString()).collapse('toggle');
@@ -1631,21 +1621,38 @@ matarapp.controllers.controller('SkraCtrl',
     $scope.finnaMat = function () {
         var matur = document.getElementById("matarlistiInput").value;
         $scope.searchedItems = [];
+        $scope.searchLoading();
+
         gapi.client.matarvefur.food_item_get({'food_item_heiti': matur}).execute(function(resp) {
             $scope.$apply(function () {
                 if (!resp.code) {
+                    $scope.finishedLoading();
                     $scope.searchedItems.push(resp);  
+                }
+                else {
+                  $scope.finishedLoading();
+                  $scope.alertMessageFun('warning', 'Fannst ekki');  
+                  
                 }
             });
         });
+        $timeout($scope.removeAlertMessageFun,3000);
+    };
+    $scope.fella = function () {
+        $scope.fellt = !$scope.fellt;
     };
     $scope.finnaFlokka = function (c1,c2) {
-       $scope.searchedItems = []; 
+       $scope.searchedItems = [];
+       $scope.loadingFlokkar(); 
        gapi.client.matarvefur.food_items_get({'category': c1,
                                               'subcategory': c2}).execute(function(resp) {
             $scope.$apply(function () {
                 if (!resp.code) {
                     $scope.searchedItems = resp.items;  
+                    $scope.finishedLoadingFlokkar();
+                }
+                else {
+
                 }
             });
         });
@@ -1665,53 +1672,119 @@ matarapp.controllers.controller('SkraCtrl',
 
         }
     };
-
-    
+   
 });
+/*
+matarapp.controllers.controller('MinFaeduTegundCtrl', function ($scope, $timeout,$location, oauth2Provider) {
+    $scope.minFaedutegundValin = {};
+    $scope.foodKeys = { 'heiti': {'nafn': 'Heiti', 
+                                    'isTala': false}
+                        'name': 'Enskt-heiti',
+                        'ediblePortion': 'Ætur-hluti',
+                        'foodGroup1': 'Fæðuflokkur',
+                        'foodGroup2': 'Undirflokkur',
+                        'protein': 'Prótein',
+                        'fita': 'Fita',
+                        'mettadar_fitusyrur': 'Mettaðar-fitusýrur',
+                        'cis_einomettadar_fitusyrur': 'cis-Einómettaðar-fitusýrur',
+                        'cis_fjolomettadar_fitusyrur': 'cis-Fjölómettaðar-fitusýrur',
+                        'cis_fjolomettadar_fitu_n_3_langar': 'cis-Fjölómettaðar-fitu-n-3-langar',
+                        'trans_fitusyrur': 'trans-Fitusýrur',
+                        'kolestrol':'Kólesteról',
+                        'kolvetni_alls': 'Kolvetni-alls',
+                        'sykrur':'Sykrur',
+                        'vidbaettur_sykur': 'Viðbættur-sykur',
+                        'trefjaefni': 'Trefjaefni',
+                        'alkohol': 'Alkóhól ' ,
+                        'steinefni_alls': 'Steinefni-alls',
+                        'vatn': 'Vatn',
+                        'a_vitamin_rj': 'A-vítamín-RJ',
+                        'retinol': 'Retinol',
+                        'beta_karotin': 'Beta-karótín',
+                        'd_vitamin': 'D-vítamín',
+                        'e_vitamin_alfa_tj': 'E-vítamín-alfa-TJ',
+                        'alfa_tokoferol': 'Alfa-tókóferol',
+                        'b1_vitamin': 'B1-vítamín',
+                        'b2_vitamin': 'B2-vítamín',
+                        'niasin_jafngildi': 'Níasín-jafngildi',
+                        'niasin': 'Níasín',
+                        'b6_vitamin': 'B6-vítamín',
+                        'folat_alls': 'Fólat-alls',
+                        'b_12_vitamin': 'B-12-vítamín',
+                        'c_vitamin': 'C-vítamín',
+                        'kalk': 'Kalk',
+                        'fosfor': 'Fosfór',
+                        'magnesium': 'Magnesíum',
+                        'natrium': 'Natríum',
+                        'kalium': 'Kalíum',
+                        'jarn': 'Járn',
+                        'sink': 'Sink',
+                        'kopar': 'Kopar',
+                        'jod': 'Joð',
+                        'mangan': 'Mangan',
+                        'selen': 'Selen',
+                        'fluor': 'Flúor',
+                        'cis_fjolomettadar_fitusyrur_n_6': 'cis-Fjölóm-fitus-n-6',
+                        'cis_fjolomettadar_fitusyrur_n_3': 'cis-Fjölóm-fitus-n-3'
+    };
+    $scope.skra = function () {
+        for (var key in $scope.foodKeys) {
+            console.log(document.getElementById(key).value);
+        }
+    };
 
-matarapp.controllers.controller('RootCtrl', function ($scope, $location, oauth2Provider) {
+});
+*/
+matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $timeout,$location,oauth2Provider) {
 
-    /**
-     * Returns if the viewLocation is the currently viewed page.
-     *
-     * @param viewLocation
-     * @returns {boolean} true if viewLocation is the currently viewed page. Returns false otherwise.
-     */
+    $scope.alertStatus = 'warning';
+    $scope.alerting = false;
+    $scope.alertMessage = '';
+    $scope.user_name = '';
+    $scope.user_email = '';
+    $scope.minarFaedutegundir = [];
+
     $scope.isActive = function (viewLocation) {
+
         return viewLocation === $location.path();
     };
 
-    /**
-     * Returns the OAuth2 signedIn state.
-     *
-     * @returns {oauth2Provider.signedIn|*} true if siendIn, false otherwise.
-     */
     $scope.getSignedInState = function () {
-        return oauth2Provider.signedIn;
+        //$cookies.get('signedin');
+        //console.log(oauth2Provider);
+        //console.log(oauth2Provider.getSignedInState);
+        var kaka = $cookieStore.get('signedin');
+        return (oauth2Provider.signedIn || !(typeof kaka === 'undefined'));//|| $cookies.get('signedin') === 'true');
     };
 
-    /**
-     * Calls the OAuth2 authentication method.
-     */
     $scope.signIn = function () {
         oauth2Provider.signIn(function () {
             gapi.client.oauth2.userinfo.get().execute(function (resp) {
                 $scope.$apply(function () {
                     if (resp.email) {
                         oauth2Provider.signedIn = true;
-                        $scope.alertStatus = 'success';
-                        $scope.rootMessages = 'Logged in with ' + resp.email;
+                        $cookieStore.put('signedin','true');
+                        $scope.user_name = resp.name;
+                        $scope.user_email = resp.email;
+                        $scope.alertMessageFun('success','Velkomin,'+ $scope.user_name +' !')
+                        $timeout($scope.removeAlertMessageFun,3000)   
                     }
                 });
             });
         });
+        /*
+        gapi.client.matarvefur.food_items_get({'user_email': $scope.user_email}).execute(function(resp) {
+            $scope.$apply(function () {
+                if (!resp.code) {
+                    //console.log(resp);
+                }
+                else {
+
+                }
+            });
+        });*/
     };
 
-    /**
-     * Render the signInButton and restore the credential if it's stored in the cookie.
-     * (Just calling this to restore the credential from the stored cookie. So hiding the signInButton immediately
-     *  after the rendering)
-     */
     $scope.initSignInButton = function () {
         gapi.signin.render('signInButton', {
             'callback': function () {
@@ -1728,20 +1801,45 @@ matarapp.controllers.controller('RootCtrl', function ($scope, $location, oauth2P
         });
     };
 
-    /**
-     * Logs out the user.
-     */
     $scope.signOut = function () {
+        
         oauth2Provider.signOut();
-        $scope.alertStatus = 'success';
-        $scope.rootMessages = 'Logged out';
+        $cookieStore.remove('signedin');
+        $location.path('/');
+        $scope.alertMessageFun('success','Þú ert útskráður ' + $scope.user_name + '.')
+        $timeout($scope.removeAlertMessageFun,3000);
+        $scope.user_name = '';
+        $scope.user_email = '';
     };
 
-    /**
-     * Collapses the navbar on mobile devices.
-     */
     $scope.collapseNavbar = function () {
         angular.element(document.querySelector('.navbar-collapse')).removeClass('in');
     };
+    $scope.searchLoading = function () {
+        $('#skoda').button('loading');
+    };
+    $scope.loadingFlokkar = function () {
+        $('.flokkar').button('loading');
+    };
+    $scope.finishedLoading = function () {
+        $('#skoda').button('reset');
+    };
+    $scope.finishedLoadingFlokkar = function () {
+        $('.flokkar').button('reset');
+    };
+    
+    $scope.alertMessageFun = function(status,warning) {
+        $scope.alertClass = status;
+        $scope.alerting = true;
+        $scope.alertMessage = warning;
+        
+    };
+    $scope.removeAlertMessageFun = function () {
+        $scope.alertClass = status;
+        $scope.alerting = false;
+    }
+    $scope.getAlertState = function () {
+        return $scope.alerting;
+    }
 
 });

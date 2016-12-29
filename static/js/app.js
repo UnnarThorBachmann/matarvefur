@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module('matarapp',
-    ['conferenceControllers', 'ngRoute', 'ui.bootstrap']).
+    ['matarappControllers','ngCookies','ngRoute', 'ui.bootstrap']).
     config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
@@ -17,6 +17,10 @@ var app = angular.module('matarapp',
                     templateUrl: '/partials/skra.html',
                     controller: 'SkraCtrl'
                 }).
+                when('/minfaedutegund', {
+                    templateUrl: '/partials/minfaedutegund.html',
+                    controller: 'MinFaeduTegundCtrl'
+                }).
                 when('/', {
                     templateUrl: '/partials/home.html'
                 }).
@@ -25,10 +29,12 @@ var app = angular.module('matarapp',
                 });
         }]);
 
+
+
 app.factory('oauth2Provider', function ($modal) {
     var oauth2Provider = {
         CLIENT_ID: '2696834811-72f8727n8t7iipvlfv8d1u1kemfjl588.apps.googleusercontent.com',
-        SCOPES: 'email profile',
+        SCOPES: 'https://www.googleapis.com/auth/userinfo.email',
         signedIn: false
     }
 
@@ -36,6 +42,7 @@ app.factory('oauth2Provider', function ($modal) {
      * Calls the OAuth2 authentication method.
      */
     oauth2Provider.signIn = function (callback) {
+        /*
         gapi.auth.signIn({
             'clientid': oauth2Provider.CLIENT_ID,
             'cookiepolicy': 'single_host_origin',
@@ -43,7 +50,11 @@ app.factory('oauth2Provider', function ($modal) {
             'approveprompt': 'auto',
             'scope': oauth2Provider.SCOPES,
             'callback': callback
-        });
+        });*/
+        gapi.auth.authorize({'client_id': oauth2Provider.CLIENT_ID,
+            'scope': oauth2Provider.SCOPES, 'immediate': false},
+            callback);
+        
     };
 
     /**
@@ -54,19 +65,6 @@ app.factory('oauth2Provider', function ($modal) {
         // Explicitly set the invalid access token in order to make the API calls fail.
         gapi.auth.setToken({access_token: ''})
         oauth2Provider.signedIn = false;
-    };
-
-    /**
-     * Shows the modal with Google+ sign in button.
-     *
-     * @returns {*|Window}
-     */
-    oauth2Provider.showLoginModal = function() {
-        var modalInstance = $modal.open({
-            templateUrl: '/partials/login.modal.html',
-            controller: 'OAuth2LoginModalCtrl'
-        });
-        return modalInstance;
     };
 
     return oauth2Provider;

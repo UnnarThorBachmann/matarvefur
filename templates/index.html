@@ -11,10 +11,24 @@
    
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-cookies.js"></script>
     <style type="text/css" media="screen">
     body {
       background-color: white;
     }
+
+.spjaldFlex {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.navFlex {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
 
 .flokkar {
     width: 100%;
@@ -22,9 +36,20 @@
 }
 
 .flokkar2 {
-    width: 100%;
     font-size: 20px;
+    width: 100%;
 }
+.flokkar3 {
+	font-size: 20px;
+	width: 100%;
+}
+.thumbDiv2 {
+	width: 80%;
+}
+.thumbDiv3 {
+	width: 10%;
+}
+
 .databasebtn {
     font-size: 14px;
 }
@@ -127,10 +152,14 @@ ul.pager {
    .week {
   display: flex;
 }
+.veljaDiv {
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
 .eventsDiv {
   display:flex;
   height: 30%;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 5%;
   border-right: 10%;
   margin-right: 1%;
@@ -246,25 +275,25 @@ html, body {
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li ng-class="{ active: isActive('/neysla/skraogskoda')}" ng-click="collapseNavbar()"><a href="#/neysla/skraogskoda" >Skrá og skoða neyslu</a></li>
-                <li ng-class="{ active: isActive('/neysla/tolfraedi')}" ng-click="collapseNavbar()"><a href="#/neysla/tolfraedi">Tölfræði</a></li>
-                <li class="nav-divider"></li>
+                <li ng-class="{ active: isActive('/neysla/skraogskoda')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/skraogskoda" >Skrá og skoða neyslu</a></li>
+                <li ng-class="{ active: isActive('/neysla/tolfraedi')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/tolfraedi">Tölfræði</a></li>
+                <!--
+                <li ng-class="{ active: isActive('/minfaedutegund')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/minfaedutegund">Bæta við fæðutegund</a></li>
+                <li class="nav-divider"></li>-->
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li id="signInLink" ng-hide="getSignedInState()"><a ng-click="signIn(); collapseNavbar()">Innskrá</a></li>
-                <li id="signOutLink" ng-show="getSignedInState()"><a ng-click="signOut(); collapseNavbar()">Log out</a></li>
+                <li id="signOutLink" ng-show="getSignedInState()"><a ng-click="signOut(); collapseNavbar()">Útskrá</a></li>
             </ul>
         </div>
     </div>
 </div>
 
-<div class="container">
+<div class="container main">
     <div class="row">
         <div class="col-lg-12">
-            <div id="rootMessages" class="alert alert-{{alertStatus}}" ng-show="rootMessages">
-                <span ng-bind="rootMessages"></span>
-                <i class="dismiss-messages pull-right glyphicon glyphicon-remove" ng-click="rootMessages = ''"
-                   ng-show="rootMessages"></i>
+            <div id="alertMessage" ng-show="getAlertState()" role="alert" class="alert alert-{{alertClass}}">
+            	<strong><h4>{{alertMessage}}</h4></strong>
             </div>
         </div>
     </div>

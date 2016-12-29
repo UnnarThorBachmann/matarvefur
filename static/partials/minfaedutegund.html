@@ -1,0 +1,11 @@
+<div class="row" ng-controller="MinFaeduTegundCtrl"> 
+<h1>Skráið eigin fæðutegund</h1>
+<form>
+  <div class="form-group" ng-repeat="(db_name,name) in foodKeys">
+    <label for="{{db_name}}">{{name}}</label>
+    <input type="text" class="form-control" id="{{db_name}}">
+  </div>
+  <button type="submit" class="btn btn-success" ng-click="skra()">Skrá fæðutegund</button>
+  <button type="submit" class="btn btn-success" ng-click="eyda()">Eyða fæðutegund</button>
+</form>
+</div>

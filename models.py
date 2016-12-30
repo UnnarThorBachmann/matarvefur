@@ -221,8 +221,8 @@ class FoodItemForms(messages.Message):
 
 class FoodForm(messages.Message):
     class Mal(messages.Enum):
-        Morgunnmatur = 1
-        Morgunnsnarl = 2
+        Morgunmatur = 1
+        Morgunsnarl = 2
         Hadegismatur = 3
         Middegissnarl = 4
         Kvoldmatur = 5
@@ -233,7 +233,7 @@ class FoodForm(messages.Message):
     size = messages.FloatField(2,required=True)
     fooditemForm = messages.MessageField(FoodItemForm,3,required = True)
     dagsetning = messages.StringField(4,required=True)
-    mal = messages.EnumField('Mal',5,required=True,default="Morgunnmatur")
+    mal = messages.EnumField('Mal',5,required=True,default="Morgunmatur")
      
 
 class FoodForms(messages.Message):

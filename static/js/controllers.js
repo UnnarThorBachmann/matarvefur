@@ -7,12 +7,11 @@ matarapp.controllers = angular.module('matarappControllers', ['ui.bootstrap']);
 
 matarapp.controllers.controller('SkraOgSkodaCtrl',
     function ($scope, $log, oauth2Provider) {
-
         $scope.days = [];
-
         $scope.months_number_dict = {0: 31, 1: 28, 2: 31, 3: 30, 4: 31, 5: 30, 6: 31, 7: 31, 8: 30, 9: 31, 10: 31, 11: 31};
         $scope.days_dict = {0: 'sunnudagur', 1:'mánudagur',2:'þriðjudagur',3:'miðvikudagur',4:'fimmtudagur', 5:'föstudagur',6:'laugardagur'};
         $scope.months_dict = {0: 'janúar', 1: 'febrúar', 2: 'mars', 3:'apríl', 4: 'maí', 5: 'júní', 6:'júlí',7: 'ágúst',8: 'september', 9:'október', 10:'nóvember',11:'desember'};
+        $scope.fellaNeyslu = false;
         var d = new Date();
         $scope.currDay = {'vikudagur': $scope.days_dict[d.getDay()],
                           'manudur': $scope.months_dict[d.getMonth()],
@@ -46,7 +45,7 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                               'manudur': $scope.months_dict[d.getMonth()],
                               'manadardagur': i,
                               'currday': false,
-                              'datestring': d.getFullYear().toString()+ '-' + (d.getMonth()+1).toString() + '-' + i.toString(),
+                              'datestring': d.getFullYear().toString()+ '-' + (d.getMonth() < 9?('0'+(d.getMonth()+1).toString()):(d.getMonth()+1).toString()) + '-' + (i < 10? ('0'+i.toString()):i.toString()),
                               'ar': d.getFullYear()});
             }
 
@@ -54,7 +53,7 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                               'manudur': $scope.months_dict[d.getMonth()],
                               'manadardagur': d.getDate(),
                               'currday': false,
-                              'datestring': d.getFullYear().toString()+ '-' + (d.getMonth()+1).toString() + '-' + d.getDate().toString(),
+                              'datestring': d.getFullYear().toString()+ '-' + (d.getMonth() < 9?('0'+(d.getMonth()+1).toString()):(d.getMonth()+1).toString()) + '-' + (d.getDate() < 10? ('0'+d.getDate().toString()):d.getDate().toString()),
                               'ar': d.getFullYear()
             });
 
@@ -68,7 +67,7 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                               'manudur': $scope.months_dict[d.getMonth()],
                               'manadardagur': i,
                               'currday': false,
-                              'datestring': d.getFullYear().toString()+ '-' + (d.getMonth()+1).toString() + '-' + i.toString(),
+                              'datestring': d.getFullYear().toString()+ '-' + (d.getMonth() < 9?('0'+((d.getMonth()+1).toString())):(d.getMonth()+1).toString()) + '-' + (i < 10? ('0'+i.toString()):i.toString()),
                               'ar': d.getFullYear()});
             }
             $scope.days.sort($scope.compare);
@@ -129,7 +128,7 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope, $log, oauth2P
  
 });
 matarapp.controllers.controller('SkraCtrl',
-    function ($scope,$timeout, $routeParams,oauth2Provider) {
+    function ($scope,$timeout, $cookieStore,$routeParams,oauth2Provider) {
     var dags = $routeParams.dags;
     dags = dags.slice(1,dags.length);
     $scope.datestring = dags;
@@ -1594,6 +1593,19 @@ matarapp.controllers.controller('SkraCtrl',
     ];
     $scope.searchedItems =[];
     $scope.fellt = false;
+    $scope.neysluflokkun = {
+        'Morgunmatur': [],
+        'Morgunsnarl': [],
+        'Hádegismatur': [],
+        'Miðdegissnarl': [],
+        'Kvöldmatur': [],
+        'Kvöldsnarl': [],
+        'Hitaeiningamagn': 0,
+        'Fitueiningamagn': 0,
+        'Proteineiningamagn': 0,
+        'Kolvetniseiningamagn': 0
+    };
+
     $scope.flokkahlekkir = document.getElementsByClassName('flokkar');
     $scope.collapse = function (nr) {
         $('#fl'+ nr.toString()).collapse('toggle');
@@ -1622,7 +1634,6 @@ matarapp.controllers.controller('SkraCtrl',
         var matur = document.getElementById("matarlistiInput").value;
         $scope.searchedItems = [];
         $scope.searchLoading();
-
         gapi.client.matarvefur.food_item_get({'food_item_heiti': matur}).execute(function(resp) {
             $scope.$apply(function () {
                 if (!resp.code) {
@@ -1631,7 +1642,7 @@ matarapp.controllers.controller('SkraCtrl',
                 }
                 else {
                   $scope.finishedLoading();
-                  $scope.alertMessageFun('warning', 'Fannst ekki');  
+                  $scope.alertMessageFun('danger', 'Fannst ekki');  
                   
                 }
             });
@@ -1672,7 +1683,106 @@ matarapp.controllers.controller('SkraCtrl',
 
         }
     };
-   
+    $scope.velja = function (heiti) {
+        var magn = document.getElementById('magn').value;
+        var timiDagsDict = {'Morgunmatur': 'Morgunmatur',
+                            'Morgunsnarl': 'Morgunsnarl',
+                            'Hádegismatur': 'Hadegismatur',
+                            'Miðdegissnarl': 'Middegissnarl',
+                            'Kvöldmatur': 'Kvoldmatur',
+                            'Kvöldsnarl': 'Kvoldsnarl'
+        };
+                            
+        magn = magn.replace(',','.');
+        if (isNaN(magn) || parseFloat(magn) <= 0) {
+            $scope.alertMessageFun('danger', 'Magn verður að vera jákvæð tala.');      
+            $timeout($scope.removeAlertMessageFun,3000);
+        }
+        else {
+            var timiDags = timiDagsDict[document.getElementById('timiDags').value];
+            $scope.veljaLoading();
+            gapi.client.matarvefur.put_food({'size': magn,
+                'user_email': $cookieStore.get('user_email'),
+                'food_item_heiti': heiti,
+                'mal': timiDags,
+                'dags': $scope.datestring}).execute(function(resp) {
+                 $scope.$apply(function () {    
+                    if (!resp.code) {
+                        $scope.alertMessageFun('success', 'Fæða skráð.');      
+                        $timeout($scope.removeAlertMessageFun,2000); 
+                    }
+                    else {
+                         $scope.alertMessageFun('danger', 'Mistókst að skrá fæðu.');      
+                        $timeout($scope.removeAlertMessageFun,2000); 
+                    }
+                });
+            });   
+            $scope.finishedVeljaLoading();
+            
+        }
+
+    };
+    $scope.neysla = function () {
+
+        var timiDagsDict = {'Morgunmatur': 'Morgunmatur',
+                            'Morgunsnarl': 'Morgunsnarl',
+                            'Hadegismatur': 'Hádegismatur',
+                            'Middegissnarl': 'Miðdegissnarl', 
+                            'Kvoldmatur': 'Kvöldmatur',
+                            'Kvoldsnarl': 'Kvöldsnarl'
+        };
+        $scope.neyslaLoading();
+        $scope.neysluflokkun = {
+            'Morgunmatur': [],
+            'Morgunsnarl': [],
+            'Hadegismatur': [],
+            'Middegissnarl': [],
+            'Kvoldmatur': [],
+            'Kvoldsnarl': [],
+            'Hitaeiningamagn': 0,
+            'Fitueiningamagn': 0,
+            'Proteineiningamagn': 0,
+            'Kolvetniseiningamagn': 0
+        };
+        gapi.client.matarvefur.get_food({
+            'user_email': $cookieStore.get('user_email'),
+            'dags1': $scope.datestring,
+            'dags2': $scope.datestring}).execute(function(resp) {           
+                if (!resp.code) {
+                    
+                    $scope.$apply(function() {
+                        var consumption = resp.items;
+                        for (var i = 0; i < consumption.length; i++) {
+                            var item = consumption[i];
+                            $scope.neysluflokkun[item.mal].push(
+                                {'heiti':item.fooditemForm.heiti,
+                                'orka': 37*parseFloat(item.fooditemForm.fita)+ 17*parseFloat(item.fooditemForm.protein)+17*parseFloat(item.fooditemForm.kolvetni_alls),
+                                'magn': item.size,
+                                'fita': item.fooditemForm.fita,
+                                'protein': item.fooditemForm.protein,
+                                'kolvetni': item.fooditemForm.kolvetni_all     
+                                }
+                            );
+                            $scope.neysluflokkun['Fitueiningamagn'] += 37*parseFloat(item.fooditemForm.fita);
+                            $scope.neysluflokkun['Proteineiningamagn'] += 17*parseFloat(item.fooditemForm.protein);
+                            $scope.neysluflokkun['Kolvetniseiningamagn'] += 17*parseFloat(item.fooditemForm.kolvetni_alls);
+                        }
+                        $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Fitueiningamagn'];
+                        $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Proteineiningamagn'];
+                        $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Kolvetniseiningamagn'];
+                        $scope.fellaNeyslu = true;
+
+
+                    });
+                }
+                else {
+                    console.log('error');
+                }
+            });
+        console.log($scope.neysluflokkun);
+        $scope.finishedNeyslaLoading();
+    };
+
 });
 /*
 matarapp.controllers.controller('MinFaeduTegundCtrl', function ($scope, $timeout,$location, oauth2Provider) {
@@ -1760,30 +1870,41 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
     $scope.signIn = function () {
         oauth2Provider.signIn(function () {
             gapi.client.oauth2.userinfo.get().execute(function (resp) {
+                console.log(resp);
                 $scope.$apply(function () {
-                    if (resp.email) {
+                    if (!resp.code) {
+                        oauth2Provider.user = resp.name;
+
+                        $scope.alertMessageFun('info','Augnablik');
                         oauth2Provider.signedIn = true;
                         $cookieStore.put('signedin','true');
                         $scope.user_name = resp.name;
                         $scope.user_email = resp.email;
-                        $scope.alertMessageFun('success','Velkomin,'+ $scope.user_name +' !')
+                        $cookieStore.put('user_email',resp.email);
+
+                        $cookieStore.put('user_name',resp.name);
+                        $scope.alertMessageFun('success','Velkomin(n), '+ $scope.user_name +' !')
+                        $timeout($scope.removeAlertMessageFun,3000);
+                        gapi.client.matarvefur.create_user_if_not_exists({'user_name': $cookieStore.get('user_name'),'user_email':$cookieStore.get('user_email')}).execute(function(resp) {
+                          if (!resp.code) {
+                             
+                          }
+                          else {
+                            
+                          }
+                        });   
+                    }
+                    else {
+                        $scope.alertMessageFun('danger','Innskráning mistókst.');
                         $timeout($scope.removeAlertMessageFun,3000)   
                     }
                 });
-            });
-        });
-        /*
-        gapi.client.matarvefur.food_items_get({'user_email': $scope.user_email}).execute(function(resp) {
-            $scope.$apply(function () {
-                if (!resp.code) {
-                    //console.log(resp);
-                }
-                else {
-
-                }
-            });
-        });*/
-    };
+                
+            });//end of client function call.
+        });// end of oauth function call
+        
+                           
+    };// end of method
 
     $scope.initSignInButton = function () {
         gapi.signin.render('signInButton', {
@@ -1805,6 +1926,8 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
         
         oauth2Provider.signOut();
         $cookieStore.remove('signedin');
+        $cookieStore.remove('user_email');
+        $cookieStore.remove('user_name');
         $location.path('/');
         $scope.alertMessageFun('success','Þú ert útskráður ' + $scope.user_name + '.')
         $timeout($scope.removeAlertMessageFun,3000);
@@ -1819,14 +1942,27 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
         $('#skoda').button('loading');
     };
     $scope.loadingFlokkar = function () {
-        $('.flokkar').button('loading');
+        $('.flokkar2').button('loading');
     };
     $scope.finishedLoading = function () {
         $('#skoda').button('reset');
     };
     $scope.finishedLoadingFlokkar = function () {
-        $('.flokkar').button('reset');
+        $('.flokkar2').button('reset');
     };
+    $scope.veljaLoading = function () {
+        $('#velja').button('loading');
+    };
+    $scope.finishedVeljaLoading = function () {
+        $('#velja').button('reset');
+    };
+    $scope.neyslaLoading = function () {
+        $('#neysluflokkun').button('loading');
+    };
+    $scope.finishedNeyslaLoading = function () {
+        $('#neysluflokkun').button('reset');
+    };
+    
     
     $scope.alertMessageFun = function(status,warning) {
         $scope.alertClass = status;

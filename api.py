@@ -443,33 +443,7 @@ class MatarvefurApi(remote.Service):
 
         return fooditem.to_form()
 
-    """
-    @endpoints.method(request_message= SEARCH_CATEGORY,
-            response_message=CategoryForm,
-            path='search_category',
-            name='search_category',
-            http_method='GET')
     
-    def search_category(self, request):
-        fooditems = FoodItem.query(FoodItem.foodGroup1 == request.category)
-        if request.subcategory:
-            fooditems = fooditems.filter(FoodItem.foodGroup2 == request.subcategory)
-        if not fooditems:
-            raise endpoints.NotFoundException(
-                    'No food items found.')
-        
-        
-        if c.has_key(request.category) and sc.has_key((request.category,request.subcategory)):
-            cat = (c[request.category],sc[(request.category,request.subcategory)])
-        
-        elif c.has_key(request.category):
-            cat = (c[request.category],None)
-        else:
-            cat = (None,None)
-         
-        return CategoryForm(category = cat[0],
-                            subcategory = cat[1],
-                            items=[fooditem.heiti for fooditem in fooditems])
     
     # Food functions.
     
@@ -530,7 +504,7 @@ class MatarvefurApi(remote.Service):
         
     
         return FoodForms(items = foodForms)
-    
+    """
     @endpoints.method(request_message= CONSUMPTION_REQUEST,
                       response_message=StatisticsForms,
                       path='statistics',

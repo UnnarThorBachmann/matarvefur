@@ -1,21 +1,23 @@
 <div class="row" ng-controller="SkraCtrl"> 
-	<div class="col-md-6 menu" >
+	<div class="col-md-5 menu" >
 		<h4>Skrásetningardagur {{dagsetning}}</h4>
         <form>
             <div class="form-group form-group-lg" id="fsd"> 
                 <input class="form-control" list="matarlisti" id="matarlistiInput">
-                    <datalist  id="matarlisti">
-                    	<option ng-repeat="item in matartegundir">{{item}}</option>
-                    </datalist>
-                    <span class="input-group-btn input-group-lg">
-                        <button type="button" data-loading-text="Augnablik..." class="btn btn-success flokkar" id="skoda" href="#/neysla/skra:{{datestring}}" ng-click="finnaMat()">Fletta eftir heiti</button>
-                    </span>
-                </div>
+                <datalist  id="matarlisti">
+                    <option ng-repeat="item in matartegundir">{{item}}</option>
+                </datalist>
+                <span class="input-group-btn input-group-lg">
+                    <button type="button" data-loading-text="Augnablik..." class="btn btn-success flokkar" id="skoda" href="#/neysla/skra:{{datestring}}" ng-click="finnaMat()">Fletta eftir heiti</button>
+               </span>
+            </div>
        	</form>
-       	<h4>Fletta eftir flokki</h4>
        	<div class="navFlex">
        		<div class="thumbDiv3">
-        		<a class="btn btn-success flokkar3" id="up" ng-click="fletta('+')"><span class="glyphicon glyphicon-chevron-left" ></span></a>
+        		<a class="btn btn-success flokkar3" id="up" ng-click="fletta('+')">
+        			<span class="glyphicon glyphicon-chevron-left" >
+        			</span>
+        		</a>
         	</div>
         	<div class="thumbDiv2" ng-repeat="(nr,matarflokkur) in matarflokkar" ng-class="{hidden:!isVisible(nr)}">
         		<a class="btn btn-success flokkar2" role="button" data-loading-text="Augnablik..." data-toggle="collapse" href="" aria-expanded="false" aria-controls="fl{{nr+1}}" ng-click="collapse(nr+1)">
@@ -24,28 +26,43 @@
         		<div class="collapse" id="fl{{nr+1}}">
             		<div class="well">
                 		<ol class="list-group">
-                    		<li class="list-group-item" ng-repeat="(nr2,undirheiti) in matarflokkur.undirflokkar"><a class="category" href="#/neysla/skra:{{datestring}}" id="{{nr+1}}-{{nr2+1}}" ng-click="finnaFlokka(nr+1,nr2+1)">{{undirheiti}}</a></li>
+                    		<li class="list-group-item" ng-repeat="(nr2,undirheiti) in matarflokkur.undirflokkar">
+                    			<a class="category" href="#/neysla/skra:{{datestring}}" id="{{nr+1}}-{{nr2+1}}" ng-click="finnaFlokka(nr+1,nr2+1)">{{undirheiti}}
+                    			</a>
+                    		</li>
                 		</ol>
             		</div>
         		</div>
         	</div>
         	<div class="thumbDiv3">
-        		<a class="btn btn-success flokkar3" id="down"><span class="glyphicon glyphicon-chevron-right" ng-click="fletta('-')"></span></a>
+        		<a class="btn btn-success flokkar3" id="down">
+        			<span class="glyphicon glyphicon-chevron-right" ng-click="fletta('-')"></span>
+        		</a>
         	</div>
         </div>
+        
+ 
     </div>
     <div class="col-md-6" id="results">
     	<div class="thumbnail" ng-repeat="(k,item) in searchedItems" ng-class="{hidden:!isVisibleSearched(k)}">
     		<div class="caption">
     			<div class="spjaldFlex">
-    		    <div>
-    				<h4><span class="badge">{{k+1}}/{{searchedItems.length}}</span>&nbsp;<strong>{{item.heiti}}</strong>
-					</h4>
-					<h5>Næringargildi í 100 g:</h5>
-				</div>
-				<div>
-				<button type="button" class="btn btn-success databasebtn" ng-click="fella()">Nánar</button>
-				</div>
+    		    	<div>
+    					<h4><span><button type="button" class="btn-xs btn-success" ng-class="{hidden: searchedItems.length <= 1}" ng-click="flettaSearched('-')">
+							<span class="glyphicon glyphicon-triangle-left"></span>
+							</button>
+    					<button type="button" class="btn-xs btn-success" ng-class="{hidden: searchedItems.length <= 1}" ng-click="flettaSearched('+')">
+							<span class="glyphicon glyphicon-triangle-right"></span>
+							</button>
+						
+							</span><span class="badge">{{k+1}}/{{searchedItems.length}}</span>&nbsp;<strong>{{item.heiti}}</strong>
+						</h4>
+						<h5>Næringargildi í 100 g:</h5>
+						
+					</div>
+					<div>
+						<button type="button" class="btn btn-success databasebtn" ng-click="fella()">Nánar</button>
+					</div>				
 				</div>
 				<table class="table-responsive">
 					<tr>
@@ -73,8 +90,7 @@
 						<td>Fita: {{item.fita}} g</td>
 						<td>E-vítamín: {{item.e_vitamin}} mg</td>
 						<td>Natríum: {{item.natrium}} mg</td>
-					</tr>
-				
+					</tr>		
 					<tr ng-show="fellt">
 						<th>Fitusýrur</th>
 						<td>Retinol: {{item.retinol}} &mu;g</td>
@@ -127,22 +143,173 @@
 					</tr>
 				</table> 
 				<div class="thumbnail veljaDiv">
-					<label for="timiDags">Tími dags</label>
-					<select id="timitDags">
-						<option>Morgunmatur</option>
-						<option>Hádegismatur</option>
-						<option>Kvöldmatur</option>
-					</select>
-					<label for="magn">Magn</label>
-					<input type="text" value="100" id="magn">				
-					<button type="button" class="btn btn-success databasebtn" id="velja">Velja</button>
+					<div>
+						<label for="timiDags">Tími dags</label>
+						<select id="timiDags">
+							<option>Morgunmatur</option>
+							<option>Morgunsnarl</option>
+							<option>Hádegismatur</option>
+							<option>Miðdegissnarl</option>
+							<option>Kvöldmatur</option>
+							<option>Kvöldsnarl</option>
+						</select>
+					</div>
+					<div>
+						<label for="magn">Magn (g/mg/&mu;g)</label>
+						<input type="text" value="100" id="magn">
+					</div>
+					<div>				
+						<button type="button" class="btn btn-success databasebtn" ng-click="velja(item.heiti)">Velja</button>
+					</div>
 				</div>
+				<div>
+        			<a class="btn btn-success flokkar3" data-toggle="tooltip" data-placement="bottom" title="Sækja neyslu dagsins" ng-click="neysla()">
+        			<span class="glyphicon glyphicon-scale" ></span>
+        			</a>
+        		</div>
+				<div ng-show="fellaNeyslu">
+        	<h4>Neysla dagsins</h4>
+        	<table class="table-responsive">		
+				<tr ng-show="neysluflokkun.Morgunmatur.length">
+					<th>Morgunmatur</th>
+			    	<th>Orka (kj)</th>
+					<th>Magn (g)</th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Morgunmatur'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				
+				<tr ng-show="neysluflokkun.Morgunsnarl.length">
+					<th>Morgunsnarl</th>
+			    	<th></th>
+					<th></th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Morgunsnarl'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				<tr ng-show="neysluflokkun.Hadegismatur.length">
+					<th>Morgunsnarl</th>
+			    	<th></th>
+					<th></th>
+				</tr>
+
+				<tr ng-repeat='item in neysluflokkun.Hadegismatur'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				<tr ng-show="neysluflokkun.Middegissnarl.length">
+					<th>Miðdegissnarl</th>
+			    	<th></th>
+					<th></th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Middegissnarl'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				<tr ng-show="neysluflokkun.Kvoldmatur.length">
+					<th>Kvöldmatur</th>
+			    	<th></th>
+					<th></th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Kvoldmatur'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				<tr ng-show="neysluflokkun.Kvoldsnarl.length">
+					<th>Kvöldsnarl</th>
+			    	<th></th>
+					<th></th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Kvoldsnarl'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+			</table> 
+        <div>
+				
+			</div>
     	</div>
     </div>
-    <nav>
-        <ul class="pager" ng-class="{hidden: searchedItems.length <= 1}">
-          <li><a ng-click="flettaSearched('-')"><span class="glyphicon glyphicon-triangle-left"></span></a></li>
-          <li><a ng-click="flettaSearched('+')"><span class="glyphicon glyphicon-triangle-right"></span></a></li>
-        </ul>
-      </nav>     
- </div>
+    <!--
+    <div class="row">
+      
+      <div class="col-md-6">
+        <div ng-show="fellaNeyslu">
+        	<h4>Neysla dagsins</h4>
+        	<table class="table-responsive">		
+				<tr ng-show="neysluflokkun.Morgunmatur.length">
+					<th>Morgunmatur</th>
+			    	<th>Orka (kj)</th>
+					<th>Magn (g)</th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Morgunmatur'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				
+				<tr ng-show="neysluflokkun.Morgunsnarl.length">
+					<th>Morgunsnarl</th>
+			    	<th>Orka (kj)</th>
+					<th>Magn (g)</th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Morgunsnarl'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				<tr ng-show="neysluflokkun.Hadegismatur.length">
+					<th>Morgunsnarl</th>
+			    	<th>Orka (kj)</th>
+					<th>Magn (g)</th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Hadegismatur'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				<tr ng-show="neysluflokkun.Middegissnarl.length">
+					<th>Miðdegissnarl</th>
+			    	<th>Orka (kj)</th>
+					<th>Magn (g)</th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Middegissnarl'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				<tr ng-show="neysluflokkun.Kvoldmatur.length">
+					<th>Kvöldmatur</th>
+			    	<th>Orka (kj)</th>
+					<th>Magn (g)</th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Kvoldmatur'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+				<tr ng-show="neysluflokkun.Kvoldsnarl.length">
+					<th>Kvöldsnarl</th>
+			    	<th>Orka (kj)</th>
+					<th>Magn (g)</th>
+				</tr>
+				<tr ng-repeat='item in neysluflokkun.Kvoldsnarl'>
+					<td>{{item.heiti}}</td>
+			    	<td>{{item.orka.toFixed(1)}}</td>
+					<td>{{item.magn}}</td>
+				</tr>
+			</table> 
+        <div>
+       
+      </div>
+       -->
+    </div>   
+</div>

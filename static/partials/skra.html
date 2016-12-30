@@ -71,7 +71,7 @@
 						<th>steinefni</th>
 					</tr>
 					<tr>
-						<td>Hitaeiningar: {{(37*item.fita + 17*item.protein + 17*item.kolvetni_alls).toFixed(0)}} kJ
+						<td>Hitaeiningar: {{(37*item.fita + 17*item.protein + 17*item.kolvetni_alls).toFixed(1)}} kJ
 						</td>
 						<td>A-vítamín: {{item.a_vitamin_rj}} &mu;g</td>
 						<td>Kalk: {{item.kalk}} mg</td>
@@ -82,7 +82,7 @@
 						<td>Járn: {{item.jarn}} mg</td>
 					</tr>
 					<tr>
-						<td>Kolvetni: {{item.kolvetni}} g</td>
+						<td>Kolvetni: {{item.kolvetni_alls}} g</td>
 						<td>D-vítamín: {{item.d_vitamin}} &mu;g</td>
 						<td>Magnesíum: {{item.magnesium}} mg</td>
 					</tr>
@@ -162,17 +162,17 @@
 						<button type="button" class="btn btn-success databasebtn" ng-click="velja(item.heiti)">Velja</button>
 					</div>
 				</div>
-				<div>
+				<div ng-show="showScaleButton">
         			<a class="btn btn-success flokkar3" data-toggle="tooltip" data-placement="bottom" title="Sækja neyslu dagsins" ng-click="neysla()">
         			<span class="glyphicon glyphicon-scale" ></span>
         			</a>
         		</div>
-				<div ng-show="fellaNeyslu">
+			<div ng-show="fellaNeyslu">
         	<h4>Neysla dagsins</h4>
         	<table class="table-responsive">		
 				<tr ng-show="neysluflokkun.Morgunmatur.length">
 					<th>Morgunmatur</th>
-			    	<th>Orka (kj)</th>
+			    	<th>Orka (kJ)</th>
 					<th>Magn (g)</th>
 				</tr>
 				<tr ng-repeat='item in neysluflokkun.Morgunmatur'>
@@ -232,7 +232,19 @@
 			    	<td>{{item.orka.toFixed(1)}}</td>
 					<td>{{item.magn}}</td>
 				</tr>
-			</table> 
+				<tr>
+					<th>Orka (kJ)</th>
+			    	<th></th>
+					<th></th>
+				</tr>
+				<tr>
+					<th>{{neysluflokkun.Hitaeiningamagn.toFixed(1)}} (fita: {{(neysluflokkun.Fitueiningamagn/neysluflokkun.Hitaeiningamagn).toFixed(1)*100}}%, prótein: {{(neysluflokkun.Proteineiningamagn/neysluflokkun.Hitaeiningamagn).toFixed(1)*100}}%, kolvetni: {{(neysluflokkun.Kolvetniseiningamagn/neysluflokkun.Hitaeiningamagn).toFixed(1)*100}}%)</th>
+					<th></th>
+					<th></th>
+				</tr>
+				
+			</table>
+			</div>
         <div>
 				
 			</div>

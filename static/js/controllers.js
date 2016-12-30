@@ -124,8 +124,21 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
         
     });
 
-matarapp.controllers.controller('TolfraediCtrl', function ($scope, $log, oauth2Provider) {
- 
+matarapp.controllers.controller('TolfraediCtrl', function ($scope, $log, oauth2Provider) {   
+ $scope.init = function () {
+    $(function() {$( "#datepicker1" ).datepicker({
+        monthNames: [ "Janúar", "Febrúar", "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember" ],
+          dayNamesMin: [ "Su", "Má", "Þr", "Mi", "Fi", "Fö", "La" ]  
+        })
+    });
+    $(function() {$( "#datepicker2" ).datepicker({
+        monthNames: [ "Janúar", "Febrúar", "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember" ],
+          dayNamesMin: [ "Su", "Má", "Þr", "Mi", "Fi", "Fö", "La" ]  
+        })
+    });
+ };   
+
+
 });
 matarapp.controllers.controller('SkraCtrl',
     function ($scope,$timeout, $cookieStore,$routeParams,oauth2Provider) {
@@ -1605,7 +1618,7 @@ matarapp.controllers.controller('SkraCtrl',
         'Proteineiningamagn': 0,
         'Kolvetniseiningamagn': 0
     };
-
+    $scope.showScaleButton = true;
     $scope.flokkahlekkir = document.getElementsByClassName('flokkar');
     $scope.collapse = function (nr) {
         $('#fl'+ nr.toString()).collapse('toggle');
@@ -1708,6 +1721,20 @@ matarapp.controllers.controller('SkraCtrl',
                 'dags': $scope.datestring}).execute(function(resp) {
                  $scope.$apply(function () {    
                     if (!resp.code) {
+                        $scope.neysluflokkun[resp.mal].push({
+                            'heiti':resp.fooditemForm.heiti,
+                            'orka': 37*parseFloat(resp.fooditemForm.fita)+ 17*parseFloat(resp.fooditemForm.protein)+17*parseFloat(resp.fooditemForm.kolvetni_alls),
+                            'magn': resp.size,
+                            'fita': resp.fooditemForm.fita,
+                            'protein': resp.fooditemForm.protein,
+                            'kolvetni': resp.fooditemForm.kolvetni_all     
+                        });
+                        $scope.neysluflokkun['Fitueiningamagn'] += 37*parseFloat(resp.fooditemForm.fita);
+                        $scope.neysluflokkun['Proteineiningamagn'] += 17*parseFloat(resp.fooditemForm.protein);
+                        $scope.neysluflokkun['Kolvetniseiningamagn'] += 17*parseFloat(resp.fooditemForm.kolvetni_alls);
+                        $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Fitueiningamagn'];
+                        $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Proteineiningamagn'];
+                        $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Kolvetniseiningamagn'];
                         $scope.alertMessageFun('success', 'Fæða skráð.');      
                         $timeout($scope.removeAlertMessageFun,2000); 
                     }
@@ -1724,13 +1751,6 @@ matarapp.controllers.controller('SkraCtrl',
     };
     $scope.neysla = function () {
 
-        var timiDagsDict = {'Morgunmatur': 'Morgunmatur',
-                            'Morgunsnarl': 'Morgunsnarl',
-                            'Hadegismatur': 'Hádegismatur',
-                            'Middegissnarl': 'Miðdegissnarl', 
-                            'Kvoldmatur': 'Kvöldmatur',
-                            'Kvoldsnarl': 'Kvöldsnarl'
-        };
         $scope.neyslaLoading();
         $scope.neysluflokkun = {
             'Morgunmatur': [],
@@ -1752,6 +1772,9 @@ matarapp.controllers.controller('SkraCtrl',
                     
                     $scope.$apply(function() {
                         var consumption = resp.items;
+                        
+                        $scope.showScaleButton = (consumption && consumption.length > 0) ? false:true; 
+                        
                         for (var i = 0; i < consumption.length; i++) {
                             var item = consumption[i];
                             $scope.neysluflokkun[item.mal].push(
@@ -1779,8 +1802,9 @@ matarapp.controllers.controller('SkraCtrl',
                     console.log('error');
                 }
             });
-        console.log($scope.neysluflokkun);
+        
         $scope.finishedNeyslaLoading();
+        
     };
 
 });
@@ -1860,9 +1884,7 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
     };
 
     $scope.getSignedInState = function () {
-        //$cookies.get('signedin');
-        //console.log(oauth2Provider);
-        //console.log(oauth2Provider.getSignedInState);
+        
         var kaka = $cookieStore.get('signedin');
         return (oauth2Provider.signedIn || !(typeof kaka === 'undefined'));//|| $cookies.get('signedin') === 'true');
     };
@@ -1870,7 +1892,6 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
     $scope.signIn = function () {
         oauth2Provider.signIn(function () {
             gapi.client.oauth2.userinfo.get().execute(function (resp) {
-                console.log(resp);
                 $scope.$apply(function () {
                     if (!resp.code) {
                         oauth2Provider.user = resp.name;
@@ -1939,22 +1960,22 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
         angular.element(document.querySelector('.navbar-collapse')).removeClass('in');
     };
     $scope.searchLoading = function () {
-        $('#skoda').button('loading');
+        //$('#skoda').button('loading');
     };
     $scope.loadingFlokkar = function () {
-        $('.flokkar2').button('loading');
+        //$('.flokkar2').button('loading');
     };
     $scope.finishedLoading = function () {
-        $('#skoda').button('reset');
+        //$('#skoda').button('reset');
     };
     $scope.finishedLoadingFlokkar = function () {
-        $('.flokkar2').button('reset');
+        //$('.flokkar2').button('reset');
     };
     $scope.veljaLoading = function () {
-        $('#velja').button('loading');
+        //$('#velja').button('loading');
     };
     $scope.finishedVeljaLoading = function () {
-        $('#velja').button('reset');
+        //$('#velja').button('reset');
     };
     $scope.neyslaLoading = function () {
         $('#neysluflokkun').button('loading');

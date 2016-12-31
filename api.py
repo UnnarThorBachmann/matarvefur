@@ -493,9 +493,10 @@ class MatarvefurApi(remote.Service):
         dagsetning_leit1 = self.dags_str_datetime(request.dags1)
 
         consumption = Food.query(Food.user == user.key,Food.dagsetning <= dagsetning_leit2,Food.dagsetning >= dagsetning_leit1).fetch()
-        
+       
         foodForms = []
         for item in consumption:
+            #print item.dagsetning
             foodForms.append(FoodForm(user = user.name,
                                       size = item.size,
                                       fooditemForm = item.foodItem.get().to_form(),

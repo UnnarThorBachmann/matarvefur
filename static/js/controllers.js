@@ -142,7 +142,8 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
     };   
     $scope.consumptionDays = {};
     $scope.showStats = false;
-    $scope.faeduefnaheiti = ["a_vitamin_rj", "alfa_tokoferol", "alkohol", "b1_vitamin", "b2_vitamin", "b6_vitamin", "b_12_vitamin", "beta_karotin", "c_vitamin", "cis_einomettadar_fitusyrur", "cis_fjolomettadar_fitu_n_3_langar", "cis_fjolomettadar_fitusyrur", "d_vitamin", "e_vitamin_alfa_tj", "fita", "fluor", "folat_alls", "fosfor", "jarn", "jod", "kalium", "kalk", "kolestrol", "kolvetni_alls", "kopar", "magnesium", "mangan", "mettadar_fitusyrur", "natrium", "niasin", "niasin_jafngildi", "protein", "retinol", "selen", "sink", "steinefni_alls", "sykrur", "trans_fitusyrur", "trefjaefni", "vatn", "vidbaettur_sykur", "cis_fjolomettadar_fitusyrur_n_3", "cis_fjolomettadar_fitusyrur_n_6", "Hitaeiningar"];
+    $scope.faeduefnaheiti = ["a_vitamin_rj", "alfa_tokoferol", "alkohol", "b1_vitamin", "b2_vitamin", "b6_vitamin", "b_12_vitamin", "beta_karotin", "c_vitamin", "cis_einomettadar_fitusyrur", "cis_fjolomettadar_fitu_n_3_langar", "cis_fjolomettadar_fitusyrur", "d_vitamin", "e_vitamin_alfa_tj", "fita", "fluor", "folat_alls", "fosfor", "Hitaeiningar", "jarn", "jod", "kalium", "kalk", "kolestrol", "kolvetni_alls", "kopar", "magnesium", "mangan", "mettadar_fitusyrur", "natrium", "niasin", "niasin_jafngildi", "protein", "retinol", "selen", "sink", "steinefni_alls", "sykrur", "trans_fitusyrur", "trefjaefni", "vatn", "vidbaettur_sykur", "cis_fjolomettadar_fitusyrur_n_3", "cis_fjolomettadar_fitusyrur_n_6"];
+    $scope.dagaheiti = [];
     $scope.nyttEfni = function () {
         var validEfni = document.getElementById('efnalisti').value;
         $scope.labelsData = [];
@@ -159,7 +160,6 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                 
                 
         }
-        console.log($scope.barChartData.data);
         
         $scope.barChartData =  {
                 type: 'bar',
@@ -186,8 +186,49 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
         $scope.barChart = new Chart($scope.ctx, $scope.barChartData);
 
     };
+    $scope.nyrDagur = function () {
+        var validEfni = document.getElementById('dagalisti').value;
+        $scope.labelsData2 = [];
+        $scope.gildin2 = [];
+        var index = 0;
+        for (var j in $scope.dagaheiti) {
+            if ($scope.dagaheiti[j] === validEfni) {
+                index = j;
+                break;
+            }        
+        }
+        var dags = $scope.consumptionDays[$scope.dagaheiti[index]];
+        $scope.gildin2 = [dags['Fitueiningar'],dags['Proteineiningar'],dags['Kolvetniseiningar']];
+        $scope.pieChartData = {
+                type: 'pie',
+                data: {
+                    labels: [
+                        "Fita",
+                        "Prótein",
+                        "Kolvetni"
+                    ],
+                    datasets: [
+                    {
+                        data: $scope.gildin2,
+                        backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#FFCE56"
+                    ],
+                        hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#FFCE56"
+                        ]
+                    }]
+                }
+            };
+        $scope.pieChart.destroy();
+        $scope.ctx2 = document.getElementById('kokurit').getContext('2d');
+        $scope.pieChart = new Chart($scope.ctx2, $scope.pieChartData);
+    };
     $scope.renderStatistics = function () {
-            console.log($scope.consumptionDays);
+            //Kokurit
             $scope.labelsData = [];
             $scope.gildin = []
             for (var l in $scope.consumptionDays) {
@@ -195,7 +236,6 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                 $scope.gildin.push($scope.consumptionDays[l]['Hitaeiningar']);
                 
             }
-            console.log($scope.faeduefnaheiti);
             
             $scope.ctx = document.getElementById("sulurit");
             $scope.barChartData =  {
@@ -218,13 +258,44 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                 }
             };
             $scope.barChart = new Chart($scope.ctx, $scope.barChartData);
+            
+            //Sulurit
+            $scope.labelsData2 = [];
+            $scope.gildin2 = []
 
-            console.log($scope.barChartData.data);
-
-
+            var dags = $scope.consumptionDays[$scope.dagaheiti[0]];
+            $scope.gildin2 = [dags['Fitueiningar'],dags['Proteineiningar'],dags['Kolvetniseiningar']];
+            $scope.ctx2 = document.getElementById("kokurit");
+            $scope.pieChartData = {
+                type: 'pie',
+                data: {
+                    labels: [
+                        "Fita",
+                        "Prótein",
+                        "Kolvetni"
+                    ],
+                    datasets: [
+                    {
+                        data: $scope.gildin2,
+                        backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#FFCE56"
+                    ],
+                        hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB",
+                        "#FFCE56"
+                        ]
+                    }]
+                }
+            };
+            $scope.pieChart = new Chart($scope.ctx2, $scope.pieChartData);
+           
+            
     };
     $scope.reikna = function () {
-        $scope.showStats = true;
+        $scope.showStats = false;
         $scope.consumptionDays = {};
         var d1 = document.getElementById('datepicker1').value;
         var d2 = document.getElementById('datepicker2').value;
@@ -247,20 +318,21 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                     'dags1': d1,
                     'dags2': d2}).execute(function(resp) {           
                     if (!resp.code) {
-                    
                         $scope.$apply(function() {
-                            if (resp.items.length === 0) {
+                            if ((typeof resp.items === 'undefined') || resp.items.length === 0) {
                                 var consumption = resp.items;
                                 $scope.alertMessageFun('info','Engin neysla skráð.');
                                 $timeout($scope.removeAlertMessageFun,3000);
                                 return
                             }
                             else {
+                                $scope.showStats = true;
                                 for (var i in resp.items) {
                                     var magn = resp.items[i].size;
                                     var dagsetning = resp.items[i].dagsetning;
                                     if (!($scope.consumptionDays.hasOwnProperty(dagsetning))) {
                                         $scope.consumptionDays[dagsetning] = {}
+                                        $scope.dagaheiti.push(dagsetning);
                                     }
                                     for (var property in resp.items[i].fooditemForm) {
                                         if (typeof resp.items[i].fooditemForm[property] === 'string') {
@@ -276,8 +348,13 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                                     }
                                 }
                                 for (var item in $scope.consumptionDays) {
-                                    $scope.consumptionDays[item]['Hitaeiningar'] = 4*$scope.consumptionDays[item]['protein']+4*$scope.consumptionDays[item]['kolvetni_alls']+9*$scope.consumptionDays[item]['fita'];
-                                }
+                                  $scope.consumptionDays[item]['Hitaeiningar'] = 4*$scope.consumptionDays[item]['protein']+4*$scope.consumptionDays[item]['kolvetni_alls']+9*$scope.consumptionDays[item]['fita'];
+                                   $scope.consumptionDays[item]['Fitueiningar'] = 9*$scope.consumptionDays[item]['fita'];
+                                   $scope.consumptionDays[item]['Fitueiningar'] = 9*$scope.consumptionDays[item]['fita'];
+                                   $scope.consumptionDays[item]['Proteineiningar'] = 4*$scope.consumptionDays[item]['protein'];
+                                   $scope.consumptionDays[item]['Kolvetniseiningar'] = 4*$scope.consumptionDays[item]['kolvetni_alls'];
+
+                                }   
                                 $scope.renderStatistics();
                             }
                             
@@ -1879,17 +1956,18 @@ matarapp.controllers.controller('SkraCtrl',
                 'dags': $scope.datestring}).execute(function(resp) {
                  $scope.$apply(function () {    
                     if (!resp.code) {
+
                         $scope.neysluflokkun[resp.mal].push({
                             'heiti':resp.fooditemForm.heiti,
-                            'orka': (9*parseFloat(resp.fooditemForm.fita)+ 4*parseFloat(resp.fooditemForm.protein)+4*parseFloat(resp.fooditemForm.kolvetni_alls))*resp.fooditemFrom.size/100,
+                            'orka': (9*parseFloat(resp.fooditemForm.fita)+ 4*parseFloat(resp.fooditemForm.protein)+4*parseFloat(resp.fooditemForm.kolvetni_alls))*resp.size/100,
                             'magn': resp.size,
                             'fita': resp.fooditemForm.fita,
                             'protein': resp.fooditemForm.protein,
                             'kolvetni': resp.fooditemForm.kolvetni_all     
                         });
-                        $scope.neysluflokkun['Fitueiningamagn'] += 9*parseFloat(resp.fooditemForm.fita)*resp.fooditemFrom.size/100;
-                        $scope.neysluflokkun['Proteineiningamagn'] += 4*parseFloat(resp.fooditemForm.protein)*resp.fooditemFrom.size/100;
-                        $scope.neysluflokkun['Kolvetniseiningamagn'] += 4*parseFloat(resp.fooditemForm.kolvetni_alls)*resp.fooditemFrom.size/100;
+                        $scope.neysluflokkun['Fitueiningamagn'] += 9*parseFloat(resp.fooditemForm.fita)*resp.size/100;
+                        $scope.neysluflokkun['Proteineiningamagn'] += 4*parseFloat(resp.fooditemForm.protein)*resp.size/100;
+                        $scope.neysluflokkun['Kolvetniseiningamagn'] += 4*parseFloat(resp.fooditemForm.kolvetni_alls)*resp.size/100;
                         $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Fitueiningamagn'];
                         $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Proteineiningamagn'];
                         $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Kolvetniseiningamagn'];

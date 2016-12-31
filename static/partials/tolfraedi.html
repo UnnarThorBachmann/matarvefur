@@ -24,6 +24,16 @@
             <button type="submit" class="btn btn-success" ng-click="nyttEfni()">Nýtt efni</button>
        	</form> 
 		<canvas id="sulurit"></canvas>
-		
+	</div>
+	<div class="col-md-4" ng-show="showStats" id="teiknibord2">
+		<form>
+            <div class="form-group form-group-lg"> 
+                <select  id="dagalisti">
+                    <option ng-repeat="efni in dagaheiti">{{efni}}</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success" ng-click="nyrDagur()">Nýr dagur</button>
+       	</form> 
+		<canvas id="kokurit"></canvas>
 	</div>
 </div>

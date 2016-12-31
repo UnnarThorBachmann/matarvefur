@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Matarvefur</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     
 
@@ -287,8 +289,8 @@ html, body {
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li ng-class="{ active: isActive('/neysla/skraogskoda')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/skraogskoda" >Skrá og skoða neyslu</a></li>
-                <li ng-class="{ active: isActive('/neysla/tolfraedi')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/tolfraedi">Tölfræði</a></li>
-                <!--
+                <li ng-class="{ active: isActive('/neysla/tolfraedi')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/tolfraedi">Tölfræði neyslu</a></li>
+                <!--fM
                 <li ng-class="{ active: isActive('/minfaedutegund')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/minfaedutegund">Bæta við fæðutegund</a></li>
                 <li class="nav-divider"></li>-->
             </ul>
@@ -317,12 +319,12 @@ html, body {
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>-->
 
 <script src="/js/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/controllers.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
 </body>
 </html>

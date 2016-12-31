@@ -71,7 +71,7 @@
 						<th>steinefni</th>
 					</tr>
 					<tr>
-						<td>Hitaeiningar: {{(37*item.fita + 17*item.protein + 17*item.kolvetni_alls).toFixed(1)}} kJ
+						<td>Hitaeiningar: {{(37*item.fita + 17*item.protein + 17*item.kolvetni_alls).toFixed(1)}} kcal
 						</td>
 						<td>A-vítamín: {{item.a_vitamin_rj}} &mu;g</td>
 						<td>Kalk: {{item.kalk}} mg</td>
@@ -172,7 +172,7 @@
         	<table class="table-responsive">		
 				<tr ng-show="neysluflokkun.Morgunmatur.length">
 					<th>Morgunmatur</th>
-			    	<th>Orka (kJ)</th>
+			    	<th>Orka (kcal)</th>
 					<th>Magn (g)</th>
 				</tr>
 				<tr ng-repeat='item in neysluflokkun.Morgunmatur'>
@@ -233,7 +233,7 @@
 					<td>{{item.magn}}</td>
 				</tr>
 				<tr>
-					<th>Orka (kJ)</th>
+					<th>Orka (kcal)</th>
 			    	<th></th>
 					<th></th>
 				</tr>

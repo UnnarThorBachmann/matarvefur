@@ -9,7 +9,7 @@
     <title>Matarvefur</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
@@ -288,8 +288,8 @@ html, body {
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li ng-class="{ active: isActive('/neysla/skraogskoda')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/skraogskoda" >Skrá og skoða neyslu</a></li>
-                <li ng-class="{ active: isActive('/neysla/tolfraedi')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/tolfraedi">Tölfræði neyslu</a></li>
+                <li ng-class="{ active: isActive('/neysla/skraogskoda')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/skraogskoda" >Skrá neyslu</a></li>
+                <li ng-class="{ active: isActive('/neysla/tolfraedi')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/neysla/tolfraedi">Skoða neyslu</a></li>
                 <!--fM
                 <li ng-class="{ active: isActive('/minfaedutegund')}" ng-click="collapseNavbar()" ng-show="getSignedInState()"><a href="#/minfaedutegund">Bæta við fæðutegund</a></li>
                 <li class="nav-divider"></li>-->

@@ -9,8 +9,8 @@
       </nav>
       <div class="month" ng-repeat="vika in manudur.vikur">
         <div class="week"  ng-style="{'margin-left': vika.left,'margin-right': vika.right}">
-          <div class="day thumbnail" ng-repeat="dagur in vika.vd" >
-            <div class="dayDiv" ng-style="{'border-color': red}">
+          <div class="day thumbnail" ng-repeat="dagur in vika.vd" ng-style="dagur.dayDiv">
+            <div class="dayDiv">
             <span class="badge">{{dagur.manadardagur}}</span>
             </div>
             <div class="spaceDiv">

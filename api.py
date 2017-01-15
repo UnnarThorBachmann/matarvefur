@@ -141,21 +141,32 @@ class MatarvefurApi(remote.Service):
             name='create_user_if_not_exists',
             http_method='PUT')   
     def create_user_if_not_exists(self, request):
-        curr_user = endpoints.get_current_user()
-        if curr_user is None:
+        user = User.query(User.email == request.user_email,User.name == request.user_name).get()
+
+        #curr_user = endpoints.get_current_user()
+        if user is None:
             raise endpoints.UnauthorizedException('Invalid token.')
         
-        if curr_user.email() != request.user_email:
-           raise endpoints.UnauthorizedException('Forbidden!')
+        #if curr_user.email() != request.user_email:
+        #   raise endpoints.UnauthorizedException('Forbidden!')
 
-        user = User.query(User.email == request.user_email).get()
-        if user and user.email == curr_user.email():
-            return UserForm(name = user.name,email = user.email)
+        #user = User.query(User.email == request.user_email).get()
+        if user:
+            
+            if (user.consumption_days is None or len(user.consumption_days) == 0):
+                days_listi = []
+                consumption = Food.query(Food.user == user.key).fetch()
+                for item in consumption:
+                    days_listi.append(str(item.dagsetning))
+                if (len(days_listi) > 0):
+                    user.consumption_days = list(set(days_listi))
+                    user.put()
+            return UserForm(name = user.name,email = user.email, consumption_days = user.consumption_days)
 
         else:
-           user = User(name=request.user_name,email=request.user_email)
+           user = User(name=request.user_name,email=request.user_email, consumption_days = [])
            user.put()
-           return UserForm(name = user.name,email = user.email)
+           return UserForm(name = user.name,email = user.email, consumption_days = user.consumption_days)
     
     
     """
@@ -472,6 +483,8 @@ class MatarvefurApi(remote.Service):
                     dagsetning = dagsetning)
         food.put()
         
+        user.put_consumption_days(str(request.dags))
+        user.put()
         return FoodForm(size = request.size,
                         fooditemForm = fooditem.to_form(),
                         user = user.name,

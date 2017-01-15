@@ -111,14 +111,19 @@ class User(ndb.Model):
     name = ndb.StringProperty(required=True)
     email = ndb.StringProperty(required=True)
     fooditems = ndb.StructuredProperty(FoodItem, repeated=True)
+    consumption_days = ndb.StringProperty(repeated=True)
     def to_form(self):
         form = userForm()
         form.user = self.user
         form.email = self.email
+        form.consumption_days = self.consumption_days
         return form
     
     def put_item(self,fooditem):
         self.fooditems.append(fooditem)
+        
+    def put_consumption_days(self,consumption_day):
+        self.consumption_days.append(consumption_day)
         
     def get_item(self,heiti):
         for item in self.fooditems:
@@ -262,3 +267,4 @@ class CategoryForm(messages.Message):
 class UserForm(messages.Message):
     name = messages.StringField(1,required=True)
     email = messages.StringField(2,required=True)
+    consumption_days = messages.StringField(3,repeated=True)

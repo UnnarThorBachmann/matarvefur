@@ -1,18 +1,33 @@
 <div class="row" ng-controller="SkraCtrl"> 
-	<div class="col-md-5 menu" >
-		<h4>Skrásetningardagur {{dagsetning}}</h4>
-        <form>
-            <div class="form-group form-group-lg" id="fsd"> 
-                <input class="form-control" list="matarlisti" id="matarlistiInput">
-                <datalist  id="matarlisti">
-                    <option ng-repeat="item in matartegundir">{{item}}</option>
-                </datalist>
-                <span class="input-group-btn input-group-lg">
-                    <button type="button" data-loading-text="Augnablik..." class="btn btn-success flokkar" id="skoda" href="#/neysla/skra:{{datestring}}" ng-click="finnaMat()">Fletta eftir heiti</button>
-               </span>
-            </div>
-       	</form>
-       	<div class="navFlex">
+<div class="page-header">
+	<h4>Skrásetningardagur {{dagsetning}}</h4>
+	<form class="navbar-form navbar-left">
+        <div class="form-group"> 
+       		<input class="form-control" list="matarlisti" id="matarlistiInput">
+        	<datalist  id="matarlisti">
+            	<option ng-repeat="item in matartegundir">{{item}}</option>
+        	</datalist>
+            <button type="button" data-loading-text="Augnablik..." class="btn btn-success" id="skoda" href="#/neysla/skra:{{datestring}}" ng-click="finnaMat()">Fletta eftir heiti</button>
+        </div>
+    </form>
+
+    <ul class="nav nav-tabs">   
+      <li role="presentation" class="dropdown" ng-repeat="item in matarflokkar">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" ng-style="{color: '#5cb85c'}">
+          {{item.heiti}}<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li ng-repeat="fl in item.undirflokkar">
+            <a href="#">{{fl}}</a>
+          </li>
+        </ul>
+      </li>
+      </ul>
+      	
+</div>
+        
+       	<!--
+    ass="navFlex">
        		<div class="thumbDiv3">
         		<a class="btn btn-success flokkar3" id="up" ng-click="fletta('+')">
         			<span class="glyphicon glyphicon-chevron-left" >
@@ -39,9 +54,7 @@
         			<span class="glyphicon glyphicon-chevron-right" ng-click="fletta('-')"></span>
         		</a>
         	</div>
-        </div>
-        
- 
+        </div>-->
     </div>
     <div class="col-md-6" id="results">
     	<div class="thumbnail" ng-repeat="(k,item) in searchedItems" ng-class="{hidden:!isVisibleSearched(k)}">

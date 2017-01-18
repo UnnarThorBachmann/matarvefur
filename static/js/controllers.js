@@ -7,7 +7,12 @@ matarapp.controllers = angular.module('matarappControllers', ['ui.bootstrap']);
 
 matarapp.controllers.controller('SkraOgSkodaCtrl',
     function ($scope, $log, oauth2Provider,$cookieStore) {
-        $scope.consumption_days = $cookieStore.get('consumption').split(',');
+        if ($cookieStore.get('consumption')) {
+            $scope.consumption_days = $cookieStore.get('consumption').split(',');
+        }
+        else {
+            $scope.consumption_days = [];   
+        }
 
         
 

@@ -1,7 +1,7 @@
 <div class="row" ng-controller="SkraCtrl"> 
-<div class="page-header">
-	<h4>Skrásetningardagur {{dagsetning}}</h4>
-	<form class="navbar-form navbar-left">
+	<div class="page-header">
+		<h4>Skrásetningardagur {{dagsetning}}</h4>
+		<form class="navbar-form navbar-left">
         <div class="form-group"> 
        		<input class="form-control" list="matarlisti" id="matarlistiInput">
         	<datalist  id="matarlisti">
@@ -9,23 +9,36 @@
         	</datalist>
             <button type="button" data-loading-text="Augnablik..." class="btn btn-success" id="skoda" href="#/neysla/skra:{{datestring}}" ng-click="finnaMat()">Fletta eftir heiti</button>
         </div>
-    </form>
+    	</form>
+    	<ul class="nav nav-tabs">   
+      		<li role="presentation" class="dropdown" ng-repeat="item in matarflokkar">
+        		<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" ng-style="{color: '#5cb85c'}">
+          		{{item.heiti}}<span class="caret"></span>
+        		</a>
+        		<ul class="dropdown-menu">
+          			<li ng-repeat="fl in item.undirflokkar">
+            			<a ng-click="searchCat(item.heiti,fl)">{{fl}}</a>
+          			</li>
+        		</ul>
+      		</li>
+      	</ul>    	
+	</div>
 
-    <ul class="nav nav-tabs">   
-      <li role="presentation" class="dropdown" ng-repeat="item in matarflokkar">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" ng-style="{color: '#5cb85c'}">
-          {{item.heiti}}<span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-          <li ng-repeat="fl in item.undirflokkar">
-            <a href="#">{{fl}}</a>
-          </li>
-        </ul>
-      </li>
-      </ul>
-      	
-</div>
-        
+    <div class="col-md-6">
+    	<ul class="media-list">
+  			<li class="media" ng-repeat="item in mini_items_searched">
+    			<div class="media-left">
+      				<a href="#">
+        				<!--<img class="media-object" src="..." alt="...">-->
+      				</a>
+    			</div>
+    			<div class="media-body">
+      				<h4 class="media-heading">{{item.nafn}}</h4>
+    			</div>
+  			</li>
+		</ul>
+    </div>
+</div>      
        	<!--
     ass="navFlex">
        		<div class="thumbDiv3">
@@ -55,7 +68,8 @@
         		</a>
         	</div>
         </div>-->
-    </div>
+  
+    <!--
     <div class="col-md-6" id="results">
     	<div class="thumbnail" ng-repeat="(k,item) in searchedItems" ng-class="{hidden:!isVisibleSearched(k)}">
     		<div class="caption">
@@ -263,7 +277,7 @@
 			</div>
     	</div>
     </div>
-    <!--
+    
     <div class="row">
       
       <div class="col-md-6">
@@ -336,5 +350,4 @@
        
       </div>
        -->
-    </div>   
-</div>
+

@@ -427,6 +427,9 @@ matarapp.controllers.controller('SkraCtrl',
     $scope.nrVisibleSearchedItem = 0;
     $scope.matartegundir = foodItemsCache.matartegundir; 
     $scope.matarflokkar = foodItemsCache.matarflokkar;
+    $scope.matarflokkar_dict = foodItemsCache.matarflokkar_dict;
+    $scope.miniFoodItems = [];
+
     $scope.searchedItems =[];
     $scope.fellt = false;
     $scope.neysluflokkun = {
@@ -441,8 +444,34 @@ matarapp.controllers.controller('SkraCtrl',
         'Proteineiningamagn': 0,
         'Kolvetniseiningamagn': 0
     };
+
+    $scope.params = {};
+    $scope.filterItem = {"nafn":"-1", "c1": -1, "c2": -1},
     $scope.showScaleButton = true;
+    $scope.mini_items_searched = [];
+
     $scope.flokkahlekkir = document.getElementsByClassName('flokkar');
+    $scope.searchCat = function(c1,c2) {
+        var c1 = parseInt($scope.matarflokkar_dict[c1]);
+        var c2 = parseInt($scope.matarflokkar_dict[c2]);
+        $scope.mini_items_searched = [];
+        for (var i = 0; i < foodItemsCache.miniFoodItems.length; i++) {
+            var item = foodItemsCache.miniFoodItems[i];
+            if (item.c1 === c1 && item.c2 === c2) {
+                $scope.mini_items_searched.push(foodItemsCache.miniFoodItems[i]);
+            }
+        }        
+    };
+    $scope.filterFn = function(item) {
+
+        if (item.c1 === $scope.params.c1 && item.c2 === $scope.params.c2) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    /*
     $scope.collapse = function (nr) {
         $('#fl'+ nr.toString()).collapse('toggle');
     };
@@ -645,7 +674,7 @@ matarapp.controllers.controller('SkraCtrl',
         $scope.finishedNeyslaLoading();
         
     };
-
+    */
 });
 /*
 matarapp.controllers.controller('MinFaeduTegundCtrl', function ($scope, $timeout,$location, oauth2Provider) {

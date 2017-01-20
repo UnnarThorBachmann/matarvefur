@@ -61,6 +61,15 @@ app.factory('oauth2Provider', function ($modal) {
     return oauth2Provider;
 });
 
+app.filter("filterFn", function() { 
+
+  return function(item) { 
+
+    return input.replace(RegExp(searchRegex), replaceRegex); 
+
+  };
+});
+
 app.factory('foodItemsCache', function ($modal) {
     var foodItemsCache = {};
     foodItemsCache.matarflokkar = [
@@ -234,7 +243,15 @@ app.factory('foodItemsCache', function ($modal) {
             ]
         }
     ];
-    foodItemsCache.matartegundir = ['AB - MJÓLK','AB - MJÓLK, létt','ABT - MJÓLK, hrein',
+    foodItemsCache.matarflokkar_dict = {};
+    
+    for (var i = 0; i < foodItemsCache.matarflokkar.length; i++) {
+        foodItemsCache.matarflokkar_dict[foodItemsCache.matarflokkar[i]["heiti"]] = i+1;  
+        for (var j = 0; j < foodItemsCache.matarflokkar[i]["undirflokkar"].length; j++) {
+            foodItemsCache.matarflokkar_dict[foodItemsCache.matarflokkar[i]["undirflokkar"][j]] = j+1;
+        }   
+    }
+    foodItemsCache.matartegundir = ['A- MJÓLK','AB - MJÓLK, létt','ABT - MJÓLK, hrein',
         "ABT - MJÓLK, með berjum og múslí",
         "ABT - MJÓLK, með múslí",
         "ABT-mjólk, m jarðarb, múslí, fitu- og sykurskert",
@@ -2766,4 +2783,18 @@ app.factory('foodItemsCache', function ($modal) {
     ];
     return foodItemsCache;
 
+});
+
+app.filter('searchFilter', function () {
+    console.log('prump');
+    return function (items, c1,c2) {
+        var newItems = [];
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].c1 === c1 && items[i].c2 === c2) {
+                newItems.push(items[i]);
+            }
+        };
+
+        return newItems;
+    }
 });

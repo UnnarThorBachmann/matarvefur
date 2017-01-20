@@ -16,9 +16,7 @@
       background-color: white;
       color: #5cb85c;
     }
-a {
-  color: 'red';
-}  
+ 
 
 .flokkar {
     width: 100%;
@@ -218,10 +216,6 @@ html, body {
   
   </style>
     <script>
-        /**
-         * Initializes the Google API JavaScript client. Bootstrap the angular module after loading the Google libraries
-         * so that Google JavaScript library ready in the angular modules.
-         */
         function init() {
             gapi.client.load('matarvefur', 'v1', null, '//' + window.location.host + '/_ah/api');
             gapi.client.load('oauth2', 'v2', function () {

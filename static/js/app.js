@@ -129,7 +129,6 @@ app.factory('foodItemsCache', function ($modal) {
                 'Hnetur, fræ',
                 'Niðursoðnir ávextir, ber, ávaxtagrautar, ávaxtamauk',
                 'Þurrkaðir ávextir og ber',
-                'Ferskar kryddjurtir',
                 'Sultur'
             ]
         }
@@ -2785,16 +2784,4 @@ app.factory('foodItemsCache', function ($modal) {
 
 });
 
-app.filter('searchFilter', function () {
-    console.log('prump');
-    return function (items, c1,c2) {
-        var newItems = [];
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].c1 === c1 && items[i].c2 === c2) {
-                newItems.push(items[i]);
-            }
-        };
 
-        return newItems;
-    }
-});

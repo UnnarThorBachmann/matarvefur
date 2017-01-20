@@ -457,8 +457,12 @@ matarapp.controllers.controller('SkraCtrl',
         $scope.mini_items_searched = [];
         for (var i = 0; i < foodItemsCache.miniFoodItems.length; i++) {
             var item = foodItemsCache.miniFoodItems[i];
+            item.c1i = c1;
+            item.c2i = c2;
+            console.log(c1);
+            console.log(c2);
             if (item.c1 === c1 && item.c2 === c2) {
-                $scope.mini_items_searched.push(foodItemsCache.miniFoodItems[i]);
+                $scope.mini_items_searched.push(item);
             }
         }        
     };

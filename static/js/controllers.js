@@ -400,6 +400,7 @@ matarapp.controllers.controller('SkraCtrl',
     var dags = $routeParams.dags;
     dags = dags.slice(1,dags.length);
     $scope.datestring = dags;
+    $scope.selectedSkammtur;
     var dags_array = dags.split('-');
     var manudir = {'1': 'Janúar', 
                '2': 'Febrúar',
@@ -457,24 +458,38 @@ matarapp.controllers.controller('SkraCtrl',
         $scope.mini_items_searched = [];
         for (var i = 0; i < foodItemsCache.miniFoodItems.length; i++) {
             var item = foodItemsCache.miniFoodItems[i];
-            item.c1i = c1;
-            item.c2i = c2;
-            console.log(c1);
-            console.log(c2);
+            item.value = 100;
+        
             if (item.c1 === c1 && item.c2 === c2) {
                 $scope.mini_items_searched.push(item);
             }
         }        
     };
-    $scope.filterFn = function(item) {
+    $scope.finnaNafn = function() {
+        var nafn = document.getElementById("matarlistiInput").value;
+        $scope.mini_items_searched = [];
 
-        if (item.c1 === $scope.params.c1 && item.c2 === $scope.params.c2) {
-            return true;
+        for (var i = 0; i < foodItemsCache.miniFoodItems.length; i++) {
+            var item = foodItemsCache.miniFoodItems[i];
+    
+            item.value = 100;
+            if (item["nafn"] === nafn) {
+                $scope.mini_items_searched.push(item);
+            }
+        }      
+    };
+    $scope.velja = function(item) {
+        console.log(item);
+    };
+    $scope.siaMida = function(item,s) {
+        if (item.heiti.includes(s.heiti)) {
+            return s.heiti;
         }
         else {
-            return false;
+            s.heiti + "(" + s.skammtur + ")";
         }
     };
+
     /*
     $scope.collapse = function (nr) {
         $('#fl'+ nr.toString()).collapse('toggle');

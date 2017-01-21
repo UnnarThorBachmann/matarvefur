@@ -5,9 +5,10 @@
         <div class="form-group"> 
        		<input class="form-control" list="matarlisti" id="matarlistiInput">
         	<datalist  id="matarlisti">
-            	<option ng-repeat="item in matartegundir">{{item}}</option>
+            	<option ng-repeat="item in matartegundir">	{{item}}
+            	</option>
         	</datalist>
-            <button type="button" data-loading-text="Augnablik..." class="btn btn-success" id="skoda" href="#/neysla/skra:{{datestring}}" ng-click="finnaMat()">Fletta eftir heiti</button>
+            <button type="button" data-loading-text="Augnablik..." class="btn btn-success" id="skoda" href="#/neysla/skra:{{datestring}}" ng-click="finnaNafn()">Fletta eftir heiti</button>
         </div>
     	</form>
     	<ul class="nav nav-tabs">   
@@ -24,16 +25,42 @@
       	</ul>    	
 	</div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
     	<ul class="media-list">
   			<li class="media" ng-repeat="item in mini_items_searched">
     			<div class="media-left">
       				<a href="#">
-        				<img class="media-object" src="/img/{{item.c1i}}{{item.c2i}}.png" alt="{{item.nafn}}">
+        				<img class="media-object" ng-src="/img/{{item.c1}}{{item.c2}}.png" alt="{{item.nafn}}">
       				</a>
     			</div>
     			<div class="media-body">
-      				<h4 class="media-heading">{{item.nafn}}</h4>
+      				<h4 class="media-heading">{{item.nafn}} <span class="glyphicon glyphicon-search"></span></h4>
+      				<div class="thumbnail veljaDiv">
+					<div>
+						<label for="timiDags">Tími dags</label>
+						<select id="timiDags" ng-model="item.mal">
+							<option>Morgunmatur</option>
+							<option>Morgunsnarl</option>
+							<option>Hádegismatur</option>
+							<option>Miðdegissnarl</option>
+							<option>Kvöldmatur</option>
+							<option>Kvöldsnarl</option>
+						</select>
+					</div>
+					<div>
+						<label for="magn">Magn (g)</label>
+						<input type="text" ng-value="item.value" id="magn">
+					</div>
+					<div ng-show="item.skammtar.length">
+						<label for="magn">Skammtar</label>
+						<select ng-model="item.value">
+						<option ng-repeat="s in item.skammtar" ng-value="s.gromm">{{item.heiti.includes(s.heiti) ? s.heiti: s.heiti + " (" + s.skammtur + ")"}}</option>
+						</select>
+					</div>
+					<div>				
+						<button type="button" class="btn btn-success databasebtn" ng-click="velja(item)">Velja</button>
+					</div>
+				</div>
     			</div>
   			</li>
 		</ul>

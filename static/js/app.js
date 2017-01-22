@@ -72,6 +72,12 @@ app.filter("filterFn", function() {
 
 app.factory('foodItemsCache', function ($modal) {
     var foodItemsCache = {};
+    foodItemsCache.mal = ['Morgunmatur',
+                          'Morgunsnarl',
+                          'Hádegismatur',
+                          'Miðdegissnarl',
+                          'Kvöldmatur',
+                          'Kvöldsnarl'];
     foodItemsCache.matarflokkar = [
         {'heiti': 'Mjólk, mjólkurvörur',
          'undirflokkar': [

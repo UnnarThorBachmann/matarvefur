@@ -25,7 +25,7 @@
       	</ul>    	
 	</div>
 
-    <div class="col-md-8">
+    <div class="col-md-7">
     	<ul class="media-list">
   			<li class="media" ng-repeat="item in mini_items_searched">
     			<div class="media-left">
@@ -49,7 +49,7 @@
 					</div>
 					<div>
 						<label for="magn">Magn (g)</label>
-						<input type="text" ng-value="item.value" id="magn">
+						<input type="text" ng-model="item.value" ng-value="item.value" id="magn">
 					</div>
 					<div ng-show="item.skammtar.length">
 						<label for="magn">Skammtar</label>
@@ -58,14 +58,94 @@
 						</select>
 					</div>
 					<div>				
-						<button type="button" class="btn btn-success databasebtn" ng-click="velja(item)">Velja</button>
+						<button type="button" class="btn btn-success databasebtn btn-xs" ng-click="velja(item)">Velja</button>
 					</div>
 				</div>
     			</div>
   			</li>
 		</ul>
     </div>
-</div>      
+    <div class="col-md-5">
+        <div class="thumbnail" ng-show="neyslaDagsins.length">
+    		<h4>Neysla dagsins</h4>
+        	<table class="table-responsive">		
+				<tr ng-repeat="item in neyslaDagsins track by $index" ng-show="item.mal && item.mal==='Morgunmatur'">
+					<td>
+						<select ng-model="item.mal">
+						<option ng-repeat="s in mal" ng-value="s">{{s}}</option>
+						</select>
+					</td>
+			    	<td>{{item.nafn}}</td>
+					<td>{{item.value}} g</td>
+					<td>
+						<span class="glyphicon glyphicon-remove" ng-click="eyda(item)"></span></span>
+					</td>
+				</tr>
+				<tr ng-repeat="item in neyslaDagsins track by $index" ng-show="item.mal && item.mal==='Morgunsnarl'">
+					<td>
+						<select ng-model="item.mal">
+						<option ng-repeat="s in mal" ng-value="s">{{s}}</option>
+						</select>
+					</td>
+			    	<td>{{item.nafn}}</td>
+					<td>{{item.value}} g</td>
+					<td>
+						<span class="glyphicon glyphicon-remove" ng-click="eyda(item)"></span></span>
+					</td>
+				</tr><tr ng-repeat="item in neyslaDagsins track by $index" ng-show="item.mal && item.mal==='Hádegismatur'">
+					<td>
+						<select ng-model="item.mal">
+						<option ng-repeat="s in mal" ng-value="s">{{s}}</option>
+						</select>
+					</td>
+			    	<td>{{item.nafn}}</td>
+					<td>{{item.value}} g</td>
+					<td>
+						<span class="glyphicon glyphicon-remove" ng-click="eyda(item)"></span></span>
+					</td>
+				</tr>
+				<tr ng-repeat="item in neyslaDagsins track by $index" ng-show="item.mal && item.mal==='Miðdegissnarl'">
+					<td>
+						<select ng-model="item.mal">
+						<option ng-repeat="s in mal" ng-value="s">{{s}}</option>
+						</select>
+					</td>
+			    	<td>{{item.nafn}}</td>
+					<td>{{item.value}} g</td>
+					<td>
+						<span class="glyphicon glyphicon-remove" ng-click="eyda(item)"></span></span>	
+					</td>
+				</tr>
+				<tr ng-repeat="item in neyslaDagsins track by $index" ng-show="item.mal && item.mal==='Kvöldmatur'">
+					<td>
+						<select ng-model="item.mal">
+						<option ng-repeat="s in mal" ng-value="s">{{s}}</option>
+						</select>
+					</td>
+			    	<td>{{item.nafn}}</td>
+					<td>{{item.value}} g</td>
+					<td>
+					<span class="glyphicon glyphicon-remove" ng-click="eyda(item)"></span></span>
+					</td>
+				</tr>
+				<tr ng-repeat="item in neyslaDagsins track by $index" ng-show="item.mal && item.mal==='Kvöldsnarl'">
+					<td>
+						<select ng-model="item.mal">
+						<option ng-repeat="s in mal" ng-value="s">{{s}}</option>
+						</select>
+					</td>
+			    	<td>{{item.nafn}}</td>
+					<td>{{item.value}} g</td>
+					<td>
+					<span class="glyphicon glyphicon-remove" ng-click="eyda(item)"></span></span>
+					</td>
+				</tr>
+			</table>
+			<div>				
+				<button type="button" class="btn btn-success databasebtn" ng-click="vista()">Vista</button>
+			</div>
+		</div>
+	</div>      
        	<!--
     ass="navFlex">
        		<div class="thumbDiv3">

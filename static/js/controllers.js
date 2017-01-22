@@ -429,6 +429,7 @@ matarapp.controllers.controller('SkraCtrl',
     $scope.matartegundir = foodItemsCache.matartegundir; 
     $scope.matarflokkar = foodItemsCache.matarflokkar;
     $scope.matarflokkar_dict = foodItemsCache.matarflokkar_dict;
+    $scope.mal = foodItemsCache.mal;
     $scope.miniFoodItems = [];
 
     $scope.searchedItems =[];
@@ -450,7 +451,7 @@ matarapp.controllers.controller('SkraCtrl',
     $scope.filterItem = {"nafn":"-1", "c1": -1, "c2": -1},
     $scope.showScaleButton = true;
     $scope.mini_items_searched = [];
-
+    $scope.neyslaDagsins = [];
     $scope.flokkahlekkir = document.getElementsByClassName('flokkar');
     $scope.searchCat = function(c1,c2) {
         var c1 = parseInt($scope.matarflokkar_dict[c1]);
@@ -479,15 +480,29 @@ matarapp.controllers.controller('SkraCtrl',
         }      
     };
     $scope.velja = function(item) {
-        console.log(item);
+        var item_c = {};
+        item_c["index"] = $scope.neyslaDagsins.length;
+        item_c["nafn"] = item.nafn;
+        item_c["nr"] = item.nr;
+        item_c["value"] = item.value;
+        console.log(item.mal);
+        item_c["mal"] = (item.mal) ? item.mal: "Morgunmatur";
+        $scope.neyslaDagsins.push(item_c);
     };
-    $scope.siaMida = function(item,s) {
-        if (item.heiti.includes(s.heiti)) {
-            return s.heiti;
+    $scope.eyda = function(item) {
+        var index = item.index;
+        var l = $scope.neyslaDagsins.length;
+
+        for (var i = index+1; i < l; i++) {
+            $scope.neyslaDagsins[i].index -= 1;
         }
-        else {
-            s.heiti + "(" + s.skammtur + ")";
-        }
+
+        $scope.neyslaDagsins.splice(index,1);
+
+        
+    };
+    $scope.vista = function() {
+        console.log("vista");
     };
 
     /*

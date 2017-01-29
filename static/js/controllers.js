@@ -397,11 +397,15 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
 });
 matarapp.controllers.controller('SkraCtrl',
     function ($scope,$timeout, $cookieStore,$routeParams,oauth2Provider,foodItemsCache) {
-    var dags = $routeParams.dags;
-    dags = dags.slice(1,dags.length);
-    $scope.datestring = dags;
-    $scope.selectedSkammtur;
-    var dags_array = dags.split('-');
+    
+    $scope.matartegundir = foodItemsCache.matartegundir; 
+    $scope.matarflokkar = foodItemsCache.matarflokkar;
+    $scope.matarflokkar_dict = foodItemsCache.matarflokkar_dict;
+    $scope.mal = foodItemsCache.mal;
+    $scope.miniFoodItems = [];
+
+    $scope.searchedItems =[];
+    $scope.fellt = false;
     var manudir = {'1': 'Janúar', 
                '2': 'Febrúar',
                '3': 'Mars',
@@ -423,17 +427,6 @@ matarapp.controllers.controller('SkraCtrl',
                '07': 'Júlí',
                '08': 'Ágúst',
                '09': 'September'};
-    $scope.dagsetning = dags_array[2] +'. ' + manudir[dags_array[1]]+ ', ' + dags_array[0];
-    $scope.nrVisible = 0;
-    $scope.nrVisibleSearchedItem = 0;
-    $scope.matartegundir = foodItemsCache.matartegundir; 
-    $scope.matarflokkar = foodItemsCache.matarflokkar;
-    $scope.matarflokkar_dict = foodItemsCache.matarflokkar_dict;
-    $scope.mal = foodItemsCache.mal;
-    $scope.miniFoodItems = [];
-
-    $scope.searchedItems =[];
-    $scope.fellt = false;
     $scope.neysluflokkun = {
         'Morgunmatur': [],
         'Morgunsnarl': [],
@@ -451,8 +444,99 @@ matarapp.controllers.controller('SkraCtrl',
     $scope.filterItem = {"nafn":"-1", "c1": -1, "c2": -1},
     $scope.showScaleButton = true;
     $scope.mini_items_searched = [];
-    $scope.neyslaDagsins = [];
     $scope.flokkahlekkir = document.getElementsByClassName('flokkar');
+    $scope.init = function() {
+        $scope.neyslaDagsins = [];
+
+        $scope.dags = $routeParams.dags.slice(1,$routeParams.dags.length);
+        $scope.datestring = $scope.dags;
+        $scope.selectedSkammtur;
+        var dags_array = $scope.dags.split('-');
+    
+        $scope.dagsetning = dags_array[2] +'. ' + manudir[dags_array[1]]+ ', ' + dags_array[0];
+        $scope.nrVisible = 0;
+        $scope.nrVisibleSearchedItem = 0;
+        $scope.neyslaLoading();
+        $scope.neysluflokkun = {
+            'Morgunmatur': [],
+            'Morgunsnarl': [],
+            'Hadegismatur': [],
+            'Middegissnarl': [],
+            'Kvoldmatur': [],
+            'Kvoldsnarl': [],
+            'Hitaeiningamagn': 0,
+            'Fitueiningamagn': 0,
+            'Proteineiningamagn': 0,
+            'Kolvetniseiningamagn': 0
+        };
+        if (gapi.client.matarvefur) {
+            
+            gapi.client.matarvefur.get_food({
+                'user_email': $cookieStore.get('user_email'),
+                'dags1': $scope.datestring,
+                'dags2': $scope.datestring}).execute(function(resp) {           
+                if (!resp.code) {
+                    console.log($scope.datestring);
+                    console.log(resp);
+                    $scope.$apply(function() {
+                        for (var i = 0; i < resp.items.length; i++) {
+                            var item = {};
+                            item["index"] = $scope.neyslaDagsins.length;
+                            item["nafn"] = resp.items[i].fooditemForm.heiti;
+                            //item["nr"] = item.nr;
+                            item["value"] = resp.items[i].size;
+                            item["mal"] = resp.items[i].mal;
+                            $scope.neyslaDagsins.push(item);   
+                        }
+                    });
+                    /*
+                    $scope.$apply(function() {
+                        var consumption = resp.items;
+                        if (consumption && consumption.length > 0) {
+                            $scope.showScaleButton = false; 
+                        
+                            for (var i = 0; i < consumption.length; i++) {
+                                var item = consumption[i];
+                                $scope.neysluflokkun[item.mal].push(
+                                {'heiti':item.fooditemForm.heiti,
+                                    'orka': (9*parseFloat(item.fooditemForm.fita)+ 4*parseFloat(item.fooditemForm.protein)+9*parseFloat(item.fooditemForm.kolvetni_alls))*item.size/100,
+                                    'magn': item.size,
+                                    'fita': item.fooditemForm.fita,
+                                    'protein': item.fooditemForm.protein,
+                                    'kolvetni': item.fooditemForm.kolvetni_all     
+                                    }
+                                );
+                                $scope.neysluflokkun['Fitueiningamagn'] += 9*parseFloat(item.fooditemForm.fita)*item.size/100;
+                                $scope.neysluflokkun['Proteineiningamagn'] += 4*parseFloat(item.fooditemForm.protein)*item.size/100;
+                                $scope.neysluflokkun['Kolvetniseiningamagn'] += 4*parseFloat(item.fooditemForm.kolvetni_alls)*item.size/100;
+                            }
+                            $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Fitueiningamagn'];
+                            $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Proteineiningamagn'];
+                            $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Kolvetniseiningamagn'];
+                            $scope.fellaNeyslu = true;
+                        }
+                        else {
+                            $scope.alertMessageFun('info','Ekkert hefur verið srkáð');
+                            $timeout($scope.removeAlertMessageFun,2000);
+                            $scope.showScaleButton = true; 
+                            return 
+                        }   
+
+                    });
+                }
+                else {
+                    console.log('error');
+                }
+            */
+            }
+            });
+            
+            //$scope.finishedNeyslaLoading();
+            
+        }
+
+
+    };
     $scope.searchCat = function(c1,c2) {
         var c1 = parseInt($scope.matarflokkar_dict[c1]);
         var c2 = parseInt($scope.matarflokkar_dict[c2]);
@@ -485,7 +569,6 @@ matarapp.controllers.controller('SkraCtrl',
         item_c["nafn"] = item.nafn;
         item_c["nr"] = item.nr;
         item_c["value"] = item.value;
-        console.log(item.mal);
         item_c["mal"] = (item.mal) ? item.mal: "Morgunmatur";
         $scope.neyslaDagsins.push(item_c);
     };
@@ -502,7 +585,7 @@ matarapp.controllers.controller('SkraCtrl',
         
     };
     $scope.vista = function() {
-        console.log("vista");
+        console.log($scope.neyslaDagsins);
     };
 
     /*

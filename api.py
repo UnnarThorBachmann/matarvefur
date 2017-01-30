@@ -3,6 +3,7 @@
 import endpoints
 import codecs
 import math
+import json
 from datetime import date,datetime
 from protorpc import remote, messages
 from flokkar import c,sc
@@ -18,6 +19,7 @@ from models import (FoodItem,
                     UserForm,
                     Food,
                     FoodForm,
+                    FoodForm2,
                     FoodForms,
                     FoodItemForm,
                     FoodItemForms,
@@ -48,12 +50,18 @@ SEARCH_FOOD_ITEMS = endpoints.ResourceContainer(
 CREATE_USER_REQUEST = endpoints.ResourceContainer(
     user_name = messages.StringField(1,required=True),
     user_email = messages.StringField(2,required=True))
+
 FOOD_REQUEST = endpoints.ResourceContainer(
     size = messages.FloatField(1,required=True),
     user_email = messages.StringField(2,required=True),
     food_item_heiti = messages.StringField(3,required=True),
     mal = messages.StringField(4,required=True),
     dags = messages.StringField(5,required=False))
+
+FOOD_REQUESTS = endpoints.ResourceContainer(
+    user_email = messages.StringField(1,required=True),
+    dags = messages.StringField(2,required=True),
+    items = messages.StringField(3,repeated=False))
     
 CONSUMPTION_REQUEST = endpoints.ResourceContainer(
     user_email = messages.StringField(1,required=True),
@@ -69,8 +77,6 @@ DELETE_REQUEST = endpoints.ResourceContainer(
     dags = messages.StringField(5,required=True))
 
     
-    
-
 FOOD_ITEM_REGISTER = endpoints.ResourceContainer(
     user_email = messages.StringField(1,required=True),
     heiti = messages.StringField(2,required=True),
@@ -490,6 +496,46 @@ class MatarvefurApi(remote.Service):
                         user = user.name,
                         dagsetning = str(food.dagsetning),
                         mal = FoodForm.Mal(food.mal))
+   
+   
+    @endpoints.method(request_message= FOOD_REQUESTS,
+            response_message=StringMessage,
+            path='put_foods',
+            name='put_foods',
+            http_method='PUT')   
+    def put_foods(self, request):
+        user = User.query(User.email == request.user_email).get()
+        if not user:
+            raise endpoints.NotFoundException(
+                'User does not exist.')
+        
+        foods = Food.query(Food.dagsetning == self.dags_str_datetime(request.dags)).fetch()
+        for item in foods:
+            item.key.delete()
+
+        cnt = 0
+        its = json.loads(request.items)
+        for item in its:
+            fooditem = FoodItem.query(FoodItem.heiti == item['heiti']).get()
+            if not fooditem:
+                raise endpoints.NotFoundException(
+                    'Food item not found.')
+            else:    
+                dagsetning = self.dags_str_datetime(request.dags)
+                mal = item['mal']
+   
+                
+                food = Food(user = user.key,
+                            size = float(item['size']),
+                            foodItem = fooditem.key,
+                            dagsetning =  dagsetning,
+                            mal = mal)
+                food.put()
+                cnt += 1
+        
+        user.put_consumption_days(str(request.dags))
+        user.put()
+        return StringMessage(message="Food items added successfully " + str(cnt))
    
     @endpoints.method(request_message= CONSUMPTION_REQUEST,
                       response_message=FoodForms,

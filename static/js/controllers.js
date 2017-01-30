@@ -476,62 +476,30 @@ matarapp.controllers.controller('SkraCtrl',
                 'dags1': $scope.datestring,
                 'dags2': $scope.datestring}).execute(function(resp) {           
                 if (!resp.code) {
-                    console.log($scope.datestring);
-                    console.log(resp);
-                    $scope.$apply(function() {
-                        for (var i = 0; i < resp.items.length; i++) {
-                            var item = {};
-                            item["index"] = $scope.neyslaDagsins.length;
-                            item["nafn"] = resp.items[i].fooditemForm.heiti;
-                            //item["nr"] = item.nr;
-                            item["value"] = resp.items[i].size;
-                            item["mal"] = resp.items[i].mal;
-                            $scope.neyslaDagsins.push(item);   
-                        }
-                    });
-                    /*
-                    $scope.$apply(function() {
-                        var consumption = resp.items;
-                        if (consumption && consumption.length > 0) {
-                            $scope.showScaleButton = false; 
-                        
-                            for (var i = 0; i < consumption.length; i++) {
-                                var item = consumption[i];
-                                $scope.neysluflokkun[item.mal].push(
-                                {'heiti':item.fooditemForm.heiti,
-                                    'orka': (9*parseFloat(item.fooditemForm.fita)+ 4*parseFloat(item.fooditemForm.protein)+9*parseFloat(item.fooditemForm.kolvetni_alls))*item.size/100,
-                                    'magn': item.size,
-                                    'fita': item.fooditemForm.fita,
-                                    'protein': item.fooditemForm.protein,
-                                    'kolvetni': item.fooditemForm.kolvetni_all     
-                                    }
-                                );
-                                $scope.neysluflokkun['Fitueiningamagn'] += 9*parseFloat(item.fooditemForm.fita)*item.size/100;
-                                $scope.neysluflokkun['Proteineiningamagn'] += 4*parseFloat(item.fooditemForm.protein)*item.size/100;
-                                $scope.neysluflokkun['Kolvetniseiningamagn'] += 4*parseFloat(item.fooditemForm.kolvetni_alls)*item.size/100;
+                    var timiDagsDict = {'Morgunmatur': 'Morgunmatur',
+                            'Morgunsnarl': 'Morgunsnarl',
+                            'Hadegismatur': 'Hádegismatur',
+                            'Middegissnarl': 'Miðdegissnarl',
+                            'Kvoldmatur': 'Kvöldmatur',
+                            'Kvoldsnarl': 'Kvöldsnarl'
+                    };
+                    if (resp.items) {
+                        $scope.$apply(function() {
+                            for (var i = 0; i < resp.items.length; i++) {
+                                var item = {};
+                                item["index"] = $scope.neyslaDagsins.length;
+                                item["nafn"] = resp.items[i].fooditemForm.heiti;
+                                //item["nr"] = item.nr;
+                                item["value"] = resp.items[i].size;
+                                item["mal"] = timiDagsDict[resp.items[i].mal];
+                                $scope.neyslaDagsins.push(item);   
                             }
-                            $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Fitueiningamagn'];
-                            $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Proteineiningamagn'];
-                            $scope.neysluflokkun['Hitaeiningamagn'] += $scope.neysluflokkun['Kolvetniseiningamagn'];
-                            $scope.fellaNeyslu = true;
-                        }
-                        else {
-                            $scope.alertMessageFun('info','Ekkert hefur verið srkáð');
-                            $timeout($scope.removeAlertMessageFun,2000);
-                            $scope.showScaleButton = true; 
-                            return 
-                        }   
+                        });
 
-                    });
+                    }
+                
                 }
-                else {
-                    console.log('error');
-                }
-            */
-            }
             });
-            
-            //$scope.finishedNeyslaLoading();
             
         }
 
@@ -564,6 +532,7 @@ matarapp.controllers.controller('SkraCtrl',
         }      
     };
     $scope.velja = function(item) {
+
         var item_c = {};
         item_c["index"] = $scope.neyslaDagsins.length;
         item_c["nafn"] = item.nafn;
@@ -585,7 +554,43 @@ matarapp.controllers.controller('SkraCtrl',
         
     };
     $scope.vista = function() {
-        console.log($scope.neyslaDagsins);
+        var timiDagsDict = {'Morgunmatur': 'Morgunmatur',
+                            'Morgunsnarl': 'Morgunsnarl',
+                            'Hádegismatur': 'Hadegismatur',
+                            'Miðdegissnarl': 'Middegissnarl',
+                            'Kvöldmatur': 'Kvoldmatur',
+                            'Kvöldsnarl': 'Kvoldsnarl'
+        };
+        
+        $scope.vistaLoading();
+        if (gapi.client.matarvefur) {
+            var push_items = [{'heiti': 'SKYR','size': 30,'mal': 'Morgunmatur'}];
+            for (var i = 0; i < $scope.neyslaDagsins.length; i++) {
+                var item = {};
+                item.heiti = $scope.neyslaDagsins[i].nafn;
+                item.size = $scope.neyslaDagsins[i].value;
+                item.mal = timiDagsDict[$scope.neyslaDagsins[i].mal];
+                push_items.push(item);
+            }
+            var temp = $cookieStore.get('consumption')
+            temp += $scope.datestring;
+            temp += ",";
+            $cookieStore.put('consumption',temp);
+            gapi.client.matarvefur.put_foods({'user_email': $cookieStore.get('user_email'),
+                'dags': $scope.datestring,
+                'items': JSON.stringify(push_items)}).execute(function(resp) {
+                 //$scope.$apply(function () {    
+                    if (!resp.code) {
+                        $timeout($scope.removeAlertMessageFun,2000); 
+                    }
+                    else {
+                         $scope.alertMessageFun('danger', 'Mistókst að skrá fæðu.');      
+                    }
+                //});
+            });   
+            $scope.finishedVistaLoading();
+            
+        }
     };
 
     /*
@@ -965,11 +970,11 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
     $scope.finishedLoadingFlokkar = function () {
         angular.element($('.flokkar2').button('reset'));
     };
-    $scope.veljaLoading = function () {
-        angular.element($('#velja').button('loading'));
+    $scope.vistaLoading = function () {
+        angular.element($('#vista').button('loading'));
     };
-    $scope.finishedVeljaLoading = function () {
-        angular.element($('#velja').button('reset'));
+    $scope.finishedVistaLoading = function () {
+        angular.element($('#vista').button('reset'));
     };
     $scope.neyslaLoading = function () {
         angular.element($('#neysluflokkun').button('loading'));

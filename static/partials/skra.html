@@ -1,4 +1,98 @@
+
 <div class="row" ng-controller="SkraCtrl" ng-init="init()">
+<div class="modal fade" id="nanar" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title large">Matur</h4>
+        </div>
+        <div class="modal-body medium">
+         <table class="table-responsive">
+					<tr>
+						<th>Orka</th>
+						<th>vítamín</th>
+						<th>steinefni</th>
+					</tr>
+					<tr>
+						<td>Hitaeiningar: {{(9*itemS.fita + 4*itemS.protein + 4*itemS.kolvetni_alls).toFixed(1)}} kcal
+						</td>
+						<td>A-vítamín: {{itemS.a_vitamin_rj}} &mu;g</td>
+						<td>Kalk: {{itemS.kalk}} mg</td>
+					</tr>
+					<tr>
+						<td>Protein: {{itemS.protein}} g</td>
+						<td>C-vítamín: {{itemS.c_vitamin}} mg</td>
+						<td>Járn: {{itemS.jarn}} mg</td>
+					</tr>
+					<tr>
+						<td>Kolvetni: {{itemS.kolvetni_alls}} g</td>
+						<td>D-vítamín: {{itemS.d_vitamin}} &mu;g</td>
+						<td>Magnesíum: {{itemS.magnesium}} mg</td>
+					</tr>
+					<tr>
+						<td>Fita: {{itemS.fita}} g</td>
+						<td>E-vítamín: {{itemS.e_vitamin}} mg</td>
+						<td>Natríum: {{itemS.natrium}} mg</td>
+					</tr>		
+					<tr>
+						<th>Fitusýrur</th>
+						<td>Retinol: {{itemS.retinol}} &mu;g</td>
+						<td>Fosfór: {{itemS.fosfor}} mg</td>
+					</tr>
+					<tr>
+						<td>Mettaðar-fitusýrur: {{itemS.mettadar_fitusyrur}} g</td>
+						<td>Beta-karótín: {{itemS.beta_karotin}} &mu;g</td>
+						<td>Kalíum: {{itemS.kalium}} mg</td>
+					</tr>
+					<tr>
+						<td>Ómettaðar-fitusýrur: {{itemS.cis_einomettadar_fitusyrur + itemS.cis_fjolomettadar_fitusyrur + itemS.cis_fjolomettadar_fitu_n_3_langar + itemS.cis_fjolomettadar_fitu_n_3 + itemS.cis_fjolomettadar_fitu_n_6}} g</td>
+						<td>Alfa-tókóferol: {{itemS.alfa_tokoferol}} mg</td>
+						<td>Sink: {{itemS.sink}} mg</td>
+					</tr>
+					<tr>
+						<td>Transfitusýrur: {{itemS.trans_fitusyrur}} g</td>
+						<td>B1-vítamín: {{itemS.b1_vitamin}} mg</td>
+						<td>Kopar: {{itemS.kompar}} mg</td>
+					</tr>
+					<tr>
+						<td>Kólesteról: {{itemS.kolestrol}} mg</td>
+						<td>B2-vítamín: {{itemS.b2_vitamin}} mg</td>
+						<td>Joð: {{itemS.jod}} &mu;g</td>
+					</tr>
+					<tr>
+						<th>kolvetnagjafar</th>
+						<td>B6-vítamín: {{itemS.b6_vitamin}} mg</td>
+						<td>Mangan: {{itemS.mangan}} mg</td>
+					</tr>
+					<tr>
+						<td>Sykrur: {{itemS.sykrur}} g</td>
+						<td>Fólat: {{itemS.folat_alls}} &mu;g</td>
+						<td>Selen: {{itemS.selen}} &mu;g</td>
+					</tr>
+					<tr>
+						<td>Viðbættur-sykur: {{item.vidbaettur_sykur}} g</td>
+						<td>Fólat: {{itemS.b_12_vitamin}} &mu;g</td>
+						<td>Flúor: {{itemS.fluor}} mg</td>
+					</tr>
+					<tr>
+						<td>Trefjaefni: {{itemS.trefjaefni}} g</td>
+						<td>Níasín: {{itemS.niasin}} mg</td>
+						<td>Stefinefni-alls: {{itemS.steinefni_alls}} g</td>
+					</tr>
+					<tr>
+						<td>Alkóhól: {{itemS.alkohol}} g</td>
+						<td>Níasín-jafngildi: {{itemS.niasin_jafngildi}} mg</td>
+						<th>Vatn: {{itemS.vatn}} g</th>
+					</tr>
+				</table> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Loka</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 	<div class="page-header">
 		<h4>Skrásetningardagur {{dagsetning}}</h4>
 		<form class="navbar-form navbar-left">
@@ -34,7 +128,7 @@
       				</a>
     			</div>
     			<div class="media-body">
-      				<h4 class="media-heading">{{item.nafn}} <span class="glyphicon glyphicon-search"></span></h4>
+      				<h4 class="media-heading">{{item.nafn}} <span class="glyphicon glyphicon-search" ng-click="get(item.nafn)"></span></h4>
       				<div class="thumbnail veljaDiv">
 					<div>
 						<label for="timiDags">Tími dags</label>

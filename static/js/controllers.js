@@ -447,7 +447,7 @@ matarapp.controllers.controller('SkraCtrl',
     $scope.flokkahlekkir = document.getElementsByClassName('flokkar');
     $scope.init = function() {
         $scope.neyslaDagsins = [];
-
+        $scope.itemS = {};
         $scope.dags = $routeParams.dags.slice(1,$routeParams.dags.length);
         $scope.datestring = $scope.dags;
         $scope.selectedSkammtur;
@@ -504,6 +504,25 @@ matarapp.controllers.controller('SkraCtrl',
         }
 
 
+    };
+    $scope.get = function(nafn) {
+        if (gapi.client.matarvefur) {
+            gapi.client.matarvefur.food_item_get({'food_item_heiti': nafn}).execute(function(resp) {
+                $scope.$apply(function () {
+                    if (!resp.code) {
+                        $scope.finishedLoading();
+                        console.log(resp);
+                        $scope.itemS = resp;
+                        console.log($scope.itemS)
+                        angular.element($('#nanar').modal('show'));   
+                    }
+                    else {
+                        $scope.finishedLoading();
+                        $scope.alertMessageFun('danger', 'Fannst ekki');  
+                    }
+                });
+            });
+        }
     };
     $scope.searchCat = function(c1,c2) {
         var c1 = parseInt($scope.matarflokkar_dict[c1]);

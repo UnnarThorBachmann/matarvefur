@@ -1,49 +1,111 @@
 
 <div class="row" ng-controller="SkraCtrl" ng-init="init()">
 <div class="modal fade" id="nanar" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title large">Matur</h4>
+          <h4 class="modal-title large">{{itemS.heiti}}</h4>
         </div>
         <div class="modal-body medium">
          <table class="table-responsive">
 					<tr>
-						<th>Orka</th>
-						<th>vítamín</th>
-						<th>steinefni</th>
+						<th>Orkuefni og vatn</th>
+						<th>Fituleysanleg vítamín</th>
+						<th>Vatnsleysanleg vítamín</th>
+						<th>Steinefni</th>
 					</tr>
 					<tr>
-						<td>Hitaeiningar: {{(9*itemS.fita + 4*itemS.protein + 4*itemS.kolvetni_alls).toFixed(1)}} kcal
-						</td>
+						<td>Vatn: {{itemS.vatn}} g</td>
 						<td>A-vítamín: {{itemS.a_vitamin_rj}} &mu;g</td>
+						<td>Þíamín (B1): {{itemS.b1_vitamin}} mg</td>
 						<td>Kalk: {{itemS.kalk}} mg</td>
 					</tr>
 					<tr>
-						<td>Protein: {{itemS.protein}} g</td>
-						<td>C-vítamín: {{itemS.c_vitamin}} mg</td>
+						<td>Hitaeiningar (kJ)</td>
+						<td> -Retinol: {{itemS.retinol}} &mu;g</td>
+						<td>Ribóflavín (B2): {{itemS.b2_vitamin}} mg</td>
 						<td>Járn: {{itemS.jarn}} mg</td>
 					</tr>
 					<tr>
-						<td>Kolvetni: {{itemS.kolvetni_alls}} g</td>
+						<td>Hitaeiningar: {{(9*itemS.fita + 4*itemS.protein + 4*itemS.kolvetni_alls).toFixed(1)}} kcal</td>
+						<td> -Beta-karótín: {{itemS.beta_karotin}} &mu;g</td>
+						<td>Níasín (B3): {{itemS.niasin}} mg</td>
+						<td>Natríum: {{item.natrium}} mg</td>
+					</tr>
+					<tr>
+						<td></td>
 						<td>D-vítamín: {{itemS.d_vitamin}} &mu;g</td>
+						<td>B6-vítamín: {{itemS.b6_vitamin}} mg</td>
+						<td>Kalíum: {{itemS.kalium}} mg</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>E-vítamín: {{itemS.e_vitamin}} mg</td>
+						<td>Fólat: {{itemS.folat_alls}} &mu;g</td>
 						<td>Magnesíum: {{itemS.magnesium}} mg</td>
 					</tr>
 					<tr>
+						<td></td>
+						<td></td>
+						<td>B12-vítamín: {{itemS.b_12_vitamin}} &mu;g</td>
+						<td>Sink: {{item.sink}} mg</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td>C-vítamín: {{itemS.c_vitamin}} mg</td>
+						<td>Joð: {{itemS.jod}} &mu;g</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>Selen: {{itemS.selen}} &mu;g</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>Kopar: {{itemS.kompar}} mg</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>Fosfór: {{itemS.fosfor}} mg</td>
+					</tr>
+					<!--
+					<tr>
+						<td>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Protein: {{itemS.protein}} g</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Kolvetni: {{itemS.kolvetni_alls}} g</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
 						<td>Fita: {{itemS.fita}} g</td>
-						<td>E-vítamín: {{itemS.e_vitamin}} mg</td>
+						<td></td>
 						<td>Natríum: {{itemS.natrium}} mg</td>
 					</tr>		
 					<tr>
 						<th>Fitusýrur</th>
-						<td>Retinol: {{itemS.retinol}} &mu;g</td>
-						<td>Fosfór: {{itemS.fosfor}} mg</td>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Mettaðar-fitusýrur: {{itemS.mettadar_fitusyrur}} g</td>
-						<td>Beta-karótín: {{itemS.beta_karotin}} &mu;g</td>
-						<td>Kalíum: {{itemS.kalium}} mg</td>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Ómettaðar-fitusýrur: {{itemS.cis_einomettadar_fitusyrur + itemS.cis_fjolomettadar_fitusyrur + itemS.cis_fjolomettadar_fitu_n_3_langar + itemS.cis_fjolomettadar_fitu_n_3 + itemS.cis_fjolomettadar_fitu_n_6}} g</td>
@@ -52,39 +114,39 @@
 					</tr>
 					<tr>
 						<td>Transfitusýrur: {{itemS.trans_fitusyrur}} g</td>
-						<td>B1-vítamín: {{itemS.b1_vitamin}} mg</td>
-						<td>Kopar: {{itemS.kompar}} mg</td>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Kólesteról: {{itemS.kolestrol}} mg</td>
-						<td>B2-vítamín: {{itemS.b2_vitamin}} mg</td>
-						<td>Joð: {{itemS.jod}} &mu;g</td>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<th>kolvetnagjafar</th>
-						<td>B6-vítamín: {{itemS.b6_vitamin}} mg</td>
+						<td></td>
 						<td>Mangan: {{itemS.mangan}} mg</td>
 					</tr>
 					<tr>
 						<td>Sykrur: {{itemS.sykrur}} g</td>
-						<td>Fólat: {{itemS.folat_alls}} &mu;g</td>
-						<td>Selen: {{itemS.selen}} &mu;g</td>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Viðbættur-sykur: {{item.vidbaettur_sykur}} g</td>
-						<td>Fólat: {{itemS.b_12_vitamin}} &mu;g</td>
+						<td></td>
 						<td>Flúor: {{itemS.fluor}} mg</td>
 					</tr>
 					<tr>
 						<td>Trefjaefni: {{itemS.trefjaefni}} g</td>
-						<td>Níasín: {{itemS.niasin}} mg</td>
+						<td></td>
 						<td>Stefinefni-alls: {{itemS.steinefni_alls}} g</td>
 					</tr>
 					<tr>
 						<td>Alkóhól: {{itemS.alkohol}} g</td>
 						<td>Níasín-jafngildi: {{itemS.niasin_jafngildi}} mg</td>
-						<th>Vatn: {{itemS.vatn}} g</th>
-					</tr>
+						<th></th>
+					</tr>-->
 				</table> 
         </div>
         <div class="modal-footer">
@@ -302,7 +364,7 @@
 						<td>Hitaeiningar: {{(9*item.fita + 4*item.protein + 4*item.kolvetni_alls).toFixed(1)}} kcal
 						</td>
 						<td>A-vítamín: {{item.a_vitamin_rj}} &mu;g</td>
-						<td>Kalk: {{item.kalk}} mg</td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Protein: {{item.protein}} g</td>
@@ -312,12 +374,12 @@
 					<tr>
 						<td>Kolvetni: {{item.kolvetni_alls}} g</td>
 						<td>D-vítamín: {{item.d_vitamin}} &mu;g</td>
-						<td>Magnesíum: {{item.magnesium}} mg</td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Fita: {{item.fita}} g</td>
 						<td>E-vítamín: {{item.e_vitamin}} mg</td>
-						<td>Natríum: {{item.natrium}} mg</td>
+						<td></td>
 					</tr>		
 					<tr ng-show="fellt">
 						<th>Fitusýrur</th>
@@ -327,12 +389,12 @@
 					<tr ng-show="fellt">
 						<td>Mettaðar-fitusýrur: {{item.mettadar_fitusyrur}} g</td>
 						<td>Beta-karótín: {{item.beta_karotin}} &mu;g</td>
-						<td>Kalíum: {{item.kalium}} mg</td>
+						<td></td>
 					</tr>
 					<tr ng-show="fellt">
 						<td>Ómettaðar-fitusýrur: {{item.cis_einomettadar_fitusyrur + cis_fjolomettadar_fitusyrur + item.cis_fjolomettadar_fitu_n_3_langar + item.cis_fjolomettadar_fitu_n_3 + item.cis_fjolomettadar_fitu_n_6}} g</td>
 						<td>Alfa-tókóferol: {{item.alfa_tokoferol}} mg</td>
-						<td>Sink: {{item.sink}} mg</td>
+						<td></td>
 					</tr>
 					<tr ng-show="fellt">
 						<td>Transfitusýrur: {{item.trans_fitusyrur}} g</td>

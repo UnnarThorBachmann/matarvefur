@@ -41,6 +41,7 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
         };
 
         $scope.setMonth = function (datestring) { 
+            
             $scope.currDateString = datestring;
             var d = new Date(datestring);
             var i = d.getDate();
@@ -50,7 +51,6 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                 j -= 1;
                 if (j < 0) {j = 6};
                 i -= 1;
-
                 var datestr2 = d.getFullYear().toString()+ '-' + (d.getMonth() < 9?('0'+(d.getMonth()+1).toString()):(d.getMonth()+1).toString()) + '-' + (i < 10? ('0'+i.toString()):i.toString());
                 var dayDiv = $.inArray(datestr2.toString(),$scope.consumption_days) === -1 ?{} : {'background-color': '#F0F0F0'}; 
 
@@ -63,7 +63,20 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                               'ar': d.getFullYear()});
             }
             var datestr2 = d.getFullYear().toString()+ '-' + (d.getMonth() < 9?('0'+(d.getMonth()+1).toString()):(d.getMonth()+1).toString()) + '-' + (d.getDate() < 10? ('0'+d.getDate().toString()):d.getDate().toString());
-            var dayDiv = $.inArray(datestr2,$scope.consumption_days) === -1 ?{'border-color': 'red'} : {'border-color': 'red', 'background-color': '#F0F0F0'}; 
+            var nowDate = new Date();
+            var calendarDate = new Date(datestr2);
+            var nowTrue = (nowDate.getDate() === calendarDate.getDate() && nowDate.getMonth() === calendarDate.getMonth() && nowDate.getFullYear() === calendarDate.getFullYear())? true:false; 
+            var dayDiv;
+            if (nowTrue && $.inArray(datestr2,$scope.consumption_days) === -1) {
+                dayDiv = {'border-color': 'red'};
+            }
+            else if (nowTrue && $.inArray(datestr2,$scope.consumption_days) != -1) {
+                dayDiv = {'border-color': 'red', 'background-color': '#F0F0F0'}; 
+            }
+            else {
+                dayDiv = {};
+            }
+            
             $scope.days.push({'vikudagur': $scope.days_dict[d.getDay()],
                               'manudur': $scope.months_dict[d.getMonth()],
                               'manadardagur': d.getDate(),
@@ -95,6 +108,9 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                               'vikur': [],
                               'ar': d.getFullYear()
             };
+            
+            
+
             var viku_nr = 1
             var vd = [];
             for (var i = 0; i < $scope.days.length; i++) {
@@ -113,10 +129,17 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
             var right = (100*(7-parseFloat(vd.length))/parseFloat(7)).toString() + '%';
 
             $scope.manudur.vikur.push({'left': '0%','vd': vd,'right': right});
-
+            
         };
-        $scope.init = function() {   
-           $scope.setMonth($scope.currDateString);
+        $scope.init = function() {
+            var datestring = $scope.currDateString;
+            var arfylki = datestring.split('-');
+            var manudur = parseInt(arfylki[1]);
+            var ar = parseInt(arfylki[0]);
+            
+            var manadarstr = (manudur < 10) ? '0'+ manudur.toString(): manudur.toString(); 
+            datestring = ar.toString() + '-' + manadarstr +'-01';
+            $scope.setMonth(datestring);   
         };
         $scope.changeMonth = function (indicator) {
             var datestring = $scope.currDateString;

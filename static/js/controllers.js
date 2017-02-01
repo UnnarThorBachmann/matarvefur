@@ -529,14 +529,13 @@ matarapp.controllers.controller('SkraCtrl',
 
     };
     $scope.get = function(nafn) {
+
         if (gapi.client.matarvefur) {
             gapi.client.matarvefur.food_item_get({'food_item_heiti': nafn}).execute(function(resp) {
                 $scope.$apply(function () {
                     if (!resp.code) {
                         $scope.finishedLoading();
-                        console.log(resp);
                         $scope.itemS = resp;
-                        console.log($scope.itemS)
                         angular.element($('#nanar').modal('show'));   
                     }
                     else {
@@ -913,6 +912,14 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
     $scope.isActive = function (viewLocation) {
 
         return viewLocation === $location.path();
+    };
+    $scope.numb = function(a) {
+        if (isNaN(a)) {
+            return 0;
+        }
+        else {
+            return a;
+        }
     };
 
     $scope.getSignedInState = function () {

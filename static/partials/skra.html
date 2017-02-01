@@ -22,58 +22,100 @@
 						<td>Kalk: {{itemS.kalk}} mg</td>
 					</tr>
 					<tr>
-						<td>Hitaeiningar (kJ)</td>
+						<td>Hitaeiningar: {{(37*numb(itemS.fita) + 17*numb(itemS.protein) + 17*numb(itemS.kolvetni_alls)+8*numb(itemS.trefjaefni)+29*numb(itemS.alkohol)).toFixed(1)}} (kJ)</td>
 						<td> -Retinol: {{itemS.retinol}} &mu;g</td>
 						<td>Ribóflavín (B2): {{itemS.b2_vitamin}} mg</td>
 						<td>Járn: {{itemS.jarn}} mg</td>
 					</tr>
 					<tr>
-						<td>Hitaeiningar: {{(9*itemS.fita + 4*itemS.protein + 4*itemS.kolvetni_alls).toFixed(1)}} kcal</td>
+						<td>Hitaeiningar: {{(9*numb(itemS.fita) + 4*numb(itemS.protein) + 4*numb(itemS.kolvetni_alls)+2*numb(itemS.trefjaefni)+7*numb(itemS.alkohol)).toFixed(1)}} kkal</td>
 						<td> -Beta-karótín: {{itemS.beta_karotin}} &mu;g</td>
 						<td>Níasín (B3): {{itemS.niasin}} mg</td>
 						<td>Natríum: {{item.natrium}} mg</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td>Fita: {{itemS.fita}} (g)</td>
 						<td>D-vítamín: {{itemS.d_vitamin}} &mu;g</td>
 						<td>B6-vítamín: {{itemS.b6_vitamin}} mg</td>
 						<td>Kalíum: {{itemS.kalium}} mg</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td>&nbsp;-Mettaðar fitusýrur: {{itemS.mettadar_fitusyrur}} g</td>
 						<td>E-vítamín: {{itemS.e_vitamin}} mg</td>
 						<td>Fólat: {{itemS.folat_alls}} &mu;g</td>
 						<td>Magnesíum: {{itemS.magnesium}} mg</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td>&nbsp;-Einómettaðar fitusýrur: {{itemS.cis_einomettadar_fitusyrur}}</td>
 						<td></td>
 						<td>B12-vítamín: {{itemS.b_12_vitamin}} &mu;g</td>
 						<td>Sink: {{item.sink}} mg</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td>&nbsp;-Fjölómettaðar fitusýrur {{itemS.cis_fjolomettadar_fitusyrur}} g</td>
 						<td></td>
 						<td>C-vítamín: {{itemS.c_vitamin}} mg</td>
 						<td>Joð: {{itemS.jod}} &mu;g</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td>&nbsp;&nbsp;&nbsp;-Ómega-3 fitusýrur {{itemS.cis_fjolomettadar_fitu_n_3_langar + itemS.cis_fjolomettadar_fitu_n_3}} g</td>
 						<td></td>
 						<td></td>
 						<td>Selen: {{itemS.selen}} &mu;g</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td>&nbsp;&nbsp;&nbsp;-Ómega-6 fitusýrur {{itemS.cis_fjolomettadar_fitu_n_6}} g</td>
 						<td></td>
 						<td></td>
 						<td>Kopar: {{itemS.kompar}} mg</td>
 					</tr>
 					<tr>
-						<td></td>
+						<td>&nbsp;&nbsp;&nbsp;-Trans-fitusýrur: {{itemS.trans_fitusyrur}} g</td>
 						<td></td>
 						<td></td>
 						<td>Fosfór: {{itemS.fosfor}} mg</td>
+					</tr>
+					<tr>
+						<td>&nbsp;-Kólesteról: {{itemS.kolestrol}} mg</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Kolvetni: {{itemS.kolvetni_alls}} g</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>&nbsp;-Ein- og tvísykrur (sykrur): {{itemS.sykrur}} g </td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>&nbsp;-Viðbættur sykur: {{itemS.vidbaettur_sykur}} g </td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>&nbsp;-Trefjar: {{itemS.trefjaefni}} g </td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Prótein: {{itemS.protein}} g </td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Alkóhól: {{itemS.alkohol}} g </td>
+						<td></td>
+						<td></td>
+						<td></td>
 					</tr>
 					<!--
 					<tr>

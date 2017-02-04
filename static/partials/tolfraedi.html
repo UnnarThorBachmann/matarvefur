@@ -54,27 +54,83 @@
 
     <button type="submit" class="btn btn-success" ng-click="reikna()">Tölfræði</button>
 	</div>
-
-	<div class="col-md-6" ng-show="showStats" id="teiknibord">
-		<form>
+  <div class="col-md-12" ng-show="showStats">
+    <form class="form-inline">
             <div class="form-group form-group-lg"> 
-                <select  id="efnalisti">
-                    <option ng-repeat="efni in faeduefnaheiti">{{efni}}</option>
+                <select  id="dagalisti" class="form-control" ng-model="currDagaheiti">
+                    <option ng-repeat="dagur in dagaheiti" ng-value="dagur">{{dagur}}</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-success" ng-click="nyttEfni()">Nýtt efni</button>
-       	</form> 
-		<canvas id="sulurit"></canvas>
+            <button type="submit" class="btn btn-success" ng-click="renderStatistics()">Nýr dagur</button>
+    </form> 
+  </div>
+	<div class="col-md-8" ng-show="showStats" id="teiknibord">
+  <h4>Ráðlagðir dagskammtar</h4>
+    <table class="table-responsive">
+          <tr>
+            <th>Orkuefni</th>
+            <th>Fituleysanleg vítamín</th>
+            <th>Vatnsleysanleg vítamín</th>
+            <th>Steinefni</th>
+          </tr>
+          <tr>
+            <td>Hitaeiningar: </td>
+            <td>A-vítamín: {{itemD.a_vitamin_rj}} %</td>
+            <td>Þíamín (B1): {{itemD.b1_vitamin}} %</td>
+            <td>Kalk: {{itemD.kalk}} %</td>
+          </tr>
+          <tr>
+            <td>&nbsp;-{{(37*numb(itemD.fita) + 17*numb(itemD.protein) + 17*numb(itemD.kolvetni_alls)+8*numb(itemD.trefjaefni)+29*numb(itemD.alkohol)).toFixed(1)}} (kJ)</td>
+            <td>D-vítamín: {{itemD.d_vitamin}} %</td>
+            <td>Ribóflavín (B2): {{itemD.b2_vitamin}} %</td>
+            <td>Járn: {{itemD.jarn}} %</td>
+          </tr>
+          <tr>
+            <td>&nbsp;-{{(9*numb(itemD.fita) + 4*numb(itemD.protein) + 4*numb(itemD.kolvetni_alls)+2*numb(itemD.trefjaefni)+7*numb(itemD.alkohol)).toFixed(1)}} kkal</td>
+            <td>E-vítamín: {{itemD.e_vitamin_alfa_tj}} %</td>
+            <td>Níasín (B3): {{itemD.niasin}} %</td>
+            <td>Kalíum: {{itemD.kalium}} %</td>
+          </tr>
+          <tr>
+            <td>&nbsp;-{{((37*numb(itemD.fita) + 17*numb(itemD.protein) + 17*numb(itemD.kolvetni_alls)+8*numb(itemD.trefjaefni)+29*numb(itemD.alkohol))/consumer.kkal_needed*100).toFixed(1)}} %</td>
+            <td></td>
+            <td>B6-vítamín: {{itemD.b6_vitamin}} %</td>
+            <td>Magnesíum: {{itemD.magnesium}} %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>Fólat: {{itemD.folat_alls}} %</td>
+            <td>Sink: {{itemD.sink}} %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>B12-vítamín: {{itemD.b_12_vitamin}} %</td>
+            <td>Joð: {{itemD.jod}} %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td>C-vítamín: {{itemD.c_vitamin}} %</td>
+            <td>Selen: {{itemD.selen}} %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Kopar: {{itemD.kopar}} %</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Fosfór: {{itemD.fosfor}} %</td>
+          </tr>
+        </table> 		
 	</div>
 	<div class="col-md-4" ng-show="showStats" id="teiknibord2">
-		<form>
-            <div class="form-group form-group-lg"> 
-                <select  id="dagalisti">
-                    <option ng-repeat="efni in dagaheiti">{{efni}}</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-success" ng-click="nyrDagur()">Nýr dagur</button>
-       	</form> 
+		
 		<canvas id="kokurit"></canvas>
 	</div>
 </div>

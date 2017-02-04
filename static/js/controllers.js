@@ -52,36 +52,21 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                 if (j < 0) {j = 6};
                 i -= 1;
                 var datestr2 = d.getFullYear().toString()+ '-' + (d.getMonth() < 9?('0'+(d.getMonth()+1).toString()):(d.getMonth()+1).toString()) + '-' + (i < 10? ('0'+i.toString()):i.toString());
-                var dayDiv = $.inArray(datestr2.toString(),$scope.consumption_days) === -1 ?{} : {'background-color': '#F0F0F0'}; 
+                //var dayDiv = $.inArray(datestr2.toString(),$scope.consumption_days) === -1 ?{} : {'background-color': '#F0F0F0'}; 
 
                 $scope.days.push({'vikudagur': $scope.days_dict[j],
                               'manudur': $scope.months_dict[d.getMonth()],
                               'manadardagur': i,
                               'currday': false,
-                              'dayDiv': dayDiv,
                               'datestring': datestr2,
                               'ar': d.getFullYear()});
             }
             var datestr2 = d.getFullYear().toString()+ '-' + (d.getMonth() < 9?('0'+(d.getMonth()+1).toString()):(d.getMonth()+1).toString()) + '-' + (d.getDate() < 10? ('0'+d.getDate().toString()):d.getDate().toString());
-            var nowDate = new Date();
-            var calendarDate = new Date(datestr2);
-            var nowTrue = (nowDate.getDate() === calendarDate.getDate() && nowDate.getMonth() === calendarDate.getMonth() && nowDate.getFullYear() === calendarDate.getFullYear())? true:false; 
-            var dayDiv;
-            if (nowTrue && $.inArray(datestr2,$scope.consumption_days) === -1) {
-                dayDiv = {'border-color': 'red'};
-            }
-            else if (nowTrue && $.inArray(datestr2,$scope.consumption_days) != -1) {
-                dayDiv = {'border-color': 'red', 'background-color': '#F0F0F0'}; 
-            }
-            else {
-                dayDiv = {};
-            }
             
             $scope.days.push({'vikudagur': $scope.days_dict[d.getDay()],
                               'manudur': $scope.months_dict[d.getMonth()],
                               'manadardagur': d.getDate(),
                               'currday': false,
-                              'dayDiv': dayDiv,
                               'datestring': datestr2,
                               'ar': d.getFullYear()
             });
@@ -93,17 +78,41 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                 if (j > 6) {j = 0};
                 i += 1;
                 var datestr2 = d.getFullYear().toString()+ '-' + (d.getMonth() < 9?('0'+((d.getMonth()+1).toString())):(d.getMonth()+1).toString()) + '-' + (i < 10? ('0'+i.toString()):i.toString());
-                var dayDiv = $.inArray(datestr2.toString(),$scope.consumption_days) === -1 ?{} : {'background-color': '#F0F0F0'}; 
+                //var dayDiv = $.inArray(datestr2.toString(),$scope.consumption_days) === -1 ?{} : {'background-color': '#F0F0F0'}; 
 
                 $scope.days.push({'vikudagur': $scope.days_dict[j],
                               'manudur': $scope.months_dict[d.getMonth()],
                               'manadardagur': i,
                               'currday': false,
-                              'dayDiv': dayDiv,
                               'datestring': datestr2,
                               'ar': d.getFullYear()});
             }
+            
+
             $scope.days.sort($scope.compare);
+            var nowDate = new Date();
+            
+            for (var i=0; i < $scope.days.length; i++) {
+                var calendarDate = new Date($scope.days[i].datestring);
+
+                var nowTrue = (nowDate.getDate() === calendarDate.getDate() && nowDate.getMonth() === calendarDate.getMonth() && nowDate.getFullYear() === calendarDate.getFullYear())? true:false; 
+                var dayDiv;
+                var consumed = $.inArray($scope.days[i].datestring,$scope.consumption_days) != -1;
+                if (nowTrue && !consumed) {
+                    $scope.days[i].dayDiv = {'border-color': 'red'};
+                }
+                else if (nowTrue && consumed) {
+                    $scope.days[i].dayDiv = {'border-color': 'red', 'background-color': '#F0F0F0'}; 
+                }
+                else if (consumed) {
+                  $scope.days[i].dayDiv = {'background-color': '#F0F0F0'};   
+                }
+                else {
+                    $scope.days[i].dayDiv = {'background-color': 'white'};
+                }
+            }
+            console.log($scope.days);
+
             $scope.manudur = {'heiti': $scope.months_dict[d.getMonth()], 
                               'vikur': [],
                               'ar': d.getFullYear()
@@ -605,7 +614,7 @@ matarapp.controllers.controller('SkraCtrl',
         
         $scope.vistaLoading();
         if (gapi.client.matarvefur) {
-            var push_items = [{'heiti': 'SKYR','size': 30,'mal': 'Morgunmatur'}];
+            var push_items = [];
             for (var i = 0; i < $scope.neyslaDagsins.length; i++) {
                 var item = {};
                 item.heiti = $scope.neyslaDagsins[i].nafn;

@@ -123,7 +123,8 @@ class User(ndb.Model):
         self.fooditems.append(fooditem)
         
     def put_consumption_days(self,consumption_day):
-        self.consumption_days.append(consumption_day)
+        if not consumption_day in self.consumption_days:
+            self.consumption_days.append(consumption_day)
         
     def get_item(self,heiti):
         for item in self.fooditems:

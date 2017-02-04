@@ -52,7 +52,7 @@
   			</div>		
 		</form>
 
-    <button type="submit" class="btn btn-success" ng-click="reikna()">Tölfræði</button>
+    <button type="submit" class="btn btn-success"  data-loading-text="Augnablik..." id="tolfrTakki" ng-click="reikna()">Tölfræði</button>
 	</div>
   <div class="col-md-12" ng-show="showStats">
     <form class="form-inline">
@@ -92,7 +92,7 @@
             <td>Kalíum: {{itemD.kalium}} %</td>
           </tr>
           <tr>
-            <td>&nbsp;-{{((37*numb(itemD.fita) + 17*numb(itemD.protein) + 17*numb(itemD.kolvetni_alls)+8*numb(itemD.trefjaefni)+29*numb(itemD.alkohol))/consumer.kkal_needed*100).toFixed(1)}} %</td>
+            <td>&nbsp;-{{((9*numb(itemD.fita) + 4*numb(itemD.protein) + 4*numb(itemD.kolvetni_alls)+2*numb(itemD.trefjaefni)+7*numb(itemD.alkohol))/consumer.kkal_needed*100).toFixed(1)}} %</td>
             <td></td>
             <td>B6-vítamín: {{itemD.b6_vitamin}} %</td>
             <td>Magnesíum: {{itemD.magnesium}} %</td>

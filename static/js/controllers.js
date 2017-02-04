@@ -265,47 +265,7 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
         $scope.barChart = new Chart($scope.ctx, $scope.barChartData);
 
     };
-    /*
-    $scope.nyrDagur = function () {
-        $scope.labelsData2 = [];
-        $scope.gildin2 = [];
-        var index = 0;
-        for (var j in $scope.dagaheiti) {
-            if ($scope.dagaheiti[j] === validEfni) {
-                index = j;
-                break;
-            }        
-        }
-        var dags = $scope.consumptionDays[$scope.dagaheiti[index]];
-        $scope.gildin2 = [dags['Fitueiningar'],dags['Proteineiningar'],dags['Kolvetniseiningar']];
-        $scope.pieChartData = {
-                type: 'pie',
-                data: {
-                    labels: [
-                        "Fita",
-                        "Prótein",
-                        "Kolvetni"
-                    ],
-                    datasets: [
-                    {
-                        data: $scope.gildin2,
-                        backgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#FFCE56"
-                    ],
-                        hoverBackgroundColor: [
-                        "#FF6384",
-                        "#36A2EB",
-                        "#FFCE56"
-                        ]
-                    }]
-                }
-            };
-        $scope.pieChart.destroy();
-        $scope.ctx2 = document.getElementById('kokurit').getContext('2d');
-        $scope.pieChart = new Chart($scope.ctx2, $scope.pieChartData);
-    };*/
+  
     $scope.renderStatistics = function () {
             
             $scope.itemD = {};
@@ -342,8 +302,8 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
             $scope.labelsData2 = [];
             $scope.gildin2 = []
 
-            var dags = $scope.consumptionDays[$scope.dagaheiti[0]];
-            $scope.gildin2 = [dags['Fitueiningar'],dags['Proteineiningar'],dags['Kolvetniseiningar']];
+            var orka = 9*$scope.numb($scope.itemD.fita) + 4*$scope.numb($scope.itemD.protein) + 4*$scope.numb($scope.itemD.kolvetni_alls)+2*$scope.numb($scope.itemD.trefjaefni)+7*$scope.numb($scope.itemD.alkohol);
+            $scope.gildin2 = [(9*$scope.itemD.fita/orka*100).toFixed(1),(4*$scope.itemD.protein/orka*100).toFixed(1),(4*$scope.itemD.kolvetni_alls/orka*100).toFixed(1)];
             $scope.ctx2 = document.getElementById("kokurit");
             $scope.pieChartData = {
                 type: 'pie',
@@ -447,6 +407,7 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                 return
             }
             else {
+                $scope.tolfrLoading();
                 if (gapi.client.matarvefur)
                 {
                     gapi.client.matarvefur.get_food({
@@ -462,6 +423,7 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                                 return
                             }
                             else {
+                                
                                 $scope.showStats = true;
                                 $scope.dagaheiti = [];
                                 for (var i in resp.items) {
@@ -484,14 +446,7 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                                         }
                                     }
                                 }
-                                for (var item in $scope.consumptionDays) {
-                                  $scope.consumptionDays[item]['Hitaeiningar'] = 4*$scope.consumptionDays[item]['protein']+4*$scope.consumptionDays[item]['kolvetni_alls']+9*$scope.consumptionDays[item]['fita'];
-                                   $scope.consumptionDays[item]['Fitueiningar'] = 9*$scope.consumptionDays[item]['fita'];
-                                   $scope.consumptionDays[item]['Fitueiningar'] = 9*$scope.consumptionDays[item]['fita'];
-                                   $scope.consumptionDays[item]['Proteineiningar'] = 4*$scope.consumptionDays[item]['protein'];
-                                   $scope.consumptionDays[item]['Kolvetniseiningar'] = 4*$scope.consumptionDays[item]['kolvetni_alls'];
-
-                                }   
+                                 
                                 $scope.renderStatistics();
                             }
                             
@@ -501,9 +456,11 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                     else {
                         console.log('error');
                     }
-                });
+                    });
             
-                }        
+                }
+                $scope.finishedTolfrLoading();
+        
             }
         }
         else {
@@ -723,9 +680,9 @@ matarapp.controllers.controller('SkraCtrl',
                          $scope.alertMessageFun('danger', 'Mistókst að skrá fæðu.');      
                     }
             });   
-            $scope.finishedVistaLoading();
-            
         }
+        $scope.finishedVistaLoading();
+
     };
 
  
@@ -855,6 +812,12 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
     };
     $scope.finishedVistaLoading = function () {
         angular.element($('#vista').button('reset'));
+    };
+    $scope.tolfrLoading = function () {
+        angular.element($('#tolfrTakki').button('loading'));
+    };
+    $scope.finishedTolfrLoading = function () {
+        angular.element($('#tolfrTakki').button('reset'));
     };
     $scope.neyslaLoading = function () {
         angular.element($('#neysluflokkun').button('loading'));

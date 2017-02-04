@@ -1,8 +1,47 @@
 <div class="row" ng-controller="TolfraediCtrl" ng-init="init()">
 	<div class="thumbnail col-md-12" >
-		<h4>Veljið dagsetningar og aðrar nauðsynlegar upplýsingar</h4>
+    <h4>Upplýsingar um notanda</h4>
+    <form class="form-inline">
+        <div class="form-group">
+          <label>Hæð (cm): </label>
+            <select class="form-control" ng-model="consumer.height">
+            <option ng-repeat="h in height" ng-value"h">{{h}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+          <label>Þyngd (kg): </label>
+            <select class="form-control" ng-model="consumer.weight">
+            <option ng-repeat="w in weight" ng-value"w">{{w}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+          <label>Aldur: </label>
+            <select class="form-control" ng-model="consumer.age">
+            <option ng-repeat="a in aldur" ng-value"a">{{a}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Kyn: </label>
+            <select ng-model="consumer.sex" class="form-control">
+            <option ng-repeat="s in kynin" ng-value="s">{{s}}</option>
+            </select>
+        </div>
+    </form>
+
+    <h4>Upplýsingar um hreyfingu</h4>
+
+    <form class="form-inline">
+        <div class="form-group">
+          <label>Hreyfing: </label>
+            <select class="form-control" ng-model="consumer.hreyfing">
+            <option ng-repeat="h in hreyfing" ng-value"h">{{h}}</option>
+          </select>
+        </div>
+    </form>
+		<h4>Veljið dagsetningar</h4>
+
 		Ef einungis fyrri dagsetningin er valin er birt tölfræði viðkomandi dags. Ef báðar dagsetningarnar eru valdar er reiknuð tölfræði hvers dags.
-        <form class="form-inline">
+      <form class="form-inline">
   			<div class="form-group">
     			<label>Frá</label>
     		    <input type='text' class="form-control" id="datepicker1"/>
@@ -10,10 +49,12 @@
   			<div class="form-group">
     			<label>Til</label>
     		    <input type='text' class="form-control" id="datepicker2"/>
-  			</div>
-  			<button type="submit" class="btn btn-success" ng-click="reikna()">Tölfræði</button>
+  			</div>		
 		</form>
+
+    <button type="submit" class="btn btn-success" ng-click="reikna()">Tölfræði</button>
 	</div>
+
 	<div class="col-md-6" ng-show="showStats" id="teiknibord">
 		<form>
             <div class="form-group form-group-lg"> 

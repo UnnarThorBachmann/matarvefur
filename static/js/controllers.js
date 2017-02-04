@@ -111,7 +111,6 @@ matarapp.controllers.controller('SkraOgSkodaCtrl',
                     $scope.days[i].dayDiv = {'background-color': 'white'};
                 }
             }
-            console.log($scope.days);
 
             $scope.manudur = {'heiti': $scope.months_dict[d.getMonth()], 
                               'vikur': [],
@@ -190,7 +189,36 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                 dateFormat: 'yy-mm-dd'    
             })
         });
-        
+        $scope.kynin = ["Karl",
+                        "Kona",
+                        "Kona á meðgöngu",
+                        "Kona með barn á brjósti"];
+        $scope.hreyfing = ["Engin hreyfing",
+                            "Léttar æfingar 1-3 sinnum í viku",
+                            "Miðlungserfiðar æfingar 3-5 sinnum í viku",
+                            "Þungar æfingar 6-7 sinnum í viku",
+            "               Mjög þungar æfingar tvisvar á dag"
+        ];
+        $scope.aldur = ["10-13",
+                        "14-17",
+                        "18-30",
+                        "31-60",
+                        "61-74",
+                        "75+"];
+        $scope.weight = [];
+        for (var i = 50; i < 150; i++) {
+            $scope.weight.push(i);
+        }
+        $scope.height = [];
+        for (var i = 140; i < 230; i++) {
+            $scope.height.push(i);
+        }
+        $scope.consumer = {};
+        $scope.consumer.age = "18-30";
+        $scope.consumer.weight = "90";
+        $scope.consumer.height = "190";
+        $scope.consumer.sex="Karl";
+        $scope.consumer.hreyfing = "Engin hreyfing";
     };   
     $scope.consumptionDays = {};
     $scope.showStats = false;

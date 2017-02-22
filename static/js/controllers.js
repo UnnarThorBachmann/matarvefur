@@ -211,13 +211,14 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
         for (var i = 140; i < 230; i++) {
             $scope.height.push(i);
         }
-
+        
         $scope.consumer = {};
-        $scope.consumer.age = "30";
-        $scope.consumer.weight = "90";
-        $scope.consumer.height = "190";
-        $scope.consumer.sex="Karl";
-        $scope.consumer.hreyfing = "Kyrrseta";
+        
+        $scope.consumer.age = $cookieStore.put('age')? $cookieStore.get('age'):"30";
+        $scope.consumer.weight = $cookieStore.get('weight')? $cookieStore.get('weight'):"90";
+        $scope.consumer.height = $cookieStore.get('height')? $cookieStore.get('height'):"190";
+        $scope.consumer.sex= $cookieStore.get('sex')? $cookieStore.get('sex'):"Karl";
+        $scope.consumer.hreyfing = $cookieStore.get('hreyfing')? $cookieStore.get('hreyfing'):"Kyrrseta";
     };   
     $scope.consumptionDays = {};
     $scope.showStats = false;
@@ -337,6 +338,12 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
             
     };
     $scope.reikna = function () {
+        $cookieStore.put('age',$scope.consumer.age);
+        $cookieStore.put('weight',$scope.consumer.weight);
+        $cookieStore.put('height',$scope.consumer.height);
+        $cookieStore.put('sex',$scope.consumer.sex);
+        $cookieStore.put('hreyfing',$scope.consumer.hreyfing);
+
         $scope.consumer.bmr = $scope.consumer.sex === 'Karl' ? ((10*parseInt($scope.consumer.weight)) + (6.25*parseInt($scope.consumer.height)) - (5*parseInt($scope.consumer.age)) + 5): ((10*parseInt($scope.consumer.weight)) + (6.25*parseInt($scope.consumer.height)) - (5*parseInt($scope.consumer.age)) -161);
         
         if ($scope.consumer.hreyfing === 'Kyrrseta') {
@@ -446,7 +453,23 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                                         }
                                     }
                                 }
-                                 
+                                var fjDaga = Object.keys($scope.consumptionDays).length;
+                                var medaltal = {};
+                                for (var property in $scope.consumptionDays) {
+                                    for (var property2 in $scope.consumptionDays[property]) {
+                                        if (medaltal.hasOwnProperty(property2)) {
+                                            medaltal[property2] = $scope.consumptionDays[property][property2];
+                                        }
+                                        else {
+                                            medaltal[property2] += $scope.consumptionDays[property][property2];
+                                        }
+                                    }
+                                }
+                                for (var property in medaltal) {
+                                    medaltal[property] = medaltal[property]/fjDaga;
+                                }
+                                $scope.dagaheiti.push('meðaltal');
+                                $scope.consumptionDays['meðaltal'] = medaltal;
                                 $scope.renderStatistics();
                             }
                             
@@ -491,7 +514,7 @@ matarapp.controllers.controller('SkraCtrl',
                '7': 'Júlí',
                '8': 'Ágúst',
                '9': 'September',
-               '10': 'Okctóber',
+               '10': 'Október',
                '11': 'Nóvember',
                '12': 'Desember',
                '01': 'Janúar', 
@@ -656,8 +679,10 @@ matarapp.controllers.controller('SkraCtrl',
                             'Kvöldsnarl': 'Kvoldsnarl'
         };
         
-        $scope.vistaLoading();
+
         if (gapi.client.matarvefur) {
+            $scope.vistaLoading();
+            $scope.alertMessageFun('info','Er að vista');
             var push_items = [];
             for (var i = 0; i < $scope.neyslaDagsins.length; i++) {
                 var item = {};
@@ -666,6 +691,8 @@ matarapp.controllers.controller('SkraCtrl',
                 item.mal = timiDagsDict[$scope.neyslaDagsins[i].mal];
                 push_items.push(item);
             }
+            $timeout($scope.removeAlertMessageFun,2000); 
+
             var temp = $cookieStore.get('consumption')
             temp += $scope.datestring;
             temp += ",";
@@ -673,15 +700,20 @@ matarapp.controllers.controller('SkraCtrl',
             gapi.client.matarvefur.put_foods({'user_email': $cookieStore.get('user_email'),
                 'dags': $scope.datestring,
                 'items': JSON.stringify(push_items)}).execute(function(resp) {
-                    if (!resp.code) {
-                        $timeout($scope.removeAlertMessageFun,2000); 
-                    }
-                    else {
-                         $scope.alertMessageFun('danger', 'Mistókst að skrá fæðu.');      
-                    }
+                    $scope.$apply(function () { 
+                        if (!resp.code) {
+                            $scope.alertMessageFun('success','Vistun tókst!');
+                            //$timeout($scope.removeAlertMessageFun,2000); 
+                        }
+                        else {
+                            $scope.alertMessageFun('danger', 'Mistókst að skrá fæðu.');
+                            $timeout($scope.removeAlertMessageFun,2000);       
+                       }
+                    });
             });   
+            $scope.finishedVistaLoading();
+            
         }
-        $scope.finishedVistaLoading();
 
     };
 

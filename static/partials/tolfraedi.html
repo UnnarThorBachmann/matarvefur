@@ -65,7 +65,7 @@
     </form> 
   </div>
 	<div class="col-md-8" ng-show="showStats" id="teiknibord">
-  <h4>Ráðlagðir dagskammtar</h4>
+  <h4>Ráðlagðir dagskammtar <span class="glyphicon glyphicon-list-alt" ng-click="switchView()"></span></h4>
     <table class="table-responsive">
           <tr>
             <th>Orkuefni</th>
@@ -75,57 +75,57 @@
           </tr>
           <tr>
             <td>Hitaeiningar: </td>
-            <td>A-vítamín: {{itemD.a_vitamin_rj}} %</td>
-            <td>Þíamín (B1): {{itemD.b1_vitamin}} %</td>
-            <td>Kalk: {{itemD.kalk}} %</td>
+            <td>A-vítamín: {{percentageView ? numb(itemD.a_vitamin_rj).toString().replace('.',',')+ ' %':numb(rds_values.a_vitamin_rj*itemD.a_vitamin_rj/100).toFixed(1).toString().replace('.',',')+ ' RJ'+' / '+rds_values.a_vitamin_rj.toString().replace('.',',') + ' RJ'}}</td>
+            <td>Þíamín (B1): {{percentageView ? numb(itemD.b1_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.b1_vitamin*itemD.b1_vitamin/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+numb(rds_values.b1_vitamin).toString().replace('.',',') + ' mg'}}</td>
+            <td>Kalk: {{percentageView ? numb(itemD.kalk).toString().replace('.',',')+ ' %':numb(rds_values.kalk*itemD.kalk/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+rds_values.kalk.toString().replace('.',',') + ' mg'}}</td>
           </tr>
           <tr>
             <td>&nbsp;-{{(37*numb(itemD.fita) + 17*numb(itemD.protein) + 17*numb(itemD.kolvetni_alls)+8*numb(itemD.trefjaefni)+29*numb(itemD.alkohol)).toFixed(1)}} (kJ)</td>
-            <td>D-vítamín: {{itemD.d_vitamin}} %</td>
-            <td>Ribóflavín (B2): {{itemD.b2_vitamin}} %</td>
-            <td>Járn: {{itemD.jarn}} %</td>
+            <td>D-vítamín: {{percentageView ? itemD.d_vitamin.toString().replace('.',',')+ ' %':(rds_values.d_vitamin*itemD.d_vitamin/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+rds_values.d_vitamin.toString() + ' &mu;g'}}</td>
+            <td>Ribóflavín (B2): {{percentageView ? numb(itemD.b2_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.b2_vitamin*itemD.b2_vitamin/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.b2_vitamin).toString().replace('.',',') + ' mg'}}</td>
+            <td>Járn: {{percentageView ? itemD.jarn.toString().replace('.',',')+ ' %':(rds_values.jarn*itemD.jarn/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+rds_values.jarn.toString() + ' mg'}}</td>
           </tr>
           <tr>
             <td>&nbsp;-{{(9*numb(itemD.fita) + 4*numb(itemD.protein) + 4*numb(itemD.kolvetni_alls)+2*numb(itemD.trefjaefni)+7*numb(itemD.alkohol)).toFixed(1)}} kkal</td>
-            <td>E-vítamín: {{itemD.e_vitamin_alfa_tj}} %</td>
-            <td>Níasín (B3): {{itemD.niasin}} %</td>
-            <td>Kalíum: {{itemD.kalium}} %</td>
+            <td>E-vítamín: {{percentageView ? numb(itemD.e_vitamin_alfa_tj).toString().replace('.',',')+ ' %':numb(rds_values.e_vitamin_alfa_tj*itemD.e_vitamin_alfa_tj/100).toFixed(1).toString().replace('.',',')+ ' &alpha;-TJ'+' / '+ numb(rds_values.e_vitamin_alfa_tj).toString().replace('.',',') + ' &alpha;-TJ'}}</td>
+            <td>Níasín (B3): {{percentageView ? numb(itemD.niasin).toString().replace('.',',')+ ' %':numb(rds_values.niasin*itemD.niasin/100).toFixed(1).toString().replace('.',',')+ ' NJ'+' / '+ numb(rds_values.niasin).toString().replace('.',',') + ' NJ'}}</td>
+            <td>Kalíum: {{percentageView ? numb(itemD.kalium).toString().replace('.',',')+ ' %':numb(rds_values.kalium*itemD.kalium/100).toFixed(1).toString().replace('.',',')+ ' g'+' / '+ numb(rds_values.kalium).toString().replace('.',',') + ' g'}}</td>
           </tr>
           <tr>
             <td>&nbsp;-{{((9*numb(itemD.fita) + 4*numb(itemD.protein) + 4*numb(itemD.kolvetni_alls)+2*numb(itemD.trefjaefni)+7*numb(itemD.alkohol))/consumer.kkal_needed*100).toFixed(1)}} %</td>
             <td></td>
-            <td>B6-vítamín: {{itemD.b6_vitamin}} %</td>
-            <td>Magnesíum: {{itemD.magnesium}} %</td>
+            <td>B6-vítamín: {{percentageView ? numb(itemD.b1_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.b6_vitamin*itemD.b6_vitamin/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.b6_vitamin).toString().replace('.',',') + ' mg'}}</td>
+            <td>Magnesíum: {{percentageView ? numb(itemD.magnesium).toString().replace('.',',')+ ' %': numb(rds_values.magnesium*itemD.magnesium/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.magnesium).toString().replace('.',',') + ' mg'}}</td>
           </tr>
           <tr>
             <td></td>
             <td></td>
-            <td>Fólat: {{itemD.folat_alls}} %</td>
-            <td>Sink: {{itemD.sink}} %</td>
+            <td>Fólat: {{percentageView ? numb(itemD.folat_alls).toString().replace('.',',')+ ' %':numb(rds_values.folat_alls*itemD.folat_alls/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+ numb(rds_values.folat).toString().replace('.',',') + ' &mu;g'}}</td>
+            <td>Sink: {{percentageView ? numb(itemD.sink).toString().replace('.',',')+ ' %':numb(rds_values.sink*itemD.sink/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.sink).toString().replace('.',',') + ' mg'}}</td>
           </tr>
           <tr>
             <td></td>
             <td></td>
-            <td>B12-vítamín: {{itemD.b_12_vitamin}} %</td>
-            <td>Joð: {{itemD.jod}} %</td>
+            <td>B12-vítamín: {{percentageView ? numb(itemD.b_12_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.b_12_vitamin*itemD.b1_vitamin/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+ numb(rds_values.b_12_vitamin).toString().replace('.',',') + ' &mu;g'}}</td>
+            <td>Joð: {{percentageView ? itemD.jod.toString().replace('.',',')+ ' %':(rds_values.jod*itemD.jod/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+numb(rds_values.jod).toString().replace('.',',') + ' &mu;g'}}</td>
           </tr>
           <tr>
             <td></td>
             <td></td>
-            <td>C-vítamín: {{itemD.c_vitamin}} %</td>
-            <td>Selen: {{itemD.selen}} %</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Kopar: {{itemD.kopar}} %</td>
+            <td>C-vítamín: {{percentageView ? numb(itemD.c_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.c_vitamin*itemD.c_vitamin/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.c_vitamin).toString().replace('.',',') + ' mg'}}</td>
+            <td>Selen: {{percentageView ? numb(itemD.selen).toString().replace('.',',')+ ' %':numb(rds_values.selen*itemD.selen/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+numb(rds_values.selen).toString().replace('.',',') + ' &mu;g'}}</td>
           </tr>
           <tr>
             <td></td>
             <td></td>
             <td></td>
-            <td>Fosfór: {{itemD.fosfor}} %</td>
+            <td>Kopar: {{percentageView ? numb(itemD.kopar).toString().replace('.',',')+ ' %':numb(rds_values.kopar*itemD.kopar/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+numb(rds_values.kopar).toString().replace('.',',') + ' mg'}}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Fosfór: {{percentageView ? numb(itemD.fosfor).toString().replace('.',',')+ ' %':numb(rds_values.fosfor*itemD.fosfor/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.fosfor).toString().replace('.',',') + ' mg'}}</td>
           </tr>
         </table> 		
 	</div>

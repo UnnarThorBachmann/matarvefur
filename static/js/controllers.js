@@ -222,8 +222,13 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
     };   
     $scope.consumptionDays = {};
     $scope.showStats = false;
+    $scope.percentageView = true;
     $scope.faeduefnaheiti = ["a_vitamin_rj", "alfa_tokoferol", "alkohol", "b1_vitamin", "b2_vitamin", "b6_vitamin", "b_12_vitamin", "beta_karotin", "c_vitamin", "cis_einomettadar_fitusyrur", "cis_fjolomettadar_fitu_n_3_langar", "cis_fjolomettadar_fitusyrur", "d_vitamin", "e_vitamin_alfa_tj", "fita", "fluor", "folat_alls", "fosfor", "Hitaeiningar", "jarn", "jod", "kalium", "kalk", "kolestrol", "kolvetni_alls", "kopar", "magnesium", "mangan", "mettadar_fitusyrur", "natrium", "niasin", "niasin_jafngildi", "protein", "retinol", "selen", "sink", "steinefni_alls", "sykrur", "trans_fitusyrur", "trefjaefni", "vatn", "vidbaettur_sykur", "cis_fjolomettadar_fitusyrur_n_3", "cis_fjolomettadar_fitusyrur_n_6"];
     $scope.dagaheiti = [];
+    $scope.switchView = function () {
+        $scope.percentageView = !$scope.percentageView;
+        console.log($scope.percentageView);
+    };
     $scope.nyttEfni = function () {
         var validEfni = document.getElementById('efnalisti').value;
         $scope.labelsData = [];

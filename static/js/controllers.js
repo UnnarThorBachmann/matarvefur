@@ -475,10 +475,10 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                                 for (var property in $scope.consumptionDays) {
                                     for (var property2 in $scope.consumptionDays[property]) {
                                         if (medaltal.hasOwnProperty(property2)) {
-                                            medaltal[property2] = $scope.consumptionDays[property][property2];
+                                            medaltal[property2] += $scope.consumptionDays[property][property2];
                                         }
                                         else {
-                                            medaltal[property2] += $scope.consumptionDays[property][property2];
+                                            medaltal[property2] = $scope.consumptionDays[property][property2];
                                         }
                                     }
                                 }
@@ -755,7 +755,7 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
             return 0;
         }
         else {
-            return a.toFixed(2);
+            return parseFloat(a).toFixed(2);
         }
     };
 

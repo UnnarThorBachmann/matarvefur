@@ -24,6 +24,9 @@ var app = angular.module('matarapp',
                 when('/', {
                     templateUrl: '/partials/home.html'
                 }).
+                when('', {
+                    templateUrl: '/partials/home.html'
+                }).
                 otherwise({
                     redirectTo: '/'
                 });

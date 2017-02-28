@@ -227,7 +227,6 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
     $scope.dagaheiti = [];
     $scope.switchView = function () {
         $scope.percentageView = !$scope.percentageView;
-        console.log($scope.percentageView);
     };
     $scope.nyttEfni = function () {
         var validEfni = document.getElementById('efnalisti').value;
@@ -297,13 +296,26 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
                     $scope.itemD[prop] = ($scope.numb($scope.consumptionDays[$scope.currDagaheiti][prop])/$scope.rds_values[prop]*100).toFixed(1);
                 }
             }
+            $scope.itemD['vatn'] = $scope.consumptionDays[$scope.currDagaheiti]['vatn'];
             $scope.itemD['fita'] = $scope.consumptionDays[$scope.currDagaheiti]['fita'];
             $scope.itemD['protein'] = $scope.consumptionDays[$scope.currDagaheiti]['protein'];
             $scope.itemD['kolvetni_alls'] = $scope.consumptionDays[$scope.currDagaheiti]['kolvetni_alls'];
             $scope.itemD['trefjaefni'] = $scope.consumptionDays[$scope.currDagaheiti]['trefjaefni'];
             $scope.itemD['alkohol'] = $scope.consumptionDays[$scope.currDagaheiti]['alkohol'];
+            $scope.itemD['mettadar_fitusyrur'] = $scope.consumptionDays[$scope.currDagaheiti]['mettadar_fitusyrur'];
+            $scope.itemD['cis_einomettadar_fitusyrur'] = $scope.consumptionDays[$scope.currDagaheiti]['cis_einomettadar_fitusyrur'];
+            $scope.itemD['cis_fjolomettadar_fitusyrur'] = $scope.consumptionDays[$scope.currDagaheiti]['cis_fjolomettadar_fitusyrur'];
+            $scope.itemD['cis_fjolomettadar_fitu_n_3'] = $scope.consumptionDays[$scope.currDagaheiti]['cis_fjolomettadar_fitu_n_3'];
+            $scope.itemD['cis_fjolomettadar_fitu_n_3_langar'] = $scope.consumptionDays[$scope.currDagaheiti]['cis_fjolomettadar_fitu_n_3_langar'];
+            $scope.itemD['cis_fjolomettadar_fitu_n_6'] = $scope.consumptionDays[$scope.currDagaheiti]['cis_fjolomettadar_fitu_n_6'];
+            $scope.itemD['trans_fitusyrur'] = $scope.consumptionDays[$scope.currDagaheiti]['trans_fitusyrur'];
+            $scope.itemD['kolestrol'] = $scope.consumptionDays[$scope.currDagaheiti]['kolestrol'];
+            $scope.itemD['sykrur'] = $scope.consumptionDays[$scope.currDagaheiti]['sykrur'];
+            $scope.itemD['vidbaettur_sykur'] = $scope.consumptionDays[$scope.currDagaheiti]['vidbaettur_sykur'];
 
-               
+            
+            
+            console.log($scope.itemD);
             //Sulurit
             $scope.labelsData2 = [];
             $scope.gildin2 = []
@@ -743,7 +755,7 @@ matarapp.controllers.controller('RootCtrl', function ($cookieStore,$scope, $time
             return 0;
         }
         else {
-            return a;
+            return a.toFixed(2);
         }
     };
 

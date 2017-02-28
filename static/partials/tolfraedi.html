@@ -68,64 +68,131 @@
   <h4>Ráðlagðir dagskammtar <span class="glyphicon glyphicon-list-alt" ng-click="switchView()"></span></h4>
     <table class="table-responsive">
           <tr>
-            <th>Orkuefni</th>
+            <th>Orkuefni og vatn</th>
             <th>Fituleysanleg vítamín</th>
             <th>Vatnsleysanleg vítamín</th>
             <th>Steinefni</th>
           </tr>
           <tr>
-            <td>Hitaeiningar: </td>
+            <td>Vatn: {{numb(itemD.vatn).toString().replace('.',',')}} g</td>
             <td>A-vítamín: {{percentageView ? numb(itemD.a_vitamin_rj).toString().replace('.',',')+ ' %':numb(rds_values.a_vitamin_rj*itemD.a_vitamin_rj/100).toFixed(1).toString().replace('.',',')+ ' RJ'+' / '+rds_values.a_vitamin_rj.toString().replace('.',',') + ' RJ'}}</td>
             <td>Þíamín (B1): {{percentageView ? numb(itemD.b1_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.b1_vitamin*itemD.b1_vitamin/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+numb(rds_values.b1_vitamin).toString().replace('.',',') + ' mg'}}</td>
             <td>Kalk: {{percentageView ? numb(itemD.kalk).toString().replace('.',',')+ ' %':numb(rds_values.kalk*itemD.kalk/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+rds_values.kalk.toString().replace('.',',') + ' mg'}}</td>
           </tr>
           <tr>
-            <td>&nbsp;-{{(37*numb(itemD.fita) + 17*numb(itemD.protein) + 17*numb(itemD.kolvetni_alls)+8*numb(itemD.trefjaefni)+29*numb(itemD.alkohol)).toFixed(1)}} (kJ)</td>
+            <td>Hitaeiningar:</td>
             <td>D-vítamín: {{percentageView ? itemD.d_vitamin.toString().replace('.',',')+ ' %':(rds_values.d_vitamin*itemD.d_vitamin/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+rds_values.d_vitamin.toString() + ' &mu;g'}}</td>
             <td>Ribóflavín (B2): {{percentageView ? numb(itemD.b2_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.b2_vitamin*itemD.b2_vitamin/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.b2_vitamin).toString().replace('.',',') + ' mg'}}</td>
             <td>Járn: {{percentageView ? itemD.jarn.toString().replace('.',',')+ ' %':(rds_values.jarn*itemD.jarn/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+rds_values.jarn.toString() + ' mg'}}</td>
           </tr>
           <tr>
-            <td>&nbsp;-{{(9*numb(itemD.fita) + 4*numb(itemD.protein) + 4*numb(itemD.kolvetni_alls)+2*numb(itemD.trefjaefni)+7*numb(itemD.alkohol)).toFixed(1)}} kkal</td>
+            <td>&nbsp;-{{(37*numb(itemD.fita) + 17*numb(itemD.protein) + 17*numb(itemD.kolvetni_alls)+8*numb(itemD.trefjaefni)+29*numb(itemD.alkohol)).toFixed(1)}} kJ</td>
             <td>E-vítamín: {{percentageView ? numb(itemD.e_vitamin_alfa_tj).toString().replace('.',',')+ ' %':numb(rds_values.e_vitamin_alfa_tj*itemD.e_vitamin_alfa_tj/100).toFixed(1).toString().replace('.',',')+ ' &alpha;-TJ'+' / '+ numb(rds_values.e_vitamin_alfa_tj).toString().replace('.',',') + ' &alpha;-TJ'}}</td>
             <td>Níasín (B3): {{percentageView ? numb(itemD.niasin).toString().replace('.',',')+ ' %':numb(rds_values.niasin*itemD.niasin/100).toFixed(1).toString().replace('.',',')+ ' NJ'+' / '+ numb(rds_values.niasin).toString().replace('.',',') + ' NJ'}}</td>
             <td>Kalíum: {{percentageView ? numb(itemD.kalium).toString().replace('.',',')+ ' %':numb(rds_values.kalium*itemD.kalium/100).toFixed(1).toString().replace('.',',')+ ' g'+' / '+ numb(rds_values.kalium).toString().replace('.',',') + ' g'}}</td>
           </tr>
           <tr>
-            <td>&nbsp;-{{((9*numb(itemD.fita) + 4*numb(itemD.protein) + 4*numb(itemD.kolvetni_alls)+2*numb(itemD.trefjaefni)+7*numb(itemD.alkohol))/consumer.kkal_needed*100).toFixed(1)}} %</td>
+            <td>&nbsp;-{{(9*numb(itemD.fita) + 4*numb(itemD.protein) + 4*numb(itemD.kolvetni_alls)+2*numb(itemD.trefjaefni)+7*numb(itemD.alkohol)).toFixed(1)}} kkal</td>
             <td></td>
             <td>B6-vítamín: {{percentageView ? numb(itemD.b1_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.b6_vitamin*itemD.b6_vitamin/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.b6_vitamin).toString().replace('.',',') + ' mg'}}</td>
             <td>Magnesíum: {{percentageView ? numb(itemD.magnesium).toString().replace('.',',')+ ' %': numb(rds_values.magnesium*itemD.magnesium/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.magnesium).toString().replace('.',',') + ' mg'}}</td>
           </tr>
           <tr>
-            <td></td>
+            <td>&nbsp;&nbsp;af {{consumer.kkal_needed}} kkal</td>
+            
             <td></td>
             <td>Fólat: {{percentageView ? numb(itemD.folat_alls).toString().replace('.',',')+ ' %':numb(rds_values.folat_alls*itemD.folat_alls/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+ numb(rds_values.folat).toString().replace('.',',') + ' &mu;g'}}</td>
             <td>Sink: {{percentageView ? numb(itemD.sink).toString().replace('.',',')+ ' %':numb(rds_values.sink*itemD.sink/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.sink).toString().replace('.',',') + ' mg'}}</td>
           </tr>
           <tr>
-            <td></td>
+            <td>&nbsp;-{{((9*numb(itemD.fita) + 4*numb(itemD.protein) + 4*numb(itemD.kolvetni_alls)+2*numb(itemD.trefjaefni)+7*numb(itemD.alkohol))/consumer.kkal_needed*100).toFixed(1)}} %</td>
             <td></td>
             <td>B12-vítamín: {{percentageView ? numb(itemD.b_12_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.b_12_vitamin*itemD.b1_vitamin/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+ numb(rds_values.b_12_vitamin).toString().replace('.',',') + ' &mu;g'}}</td>
             <td>Joð: {{percentageView ? itemD.jod.toString().replace('.',',')+ ' %':(rds_values.jod*itemD.jod/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+numb(rds_values.jod).toString().replace('.',',') + ' &mu;g'}}</td>
           </tr>
           <tr>
-            <td></td>
+            <td>Fita: {{numb(itemD.fita).toString().replace('.',',')}} g</td>
             <td></td>
             <td>C-vítamín: {{percentageView ? numb(itemD.c_vitamin).toString().replace('.',',')+ ' %':numb(rds_values.c_vitamin*itemD.c_vitamin/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.c_vitamin).toString().replace('.',',') + ' mg'}}</td>
             <td>Selen: {{percentageView ? numb(itemD.selen).toString().replace('.',',')+ ' %':numb(rds_values.selen*itemD.selen/100).toFixed(1).toString().replace('.',',')+ ' &mu;g'+' / '+numb(rds_values.selen).toString().replace('.',',') + ' &mu;g'}}</td>
           </tr>
           <tr>
-            <td></td>
+            <td>-Mettaðar fitusýrur: {{numb(itemD.mettadar_fitusyrur).toString().replace('.',',')}} g</td>
             <td></td>
             <td></td>
             <td>Kopar: {{percentageView ? numb(itemD.kopar).toString().replace('.',',')+ ' %':numb(rds_values.kopar*itemD.kopar/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+numb(rds_values.kopar).toString().replace('.',',') + ' mg'}}</td>
           </tr>
           <tr>
-            <td></td>
+            <td>&nbsp;-Einómettaðar fitusýrur: {{numb(itemD.cis_einomettadar_fitusyrur).toString().replace('.',',')}} g</td>
             <td></td>
             <td></td>
             <td>Fosfór: {{percentageView ? numb(itemD.fosfor).toString().replace('.',',')+ ' %':numb(rds_values.fosfor*itemD.fosfor/100).toFixed(1).toString().replace('.',',')+ ' mg'+' / '+ numb(rds_values.fosfor).toString().replace('.',',') + ' mg'}}</td>
+          </tr>
+          <tr>
+            <td>&nbsp;-Fjölómettaðar fitusýrur {{numb(itemD.cis_fjolomettadar_fitusyrur).toString().replace('.',',')}} g</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;&nbsp;-Ómega-3 fitusýrur {{numb(itemD.cis_fjolomettadar_fitu_n_3_langar + itemD.cis_fjolomettadar_fitu_n_3).toString().replace('.',',')}} g</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;&nbsp;-Ómega-6 fitusýrur {{ numb(itemD.cis_fjolomettadar_fitu_n_6).toString().replace('.',',')}} g</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>&nbsp;&nbsp;&nbsp;-Trans-fitusýrur: {{numb(itemD.trans_fitusyrur).toString().replace('.',',')}} g</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>-Kólesteról: {{numb(itemD.kolestrol).toString().replace('.',',')}} mg</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Kolvetni: {{numb(itemD.kolvetni_alls).toString().replace('.',',')}} g</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>&nbsp;-Ein- og tvísykrur (sykrur): {{numb(itemD.sykrur).toString().replace('.',',')}} g </td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>&nbsp;-Viðbættur sykur: {{numb(itemD.vidbaettur_sykur).toString().replace('.',',')}} g </td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>&nbsp;-Trefjar: {{numb(itemD.trefjaefni).toString().replace('.',',')}} g</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Prótein: {{numb(itemS.protein).toString().replace('.',',')}} g </td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Alkóhól: {{numb(itemD.alkohol).replace('.',',')}} g </td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </table> 		
 	</div>

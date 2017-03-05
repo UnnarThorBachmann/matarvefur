@@ -315,7 +315,6 @@ matarapp.controllers.controller('TolfraediCtrl', function ($scope,$cookieStore,$
 
             
             
-            console.log($scope.itemD);
             //Sulurit
             $scope.labelsData2 = [];
             $scope.gildin2 = []

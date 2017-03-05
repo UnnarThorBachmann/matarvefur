@@ -150,8 +150,8 @@ class MatarvefurApi(remote.Service):
         user = User.query(User.email == request.user_email,User.name == request.user_name).get()
 
         #curr_user = endpoints.get_current_user()
-        if user is None:
-            raise endpoints.UnauthorizedException('Invalid token.')
+        #if user is None:
+        #    raise endpoints.UnauthorizedException('Invalid token.')
         
         #if curr_user.email() != request.user_email:
         #   raise endpoints.UnauthorizedException('Forbidden!')
